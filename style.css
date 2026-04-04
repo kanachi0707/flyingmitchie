@@ -100,7 +100,16 @@ body[data-stage="sky"] .hud-label {
 }
 
 body[data-stage="sky"] .stage-order,
-body[data-stage="sky"] .stage-kicker {
+body[data-stage="sky"] .stage-kicker,
+body[data-stage="sky"] .stage-subname,
+body[data-stage="sky"] .stage-meta em {
+  color: #123d7a;
+}
+
+body[data-stage="sky"] .music-kicker,
+body[data-stage="sky"] .music-title,
+body[data-stage="sky"] .music-track-order,
+body[data-stage="sky"] .music-track-meta strong {
   color: #123d7a;
 }
 
@@ -211,6 +220,17 @@ body[data-stage="city"] {
 }
 
 .score-hud {
+  display: grid;
+  gap: 6px;
+}
+
+.hud-metrics {
+  display: flex;
+  align-items: start;
+  gap: 34px;
+}
+
+.hud-metric {
   display: grid;
   gap: 6px;
 }
@@ -333,7 +353,9 @@ body[data-stage="city"] {
   width: 100%;
   min-height: 100%;
   display: grid;
-  align-content: end;
+  align-content: center;
+  justify-items: center;
+  padding-top: clamp(12px, 4vh, 48px);
 }
 
 .intro-shell,
@@ -345,7 +367,10 @@ body[data-stage="city"] {
 
 .intro-shell {
   min-height: min(68vh, 720px);
-  align-content: end;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  transform: translateY(-10vh);
 }
 
 .title-badge,
@@ -373,6 +398,15 @@ body[data-stage="city"] {
   text-wrap: balance;
 }
 
+.title-logo {
+  display: block;
+  width: min(840px, 92vw);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.22));
+}
+
+
 .title-subcopy,
 .music-copy {
   margin: 0;
@@ -394,8 +428,37 @@ body[data-stage="city"] {
   align-items: center;
 }
 
+.music-back-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .title-mode-button {
   min-width: 190px;
+}
+
+.music-option-button {
+  min-width: 64px;
+  padding-inline: 0;
+  font-size: 1.15rem;
+  letter-spacing: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-option-button svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+#musicPrevButton,
+#musicNextButton,
+#musicShuffleButton,
+#musicRepeatButton {
+  min-width: auto;
+  padding: 12px 16px;
 }
 
 .music-screen {
@@ -547,6 +610,7 @@ body[data-stage="city"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   align-self: start;
+  align-items: start;
   width: min(760px, 100%);
 }
 
@@ -555,6 +619,61 @@ body[data-stage="city"] {
   display: grid;
   gap: 12px;
   justify-self: end;
+}
+
+.stage-option-card {
+  position: relative;
+  display: grid;
+  gap: 0;
+  width: 100%;
+  min-height: 184px;
+  height: 184px;
+  background: rgba(6, 12, 28, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  overflow: hidden;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.stage-option-card[data-theme="city"] {
+  background:
+    linear-gradient(180deg, rgba(255, 156, 90, 0.2), rgba(18, 12, 20, 0.36));
+}
+
+.stage-option-main {
+  min-height: 100%;
+  height: 100%;
+  padding-bottom: 78px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.stage-option-main:hover,
+.stage-option-main:focus-visible {
+  border-color: transparent;
+}
+
+.stage-option-card:hover,
+.stage-option-card:focus-within {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.stage-option-card .stage-option.is-preview {
+  transform: none;
+}
+
+.stage-option-card:has(.stage-option.is-preview) {
+  transform: translateY(-6px);
+  border-color: rgba(255, 255, 255, 0.34);
 }
 
 .city-track-label {
@@ -601,6 +720,7 @@ body[data-stage="city"] {
 }
 
 .stage-option {
+  position: relative;
   display: grid;
   grid-template-columns: 52px 1fr;
   align-items: start;
@@ -641,24 +761,42 @@ body[data-stage="city"] {
 
 .stage-meta {
   display: grid;
-  gap: 6px;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 6px 12px;
 }
 
 .stage-kicker {
+  grid-column: 1;
+  grid-row: 1;
+  font-family: "Orbitron", "Zen Kaku Gothic New", sans-serif;
   font-size: 0.78rem;
+  font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
 .stage-meta strong {
+  grid-column: 1 / -1;
+  grid-row: 2;
   font-family: "Zen Kaku Gothic New", "Space Grotesk", "Segoe UI", sans-serif;
   font-size: clamp(1.3rem, 3vw, 1.8rem);
   font-weight: 900;
   letter-spacing: 0.02em;
 }
 
-.stage-meta em,
+.stage-subname {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  font-family: "Orbitron", "Zen Kaku Gothic New", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 .stage-summary,
 .stage-best {
   font-style: normal;
@@ -666,7 +804,20 @@ body[data-stage="city"] {
 }
 
 .stage-meta em {
-  font-size: 0.98rem;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  font-family: "Orbitron", "Zen Kaku Gothic New", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--accent);
+}
+
+.stage-meta em:empty {
+  display: none;
 }
 
 .stage-summary {
@@ -676,10 +827,20 @@ body[data-stage="city"] {
   color: rgba(247, 251, 255, 0.92);
 }
 
+.stage-summary:empty {
+  display: none;
+}
+
 .stage-best {
-  font-size: 0.88rem;
-  grid-column: 1 / -1;
-  text-align: left;
+  position: absolute;
+  top: 54px;
+  right: 20px;
+  font-family: "Orbitron", "Zen Kaku Gothic New", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: right;
 }
 
 .stage-option[data-theme="sky"] {
@@ -700,6 +861,41 @@ body[data-stage="city"] {
 .stage-option[data-theme="city"] {
   background:
     linear-gradient(180deg, rgba(255, 156, 90, 0.2), rgba(18, 12, 20, 0.36));
+}
+
+.stage-option-card .city-track-panel--inline {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 16px;
+  width: auto;
+  padding: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+  justify-self: stretch;
+}
+
+.stage-option-card .city-track-label {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: rgba(255, 214, 176, 0.92);
+}
+
+.stage-option-card .city-track-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.stage-option-card .track-option {
+  min-width: 0;
+  padding: 7px 8px;
+  font-size: 0.8rem;
+  text-align: center;
 }
 
 .result-stats {
@@ -843,6 +1039,13 @@ body[data-stage="city"] {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+#musicShuffleButton.is-selected,
+#musicRepeatButton.is-selected {
+  background: rgba(121, 229, 255, 0.24);
+  border-color: rgba(121, 229, 255, 0.6);
+  box-shadow: 0 0 18px rgba(121, 229, 255, 0.22);
+}
+
 .utility-button:hover,
 .link-button:hover,
 .primary-button:hover,
@@ -962,6 +1165,7 @@ body[data-screen="running"] .life-hud {
   .link-button {
     width: 100%;
   }
+
 
   .result-actions {
     flex-direction: column;

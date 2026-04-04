@@ -2,7 +2,7 @@
   "name": "flying-micchi",
   "version": "1.0.0",
   "private": true,
-  "description": "Local static server for the Flying Micchi unified demo.",
+  "description": "Local static server for the Flying Mitchie unified demo.",
   "scripts": {
     "start": "node server.js",
     "serve": "node server.js"

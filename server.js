@@ -68,7 +68,7 @@ function listen(preferredPort) {
   server.listen(preferredPort, host, () => {
     const address = server.address();
     const activePort = typeof address === "object" && address ? address.port : preferredPort;
-    console.log(`Flying Micchi server: http://${host}:${activePort}`);
+    console.log(`Flying Mitchie server: http://${host}:${activePort}`);
   });
 }
 

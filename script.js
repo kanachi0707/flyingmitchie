@@ -5,6 +5,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
   const STORAGE_KEY = "flying-micchi-bests-v1";
   const SETTINGS_KEY = "flying-micchi-settings-v1";
+  const SETTINGS_VERSION = 2;
   const PLAYER_Z = 8.4;
   const TRACK_HALF_WIDTH = 6;
   const TRACK_TOP = 4.2;
@@ -12,6 +13,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const GATE_SPACING = 22;
   const GATE_COUNT = 9;
   const GATE_MARGIN = 0.55;
+  const GATE_HOLE_COMPENSATION = 8.4 / 9.4;
   const PENGUIN_SCALE = 0.5;
 
   const THEMES = {
@@ -150,7 +152,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       gapStep: 0.1,
       gapStepEvery: 10,
       gapMinScale: 1.8,
-      summary: "速度固定 / 100リング"
+      summary: "速度固定 / 100 WALLでクリア",
+      detail: "100 WALL でクリア"
     },
     sea: {
       key: "sea",
@@ -165,7 +168,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       gapStep: 0.15,
       gapStepEvery: 10,
       gapMinScale: 1.4,
-      summary: "0.1ずつ加速 / 100リング"
+      summary: "0.1ずつ加速 / 150 WALLでクリア",
+      detail: "150 WALL でクリア"
     },
     space: {
       key: "space",
@@ -180,7 +184,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       gapStep: 0.175,
       gapStepEvery: 10,
       gapMinScale: 1.4,
-      summary: "0.1ずつ加速 / 200リング"
+      summary: "0.1ずつ加速 / 200 WALLでクリア",
+      detail: "200 WALL でクリア"
     },
     city: {
       key: "city",
@@ -196,14 +201,11 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       gapStepEvery: 10,
       gapMinScale: 1.3,
       summary: "星ボーナスあり / エンドレス",
+      detail: "20 WALLごとに星 / エンドレス",
       bonusEvery: 20,
       bonusValue: 10
     }
   };
-
-  const MAX_FINITE_GATES = Object.values(MODES).reduce((max, mode) => (
-    Number.isFinite(mode.targetRings) ? Math.max(max, mode.targetRings) : max
-  ), GATE_COUNT);
 
   const sceneRoot = document.querySelector("#sceneRoot");
   const introScreen = document.querySelector("#introScreen");
@@ -211,6 +213,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const selectScreen = document.querySelector("#selectScreen");
   const resultScreen = document.querySelector("#resultScreen");
   const scoreHud = document.querySelector("#scoreHud");
+  const wallValue = document.querySelector("#wallValue");
   const scoreValue = document.querySelector("#scoreValue");
   const lifeHud = document.querySelector("#lifeHud");
   const lifeTokens = [...document.querySelectorAll("[data-life-index]")];
@@ -218,9 +221,11 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const gameModeButton = document.querySelector("#gameModeButton");
   const musicModeButton = document.querySelector("#musicModeButton");
   const musicStopButton = document.querySelector("#musicStopButton");
-  const musicRandomButton = document.querySelector("#musicRandomButton");
   const musicPrevButton = document.querySelector("#musicPrevButton");
   const musicNextButton = document.querySelector("#musicNextButton");
+  const musicPlayButton = document.querySelector("#musicPlayButton");
+  const musicShuffleButton = document.querySelector("#musicShuffleButton");
+  const musicRepeatButton = document.querySelector("#musicRepeatButton");
   const musicBackButton = document.querySelector("#musicBackButton");
   const titleButton = document.querySelector("#titleButton");
   const retryButton = document.querySelector("#retryButton");
@@ -343,9 +348,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     cityTrackKey: settings.cityTrackKey,
     musicTrackKey: "sky",
     musicPreviewPlaying: false,
-    musicRandomMode: false,
+    musicShuffle: false,
+    musicAutoPlay: false,
+    musicRepeat: false,
     musicHistory: [],
     musicHistoryIndex: -1,
+    musicShuffleBag: [],
     resultOutcome: "failed",
     resultTitle: "",
     resultLead: ""
@@ -412,7 +420,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       const raw = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
       return {
         soundEnabled: raw.soundEnabled !== false,
-        cityTrackKey: SOUNDTRACKS[raw.cityTrackKey] ? raw.cityTrackKey : DEFAULT_CITY_TRACK_KEY
+        cityTrackKey: raw.settingsVersion === SETTINGS_VERSION && SOUNDTRACKS[raw.cityTrackKey]
+          ? raw.cityTrackKey
+          : DEFAULT_CITY_TRACK_KEY
       };
     } catch {
       return {
@@ -425,6 +435,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   function saveSettings() {
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+        settingsVersion: SETTINGS_VERSION,
         soundEnabled: state.soundEnabled,
         cityTrackKey: state.cityTrackKey
       }));
@@ -445,8 +456,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     return modeKey === "city" ? state.cityTrackKey : modeKey;
   }
 
-  function ensureMainBgmTrack(modeKey = state.modeKey) {
-    const trackKey = resolveTrackKeyForMode(modeKey);
+  function ensureBgmTrackByKey(trackKey) {
     const soundtrack = SOUNDTRACKS[trackKey] || SOUNDTRACKS[DEFAULT_CITY_TRACK_KEY];
 
     if (activeBgmTrackKey !== soundtrack.key || bgm.src !== new URL(soundtrack.src, window.location.href).href) {
@@ -457,6 +467,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     return soundtrack.key;
   }
 
+  function ensureMainBgmTrack(modeKey = state.modeKey) {
+    return ensureBgmTrackByKey(resolveTrackKeyForMode(modeKey));
+  }
+
   function activeThemeKey() {
     return state.running ? currentMode().theme : previewMode().theme;
   }
@@ -464,6 +478,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   function previewModeKeyForMusicTrack(trackKey = state.musicTrackKey) {
     if (trackKey === "sea") {
       return "sea";
+    }
+    if (trackKey === "space") {
+      return "space";
     }
     if (trackKey === "city") {
       return "city";
@@ -483,14 +500,44 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       .map(([key]) => key);
   }
 
-  function pickRandomMusicTrackKey(excludeKey = "") {
-    const playableTrackKeys = getPlayableMusicTrackKeys();
-    const filteredTrackKeys = playableTrackKeys.filter((key) => key !== excludeKey);
-    const pool = filteredTrackKeys.length ? filteredTrackKeys : playableTrackKeys;
-    if (!pool.length) {
-      return state.musicTrackKey;
+  function getOrderedPlayableMusicTrackKeys() {
+    return getPlayableMusicTrackKeys().sort((leftKey, rightKey) => {
+      const leftOrder = Number(MUSIC_TRACK_META[leftKey]?.order || 999);
+      const rightOrder = Number(MUSIC_TRACK_META[rightKey]?.order || 999);
+      return leftOrder - rightOrder;
+    });
+  }
+
+  function resetShuffleBag(currentTrackKey = state.musicTrackKey) {
+    state.musicShuffleBag = getPlayableMusicTrackKeys().filter((key) => key !== currentTrackKey);
+  }
+
+  function drawShuffleTrack(currentTrackKey = state.musicTrackKey) {
+    if (!state.musicShuffleBag.length) {
+      if (!state.musicRepeat) {
+        return null;
+      }
+      resetShuffleBag(currentTrackKey);
     }
-    return pool[Math.floor(Math.random() * pool.length)];
+
+    if (!state.musicShuffleBag.length) {
+      return null;
+    }
+
+    const nextIndex = Math.floor(Math.random() * state.musicShuffleBag.length);
+    const [nextTrackKey] = state.musicShuffleBag.splice(nextIndex, 1);
+    return nextTrackKey ?? null;
+  }
+
+  function getSequentialMusicTrackKey(step = 1, anchorTrackKey = state.musicTrackKey) {
+    const orderedTrackKeys = getOrderedPlayableMusicTrackKeys();
+    if (!orderedTrackKeys.length) {
+      return anchorTrackKey;
+    }
+
+    const currentIndex = Math.max(0, orderedTrackKeys.indexOf(anchorTrackKey));
+    const nextIndex = (currentIndex + step + orderedTrackKeys.length) % orderedTrackKeys.length;
+    return orderedTrackKeys[nextIndex];
   }
 
   function pushMusicHistory(trackKey) {
@@ -504,11 +551,57 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   }
 
   function canPlayPreviousMusicTrack() {
-    return state.musicHistoryIndex > 0;
+    if (state.musicShuffle) {
+      return state.musicHistoryIndex > 0;
+    }
+
+    return getSequentialMusicTrackKey(-1, state.musicTrackKey) !== null;
   }
 
   function canPlayNextMusicTrack() {
-    return state.musicRandomMode || state.musicHistoryIndex < state.musicHistory.length - 1;
+    if (state.musicAutoPlay) {
+      if (state.musicShuffle) {
+        return state.musicShuffleBag.length > 0 || state.musicRepeat;
+      }
+
+      const orderedTrackKeys = getOrderedPlayableMusicTrackKeys();
+      const currentIndex = orderedTrackKeys.indexOf(state.musicTrackKey);
+      return state.musicRepeat || currentIndex < orderedTrackKeys.length - 1;
+    }
+
+    if (state.musicShuffle) {
+      return state.musicHistoryIndex < state.musicHistory.length - 1
+        || state.musicShuffleBag.length > 0
+        || state.musicRepeat;
+    }
+
+    return getSequentialMusicTrackKey(1, state.musicTrackKey) !== null;
+  }
+
+  function getSequentialMusicTrackKey(step = 1, anchorTrackKey = state.musicTrackKey) {
+    const orderedTrackKeys = getOrderedPlayableMusicTrackKeys();
+    if (!orderedTrackKeys.length) {
+      return anchorTrackKey;
+    }
+
+    const currentIndex = Math.max(0, orderedTrackKeys.indexOf(anchorTrackKey));
+    const nextIndex = currentIndex + step;
+
+    if (state.musicRepeat) {
+      return orderedTrackKeys[(nextIndex + orderedTrackKeys.length) % orderedTrackKeys.length];
+    }
+
+    if (nextIndex < 0 || nextIndex >= orderedTrackKeys.length) {
+      return null;
+    }
+
+    return orderedTrackKeys[nextIndex];
+  }
+
+  function getNextAutoTrackKey() {
+    return state.musicShuffle
+      ? drawShuffleTrack(state.musicTrackKey)
+      : getSequentialMusicTrackKey(1, state.musicTrackKey);
   }
 
   function setMessage(text = "") {
@@ -527,6 +620,13 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
         track.currentTime = 0;
       }
     });
+  }
+
+  function syncMusicPreviewLoopState() {
+    const shouldLoop = !state.musicAutoPlay;
+    bgm.loop = shouldLoop;
+    clearBgm.loop = shouldLoop;
+    failedBgm.loop = shouldLoop;
   }
 
   function updateLifeHud(lostIndex = null) {
@@ -567,7 +667,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   function refreshBestLabels() {
     Object.entries(bestNodes).forEach(([key, node]) => {
       if (node) {
-        node.textContent = `Best ${state.bests[key]}`;
+        node.textContent = `BEST SCORE ${state.bests[key]}`;
       }
     });
   }
@@ -589,6 +689,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     resultScreen.hidden = state.screen !== "result";
     resultScreen.dataset.outcome = state.resultOutcome;
     scoreHud.hidden = state.screen !== "running";
+    if (wallValue) {
+      wallValue.textContent = String(state.ringsCleared);
+    }
+    if (scoreValue) {
+      scoreValue.textContent = String(state.score);
+    }
     if (lifeHud) {
       lifeHud.hidden = state.screen !== "running";
     }
@@ -609,10 +715,18 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     if (musicTitle) {
       musicTitle.textContent = "Sound Select";
     }
-    if (musicRandomButton) {
-      musicRandomButton.classList.toggle("is-selected", state.musicRandomMode);
-      musicRandomButton.disabled = !state.soundEnabled;
-      musicRandomButton.textContent = state.musicRandomMode ? "RANDOM ON" : "RANDOM";
+    if (musicPlayButton) {
+      musicPlayButton.classList.toggle("is-selected", state.musicAutoPlay);
+      musicPlayButton.disabled = !state.soundEnabled;
+      musicPlayButton.textContent = state.musicAutoPlay ? "PLAY ON" : "PLAY";
+    }
+    if (musicShuffleButton) {
+      musicShuffleButton.classList.toggle("is-selected", state.musicShuffle);
+      musicShuffleButton.disabled = !state.soundEnabled;
+    }
+    if (musicRepeatButton) {
+      musicRepeatButton.classList.toggle("is-selected", state.musicRepeat);
+      musicRepeatButton.disabled = !state.soundEnabled;
     }
     if (musicPrevButton) {
       musicPrevButton.disabled = !state.soundEnabled || !canPlayPreviousMusicTrack();
@@ -625,8 +739,14 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       button.classList.toggle("is-preview", button.dataset.mode === state.previewModeKey);
       const mode = MODES[button.dataset.mode];
       const metaSummary = button.querySelector(".stage-meta em");
+      const detailSummary = button.querySelector(".stage-summary");
       if (mode && metaSummary) {
-        metaSummary.textContent = getModeSummary(mode);
+        metaSummary.textContent = Number.isFinite(mode.targetRings)
+          ? `${mode.targetRings} WALL`
+          : "ENDLESS";
+      }
+      if (mode && detailSummary) {
+        detailSummary.textContent = "";
       }
     });
 
@@ -691,10 +811,22 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     }
 
     if (mode.speedStep <= 0) {
-      return `速度固定 / ${mode.targetRings}リング`;
+      return `速度固定 / ${mode.targetRings} WALLでクリア`;
     }
 
-    return `${mode.speedStep.toFixed(1)}ずつ加速 / ${mode.targetRings}リング`;
+    return `${mode.speedStep.toFixed(1)}ずつ加速 / ${mode.targetRings} WALLでクリア`;
+  }
+
+  function getModeDetail(mode) {
+    if (mode.detail) {
+      return mode.detail;
+    }
+
+    if (!Number.isFinite(mode.targetRings)) {
+      return mode.summary;
+    }
+
+    return `${mode.targetRings} WALLでクリア`;
   }
 
   function getGapScale(ringsCleared, mode) {
@@ -704,6 +836,16 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
     const steps = Math.floor(ringsCleared / mode.gapStepEvery);
     return Math.max(mode.gapMinScale, mode.gapStartScale - steps * mode.gapStep);
+  }
+
+  function getModeDetail(mode, label = mode.difficulty) {
+    const heading = String(label || mode.difficulty || "").toUpperCase();
+
+    if (!Number.isFinite(mode.targetRings)) {
+      return `${heading} / ENDLESS`;
+    }
+
+    return `${heading} / ${mode.targetRings} WALL`;
   }
 
   function calculateSpeed(mode, ringsCleared) {
@@ -1038,10 +1180,13 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     const group = new THREE.Group();
     const shell = [];
     const depth = 0.7;
+    const shellMaterial = gateMaterial.clone();
+    shellMaterial.transparent = true;
+    shellMaterial.opacity = 1;
 
     const segments = Array.from(
       { length: 8 },
-      () => new THREE.Mesh(new THREE.BoxGeometry(1, 1, depth), gateMaterial)
+      () => new THREE.Mesh(new THREE.BoxGeometry(1, 1, depth), shellMaterial)
     );
 
     segments.forEach((segment) => {
@@ -1082,6 +1227,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     group.userData = {
       seed,
       shell,
+      shellMaterial,
       accent,
       accentRing,
       accentFish,
@@ -1101,7 +1247,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       bonusActive: false,
       bonusCollected: false,
       ringNumber: seed,
-      cleared: false
+      cleared: false,
+      fadeOpacity: 1,
+      fadeActive: false
     };
 
     return { group };
@@ -1113,12 +1261,19 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
     if (width <= 0.04 || height <= 0.04) {
       mesh.visible = false;
+      mesh.userData.hitRect = null;
       return;
     }
 
     mesh.visible = true;
     mesh.position.set((minX + maxX) * 0.5, (minY + maxY) * 0.5, 0);
     mesh.scale.set(width, height, 1);
+    mesh.userData.hitRect = {
+      left: minX,
+      right: maxX,
+      bottom: minY,
+      top: maxY
+    };
   }
 
   function layoutGateShell(data, left, right, top, bottom) {
@@ -1156,6 +1311,14 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     placeSegment(data.shell[4], right, outerRight, bottom, pocket.bottom);
     placeSegment(data.shell[5], right, pocket.left, pocket.bottom, pocket.top);
     placeSegment(data.shell[6], pocket.right, outerRight, pocket.bottom, pocket.top);
+  }
+
+  function pointHitsVisibleWall(data, x, y, insetX = 0, insetY = 0) {
+    return data.shell.some((segment) => (
+      segment.visible
+      && segment.userData.hitRect
+      && pointInRect(x, y, segment.userData.hitRect, insetX, insetY)
+    ));
   }
 
   function activateBonusPocket(data, mode, left, right) {
@@ -1229,8 +1392,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     const gapScale = getGapScale(Math.max(0, ringNumber - 1), mode);
 
     data.ringNumber = ringNumber;
-    data.gapWidth = THREE.MathUtils.randFloat(2.4 * gapScale, 4.1 * gapScale);
-    data.gapHeight = THREE.MathUtils.randFloat(2.2 * gapScale, 3.6 * gapScale);
+    data.gapWidth = THREE.MathUtils.randFloat(2.4 * gapScale, 4.1 * gapScale) * GATE_HOLE_COMPENSATION;
+    data.gapHeight = THREE.MathUtils.randFloat(2.2 * gapScale, 3.6 * gapScale) * GATE_HOLE_COMPENSATION;
 
     const maxGapX = Math.max(0, data.outerWidth * 0.5 - data.gapWidth * 0.5 - GATE_MARGIN);
     const maxGapY = Math.max(0, data.outerHeight * 0.5 - data.gapHeight * 0.5 - GATE_MARGIN);
@@ -1239,8 +1402,11 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     data.gapY = Math.cos(t * 1.2) * maxGapY * 0.88 + Math.min(0.28, maxGapY);
     data.gapY = THREE.MathUtils.clamp(data.gapY, -maxGapY, maxGapY);
     data.cleared = false;
+    data.fadeOpacity = 1;
+    data.fadeActive = false;
     gate.group.visible = true;
     gate.group.scale.set(1, 1, 1);
+    data.shellMaterial.opacity = 1;
 
     const left = data.gapX - data.gapWidth * 0.5;
     const right = data.gapX + data.gapWidth * 0.5;
@@ -1270,65 +1436,59 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     group.userData.key = "sky";
     const mountainGlowTexture = createMountainGlowTexture();
 
-    mountainTextures.forEach((texture) => {
-      for (let index = 0; index < 4; index += 1) {
-        const sprite = new THREE.Sprite(
-          new THREE.SpriteMaterial({
-            map: texture,
-            color: 0xdcefff,
-            transparent: true,
-            opacity: 0.96,
-            depthWrite: false,
-            depthTest: true,
-            fog: false
-          })
-        );
-        const glow = new THREE.Sprite(
-          new THREE.SpriteMaterial({
-            map: mountainGlowTexture,
-            color: 0x8bc5ff,
-            transparent: true,
-            opacity: 0.34,
-            depthWrite: false,
-            depthTest: true,
-            fog: false
-          })
-        );
-        const aspect = texture.image ? texture.image.height / texture.image.width : THREE.MathUtils.randFloat(0.32, 0.52);
-        const width = THREE.MathUtils.randFloat(15, 24);
-        sprite.scale.set(width, width * aspect, 1);
-        sprite.center.set(0.5, 0);
-        sprite.renderOrder = -8;
-        glow.center.set(0.5, 0);
-        glow.scale.set(1.48, 0.9, 1);
-        glow.position.z = -0.2;
-        glow.renderOrder = -9;
-        sprite.add(glow);
-        sprite.userData.kind = "mountain";
-        sprite.userData.speedFactor = THREE.MathUtils.randFloat(0.34, 0.62);
-        sprite.userData.reset = (initial = false) => {
-          const travelLimit = 18 + sprite.scale.x * 0.72;
-          const respawnBand = Math.max(2.4, travelLimit * 0.22);
-          let nextX;
-
-          if (initial || !sprite.userData.originSide) {
-            nextX = THREE.MathUtils.randFloat(-travelLimit, travelLimit);
-            sprite.userData.originSide = nextX < 0 ? -1 : 1;
-          } else {
-            nextX = THREE.MathUtils.randFloat(respawnBand, travelLimit * 0.4) * sprite.userData.originSide;
-          }
-
+    mountainTextures.forEach((texture, textureIndex) => {
+      const sprite = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: texture,
+          color: 0xdcefff,
+          transparent: true,
+          opacity: 0.96,
+          depthWrite: false,
+          depthTest: true,
+          fog: false
+        })
+      );
+      const glow = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: mountainGlowTexture,
+          color: 0x8bc5ff,
+          transparent: true,
+          opacity: 0.34,
+          depthWrite: false,
+          depthTest: true,
+          fog: false
+        })
+      );
+      const aspect = texture.image ? texture.image.height / texture.image.width : THREE.MathUtils.randFloat(0.32, 0.52);
+      const width = THREE.MathUtils.randFloat(15, 24);
+      sprite.scale.set(width, width * aspect, 1);
+      sprite.center.set(0.5, 0);
+      sprite.renderOrder = -8;
+      glow.center.set(0.5, 0);
+      glow.scale.set(1.48, 0.9, 1);
+      glow.position.z = -0.2;
+      glow.renderOrder = -9;
+      sprite.add(glow);
+      sprite.userData.kind = "mountain";
+      sprite.userData.speedFactor = THREE.MathUtils.randFloat(0.34, 0.62);
+      sprite.userData.motionCenterX = textureIndex % 2 === 0
+        ? THREE.MathUtils.randFloat(-8.4, -3.6)
+        : THREE.MathUtils.randFloat(3.6, 8.4);
+      sprite.userData.motionRange = THREE.MathUtils.randFloat(1.6, 3.2);
+      sprite.userData.motionPhase = textureIndex % 2 === 0 ? 0 : Math.PI;
+      sprite.userData.motionSpeed = THREE.MathUtils.randFloat(0.22, 0.38);
+      sprite.userData.reset = (initial = false) => {
+        if (initial) {
           sprite.userData.baseZ = THREE.MathUtils.randFloat(-132, -92);
-          sprite.userData.driftDirection = sprite.userData.originSide;
-          sprite.position.set(
-            nextX,
-            getSkyMountainFloorY(sprite),
-            sprite.userData.baseZ
-          );
-        };
-        sprite.userData.reset(true);
-        group.add(sprite);
-      }
+        }
+        sprite.position.set(
+          sprite.userData.motionCenterX,
+          getSkyMountainFloorY(sprite),
+          sprite.userData.baseZ
+        );
+      };
+      sprite.userData.reset(true);
+      group.add(sprite);
     });
 
     cloudTextures.forEach((texture, textureIndex) => {
@@ -1567,6 +1727,13 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       gateMaterial.color.setHex(theme.gateColor);
       gateMaterial.emissive.setHex(theme.gateEmissive);
     }
+    gates.forEach((gate) => {
+      const shellMaterial = gate.group.userData?.shellMaterial;
+      if (shellMaterial) {
+        shellMaterial.color.setHex(theme.gateColor);
+        shellMaterial.emissive.setHex(theme.gateEmissive);
+      }
+    });
     if (gateAccentMaterial) {
       gateAccentMaterial.color.setHex(theme.accentColor);
       gateAccentMaterial.emissive.setHex(theme.accentColor);
@@ -1597,23 +1764,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     });
   }
 
-  function usesStaticFiniteGateLayout(mode) {
-    return state.running && Number.isFinite(mode.targetRings);
-  }
-
   function layoutGates(mode) {
     gates.forEach((gate, index) => {
-      if (usesStaticFiniteGateLayout(mode)) {
-        const ringNumber = index + 1;
-        if (ringNumber <= mode.targetRings) {
-          gate.group.position.z = -46 - index * GATE_SPACING;
-          randomizeGate(gate, ringNumber, mode);
-        } else {
-          hideGate(gate);
-        }
-        return;
-      }
-
       if (index < GATE_COUNT) {
         gate.group.position.z = -46 - index * GATE_SPACING;
         const ringNumber = index + 1;
@@ -1694,7 +1846,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.running = false;
     state.screen = "intro";
     state.musicPreviewPlaying = false;
-    state.musicRandomMode = false;
+    state.musicShuffle = false;
+    state.musicAutoPlay = false;
+    state.musicRepeat = false;
+    state.musicShuffleBag = [];
     stopBgmTracks(true);
     setMessage("");
     resetPreviewScene("sky");
@@ -1705,9 +1860,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.screen = "music";
     state.musicTrackKey = trackKey;
     state.musicPreviewPlaying = false;
-    state.musicRandomMode = false;
+    state.musicShuffle = false;
+    state.musicAutoPlay = false;
+    state.musicRepeat = false;
     state.musicHistory = [];
     state.musicHistoryIndex = -1;
+    state.musicShuffleBag = [];
     stopBgmTracks(true);
     setMessage("");
     resetPreviewScene(previewModeKeyForMusicTrack(trackKey));
@@ -1717,7 +1875,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.running = false;
     state.screen = "select";
     state.musicPreviewPlaying = false;
-    state.musicRandomMode = false;
+    state.musicShuffle = false;
+    state.musicAutoPlay = false;
+    state.musicRepeat = false;
+    state.musicShuffleBag = [];
     stopBgmTracks(true);
     resetPreviewScene(modeKey);
   }
@@ -1750,15 +1911,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       if (mode.key === "city") {
         state.resultLead = `Score ${state.score}。街ルートのスコアアタックを走り切りました。`;
       } else {
-        state.resultLead = `${mode.targetRings}リング到達。${mode.difficulty}ルートを飛び切りました。`;
+        state.resultLead = `${mode.targetRings} WALL でクリア。${mode.difficulty}ルートを飛び切りました。`;
       }
       playSfx("stage");
     } else {
       state.resultOutcome = "failed";
       state.resultTitle = `${mode.label} Failed`;
       state.resultLead = mode.key === "city"
-        ? `Score ${state.score}。20リングごとの星で +${mode.bonusValue} を狙えます。`
-        : `Score ${state.score} / ${mode.targetRings}。もう一度同じルートへ挑めます。`;
+        ? `Score ${state.score}。20 WALLごとの星で +${mode.bonusValue} を狙えます。`
+        : `${state.ringsCleared} / ${mode.targetRings} WALL。もう一度同じルートへ挑めます。`;
       playSfx("hit");
     }
 
@@ -1947,17 +2108,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     }
 
     stopBgmTracks(true);
+    syncMusicPreviewLoopState();
 
     try {
       if (trackKey === "clear") {
-        clearBgm.loop = !state.musicRandomMode;
         await clearBgm.play();
       } else if (trackKey === "failed") {
-        failedBgm.loop = !state.musicRandomMode;
         await failedBgm.play();
       } else {
-        ensureMainBgmTrack(trackKey);
-        bgm.loop = !state.musicRandomMode;
+        ensureBgmTrackByKey(trackKey);
         await bgm.play();
       }
       setMessage("");
@@ -1968,10 +2127,34 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     }
   }
 
-  async function playRandomMusicPreview(initial = false) {
-    state.musicRandomMode = true;
-    const nextTrackKey = pickRandomMusicTrackKey(initial ? "" : state.musicTrackKey);
-    await playMusicPreview(nextTrackKey);
+  async function enableMusicAutoPlay() {
+    state.musicAutoPlay = true;
+    if (state.musicShuffle) {
+      resetShuffleBag(state.musicTrackKey);
+    }
+
+    if (!state.musicPreviewPlaying) {
+      await playMusicPreview(state.musicTrackKey || getOrderedPlayableMusicTrackKeys()[0] || "sky");
+      return;
+    }
+
+    syncMusicPreviewLoopState();
+    syncUi();
+  }
+
+  function toggleMusicShuffle() {
+    state.musicShuffle = !state.musicShuffle;
+    if (state.musicShuffle) {
+      resetShuffleBag(state.musicTrackKey);
+    } else {
+      state.musicShuffleBag = [];
+    }
+    syncUi();
+  }
+
+  function toggleMusicRepeat() {
+    state.musicRepeat = !state.musicRepeat;
+    syncUi();
   }
 
   async function playPreviousMusicPreview() {
@@ -1979,14 +2162,29 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return;
     }
 
-    state.musicRandomMode = false;
-    state.musicHistoryIndex -= 1;
-    await playMusicPreview(state.musicHistory[state.musicHistoryIndex], { skipHistory: true });
+    if (state.musicShuffle) {
+      state.musicHistoryIndex -= 1;
+      await playMusicPreview(state.musicHistory[state.musicHistoryIndex], { skipHistory: true });
+      return;
+    }
+
+    const previousTrackKey = getSequentialMusicTrackKey(-1, state.musicTrackKey);
+    if (previousTrackKey) {
+      await playMusicPreview(previousTrackKey);
+    }
   }
 
   async function playNextMusicPreview() {
-    if (state.musicRandomMode) {
-      await playRandomMusicPreview();
+    if (state.musicAutoPlay) {
+      const nextTrackKey = getNextAutoTrackKey();
+      if (!nextTrackKey) {
+        state.musicAutoPlay = false;
+        state.musicPreviewPlaying = false;
+        stopBgmTracks(false);
+        syncUi();
+        return;
+      }
+      await playMusicPreview(nextTrackKey);
       return;
     }
 
@@ -1994,13 +2192,32 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return;
     }
 
-    state.musicHistoryIndex += 1;
-    await playMusicPreview(state.musicHistory[state.musicHistoryIndex], { skipHistory: true });
+    if (state.musicShuffle) {
+      if (state.musicHistoryIndex < state.musicHistory.length - 1) {
+        state.musicHistoryIndex += 1;
+        await playMusicPreview(state.musicHistory[state.musicHistoryIndex], { skipHistory: true });
+        return;
+      }
+
+      const shuffledTrackKey = drawShuffleTrack(state.musicTrackKey);
+      if (shuffledTrackKey) {
+        await playMusicPreview(shuffledTrackKey);
+      }
+      return;
+    }
+
+    const nextTrackKey = getSequentialMusicTrackKey(1, state.musicTrackKey);
+    if (nextTrackKey) {
+      await playMusicPreview(nextTrackKey);
+    }
   }
 
   function stopMusicPreview(reset = true) {
     state.musicPreviewPlaying = false;
-    state.musicRandomMode = false;
+    state.musicAutoPlay = false;
+    state.musicShuffle = false;
+    state.musicRepeat = false;
+    state.musicShuffleBag = [];
     stopBgmTracks(reset);
     syncUi();
   }
@@ -2036,17 +2253,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
       group.children.forEach((item) => {
         if (key === "sky" && item.userData.kind === "mountain") {
-          item.position.x += delta * (state.running ? state.speed : 7.5) * 0.14 * item.userData.speedFactor * item.userData.driftDirection;
+          item.position.x = item.userData.motionCenterX
+            + Math.sin(state.time * item.userData.motionSpeed + item.userData.motionPhase) * item.userData.motionRange;
           item.position.z = item.userData.baseZ;
           item.position.y = getSkyMountainFloorY(item);
-
-          const travelLimit = 18 + item.scale.x * 0.72;
-          if (
-            (item.userData.driftDirection > 0 && item.position.x > travelLimit)
-            || (item.userData.driftDirection < 0 && item.position.x < -travelLimit)
-          ) {
-            item.userData.reset();
-          }
           return;
         }
 
@@ -2070,6 +2280,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   }
 
   function updateTrail() {
+    trailMesh.visible = true;
     trailMesh.position.x = player.position.x;
     trailMesh.scale.x = THREE.MathUtils.lerp(trailMesh.scale.x, 0.72 + Math.abs(state.playerVelocityX) * 0.012, 0.14);
     trailMesh.material.opacity = 0.18 + Math.min(0.18, state.speed * 0.004);
@@ -2167,6 +2378,13 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return;
     }
 
+    if (data.fadeActive) {
+      data.fadeOpacity = Math.max(0.18, data.fadeOpacity - delta * 1.4);
+    } else {
+      data.fadeOpacity = 1;
+    }
+    data.shellMaterial.opacity = data.fadeOpacity;
+
     if (data.accentTheme === "sea") {
       data.accent.rotation.z = Math.sin(state.time * 3.4 + data.ringNumber * 0.35) * 0.16;
       data.accentFish.position.x = Math.sin(state.time * 5 + data.ringNumber) * 0.12;
@@ -2201,18 +2419,25 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
     if (!data.cleared && gate.group.position.z >= PLAYER_Z) {
       data.cleared = true;
+      const hitsVisibleWall = pointHitsVisibleWall(data, player.position.x, player.position.y, 0.34, 0.26);
       const insideMain = pointInRect(player.position.x, player.position.y, data.safeRect, 0.34, 0.26);
       const insideBonus = data.bonusActive && pointInRect(player.position.x, player.position.y, data.bonusRect, 0.16, 0.12);
 
-      if (insideMain || insideBonus) {
+      if (!hitsVisibleWall) {
         state.ringsCleared += 1;
-        state.score += 1;
         state.speed = calculateSpeed(mode, state.ringsCleared);
+        data.fadeActive = true;
+        if (wallValue) {
+          wallValue.textContent = String(state.ringsCleared);
+        }
 
-        spawnBurst(theme.burstColor, new THREE.Vector3(data.gapX, data.gapY, PLAYER_Z - 0.8), 12);
-        spawnRingBurst(gate);
-        playSfx("clear");
-        data.accent.visible = false;
+        if (insideMain || insideBonus) {
+          state.score += 1;
+          spawnBurst(theme.burstColor, new THREE.Vector3(data.gapX, data.gapY, PLAYER_Z - 0.8), 12);
+          spawnRingBurst(gate);
+          playSfx("clear");
+          data.accent.visible = false;
+        }
 
         if (data.bonusActive && !data.bonusCollected) {
           const bonusDistance = Math.hypot(
@@ -2236,6 +2461,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
           return;
         }
       } else {
+        data.fadeActive = true;
         spawnBurst(0xff769e, player.position.clone(), 24, 0.1);
         if (state.hitsRemaining > 0) {
           absorbHit();
@@ -2249,7 +2475,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
     if (gate.group.position.z > 25) {
       if (Number.isFinite(mode.targetRings)) {
-        hideGate(gate);
+        placeGateAtQueueTail(gate);
+        randomizeGate(gate, state.nextRingNumber, mode);
+        state.nextRingNumber += 1;
       } else {
         const nextRingNumber = gate.group.userData.ringNumber + GATE_COUNT;
         if (shouldRenderGate(nextRingNumber, mode)) {
@@ -2263,9 +2491,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   }
 
   function animateIdle(delta) {
-    penguinSprite.visible = true;
-    penguinAura.visible = true;
-    playerShadow.visible = true;
+    penguinSprite.visible = false;
+    penguinAura.visible = false;
+    playerShadow.visible = false;
+    trailMesh.visible = false;
     player.position.y = THREE.MathUtils.lerp(player.position.y, 0.2 + Math.sin(state.time * 1.9) * 0.12, 1 - Math.exp(-delta * 4));
     player.position.x = THREE.MathUtils.lerp(player.position.x, Math.sin(state.time * 1.3) * 0.26, 1 - Math.exp(-delta * 4));
     penguinSprite.position.y = Math.sin(state.time * 8) * 0.08 + 0.16;
@@ -2274,7 +2503,6 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2.8 + player.position.y * 0.18, 1 - Math.exp(-delta * 4));
     camera.position.z = 18;
     camera.lookAt(player.position.x * 0.12, player.position.y * 0.1, -18);
-    updateTrail();
   }
 
   function updateIdleGates(delta) {
@@ -2285,6 +2513,13 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       }
 
       gate.group.position.z += delta * 7.5;
+
+      if (!gate.group.userData.cleared && gate.group.position.z >= PLAYER_Z) {
+        gate.group.userData.cleared = true;
+        gate.group.userData.fadeActive = true;
+        gate.group.userData.accent.visible = false;
+      }
+
       updateGateVisuals(gate, delta);
 
       if (gate.group.position.z > 25) {
@@ -2403,7 +2638,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       createStageGroups(cloudTextures, mountainTextures);
       pinSkyMountainsToViewportFloor();
 
-      for (let index = 0; index < MAX_FINITE_GATES; index += 1) {
+      for (let index = 0; index < GATE_COUNT; index += 1) {
         const gate = createGate(index + 1);
         gates.push(gate);
         sceneGroup.add(gate.group);
@@ -2438,10 +2673,11 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.score = 0;
     state.ringsCleared = 0;
     state.hitsRemaining = 2;
-    state.musicRandomMode = false;
-    state.nextRingNumber = Number.isFinite(mode.targetRings)
-      ? Math.min(mode.targetRings, GATE_COUNT) + 1
-      : GATE_COUNT + 1;
+    state.musicShuffle = false;
+    state.musicAutoPlay = false;
+    state.musicRepeat = false;
+    state.musicShuffleBag = [];
+    state.nextRingNumber = GATE_COUNT + 1;
     state.speed = mode.speedStart;
     state.targetX = 0;
     state.targetY = 0.1;
@@ -2515,14 +2751,34 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
   musicTrackButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      state.musicRandomMode = false;
+      if (state.musicShuffle) {
+        resetShuffleBag(button.dataset.previewTrack);
+      }
       void playMusicPreview(button.dataset.previewTrack);
     });
   });
 
-  if (musicRandomButton) {
-    musicRandomButton.addEventListener("click", () => {
-      void playRandomMusicPreview(true);
+  if (musicPlayButton) {
+    musicPlayButton.addEventListener("click", () => {
+      if (state.musicAutoPlay) {
+        state.musicAutoPlay = false;
+        syncMusicPreviewLoopState();
+        syncUi();
+        return;
+      }
+      void enableMusicAutoPlay();
+    });
+  }
+
+  if (musicShuffleButton) {
+    musicShuffleButton.addEventListener("click", () => {
+      toggleMusicShuffle();
+    });
+  }
+
+  if (musicRepeatButton) {
+    musicRepeatButton.addEventListener("click", () => {
+      toggleMusicRepeat();
     });
   }
 
@@ -2551,10 +2807,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       if (
         state.screen === "music"
         && state.musicPreviewPlaying
-        && state.musicRandomMode
         && state.soundEnabled
+        && state.musicAutoPlay
       ) {
-        void playRandomMusicPreview();
+        void playNextMusicPreview();
       }
     });
   });

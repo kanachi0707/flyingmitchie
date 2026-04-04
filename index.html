@@ -25,8 +25,16 @@
     <header class="hud-bar" aria-label="Game HUD">
       <div class="hud-stack">
         <div id="scoreHud" class="score-hud" hidden>
-          <span class="hud-label">Score</span>
-          <strong id="scoreValue" class="hud-value">0</strong>
+          <div class="hud-metrics">
+            <div class="hud-metric">
+              <span class="hud-label">Wall</span>
+              <strong id="wallValue" class="hud-value">0</strong>
+            </div>
+            <div class="hud-metric">
+              <span class="hud-label">Score</span>
+              <strong id="scoreValue" class="hud-value">0</strong>
+            </div>
+          </div>
           <button class="music-track-button" type="button" data-preview-track="failed">
             <span class="music-track-order">05</span>
             <span class="music-track-meta">
@@ -48,15 +56,13 @@
         </div>
       </div>
       <div class="utility-bar">
-        <p class="top-title">フライングみっちー</p>
         <button id="soundButton" class="utility-button" type="button">SOUND ON</button>
       </div>
     </header>
 
     <section id="introScreen" class="screen intro-screen" aria-label="Title">
       <div class="intro-shell">
-        <p class="title-badge">FLYING MICCHI</p>
-        <h1 class="title-headline">フライングみっちー</h1>
+        <img class="title-logo" src="./assets/fm-logo-wm.png" alt="フライングみっちー">
         <div class="title-actions">
           <button id="gameModeButton" class="title-mode-button primary-button" type="button">GAME MODE</button>
           <button id="musicModeButton" class="title-mode-button secondary-button" type="button">MUSIC MODE</button>
@@ -103,11 +109,22 @@
         </div>
 
         <div class="music-actions">
-          <button id="musicPrevButton" class="secondary-button" type="button">PREV</button>
-          <button id="musicRandomButton" class="secondary-button" type="button">RANDOM</button>
-          <button id="musicNextButton" class="secondary-button" type="button">NEXT</button>
+          <button id="musicPrevButton" class="secondary-button" type="button">&lt;&lt;</button>
+          <button id="musicPlayButton" class="secondary-button" type="button">PLAY</button>
+          <button id="musicNextButton" class="secondary-button" type="button">&gt;&gt;</button>
+          <button id="musicShuffleButton" class="secondary-button music-option-button" type="button" aria-label="Shuffle" title="Shuffle">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M4 7h5l7 10h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M17 5l3 2-3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 17h5l2-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M17 15l3 2-3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button id="musicRepeatButton" class="secondary-button music-option-button" type="button" aria-label="Repeat" title="Repeat">↻</button>
           <button id="musicStopButton" class="secondary-button" type="button">STOP</button>
-          <button id="musicBackButton" class="link-button" type="button">TITLE</button>
+        </div>
+        <div class="music-back-row">
+          <button id="musicBackButton" class="link-button" type="button">タイトルに戻る</button>
         </div>
       </div>
     </section>
@@ -118,56 +135,62 @@
           <span class="stage-order">01</span>
           <span class="stage-meta">
             <span class="stage-kicker">Beginner</span>
+            <span class="stage-subname">SKY</span>
             <strong>空</strong>
-            <em>速度固定で 50 リング</em>
+            <em></em>
           </span>
-          <span class="stage-summary">いちばん遊びやすい基本コース</span>
-          <span id="best-sky" class="stage-best">Best 0</span>
+          <span class="stage-summary"></span>
+          <span id="best-sky" class="stage-best">BEST SCORE 0</span>
         </button>
 
         <button class="stage-option" type="button" data-mode="sea" data-theme="sea">
           <span class="stage-order">02</span>
           <span class="stage-meta">
             <span class="stage-kicker">Normal</span>
+            <span class="stage-subname">SEA</span>
             <strong>海</strong>
-            <em>0.1 ずつ加速して 100 リング</em>
+            <em></em>
           </span>
-          <span class="stage-summary">緩やかに速くなる中級ルート</span>
-          <span id="best-sea" class="stage-best">Best 0</span>
+          <span class="stage-summary"></span>
+          <span id="best-sea" class="stage-best">BEST SCORE 0</span>
         </button>
 
         <button class="stage-option" type="button" data-mode="space" data-theme="space">
           <span class="stage-order">03</span>
           <span class="stage-meta">
             <span class="stage-kicker">Hard</span>
+            <span class="stage-subname">SPACE</span>
             <strong>宇宙</strong>
-            <em>0.1 ずつ加速して 200 リング</em>
+            <em></em>
           </span>
-          <span class="stage-summary">高速感が続く上級コース</span>
-          <span id="best-space" class="stage-best">Best 0</span>
+          <span class="stage-summary"></span>
+          <span id="best-space" class="stage-best">BEST SCORE 0</span>
         </button>
 
-        <button class="stage-option" type="button" data-mode="city" data-theme="city">
-          <span class="stage-order">04</span>
-          <span class="stage-meta">
-            <span class="stage-kicker">Score Attack</span>
-            <strong>街</strong>
-            <em>20 リングごとに星が現れるエンドレス</em>
-          </span>
-          <span class="stage-summary">星を取るとスコア +10</span>
-          <span id="best-city" class="stage-best">Best 0</span>
-        </button>
-      </div>
+        <div class="stage-option-card" data-theme="city">
+          <button class="stage-option stage-option-main" type="button" data-mode="city" data-theme="city">
+            <span class="stage-order">04</span>
+            <span class="stage-meta">
+              <span class="stage-kicker">Score Attack</span>
+              <span class="stage-subname">CITY</span>
+              <strong>街</strong>
+              <em></em>
+            </span>
+            <span class="stage-summary"></span>
+            <span id="best-city" class="stage-best">BEST SCORE 0</span>
+          </button>
 
-      <section class="city-track-panel" aria-label="City soundtrack">
-        <p class="city-track-label">街 BGM</p>
-        <div class="city-track-options" role="group" aria-label="City soundtrack selection">
-          <button class="track-option" type="button" data-city-track="sky">空</button>
-          <button class="track-option" type="button" data-city-track="sea">海</button>
-          <button class="track-option" type="button" data-city-track="space">宇宙</button>
-          <button class="track-option" type="button" data-city-track="city">街</button>
+          <section class="city-track-panel city-track-panel--inline" aria-label="City soundtrack">
+            <p class="city-track-label">BGM</p>
+            <div class="city-track-options" role="group" aria-label="City soundtrack selection">
+              <button class="track-option" type="button" data-city-track="sky">空</button>
+              <button class="track-option" type="button" data-city-track="sea">海</button>
+              <button class="track-option" type="button" data-city-track="space">宇宙</button>
+              <button class="track-option" type="button" data-city-track="city">街</button>
+            </div>
+          </section>
         </div>
-      </section>
+      </div>
 
       <button id="titleButton" class="link-button" type="button">TITLE に戻る</button>
     </section>
@@ -208,7 +231,7 @@
   </main>
 
   <noscript>このゲームを遊ぶには JavaScript を有効にしてください。</noscript>
-  <script type="module" src="./script.js"></script>
+  <script type="module" src="./script.js?v=20260404c"></script>
   <script>
     window.__penguinReady = false;
     window.addEventListener("load", function () {
