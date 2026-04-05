@@ -418,6 +418,11 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     speed: 14,
     targetX: 0,
     targetY: 0.1,
+    touchActive: false,
+    touchStartClientX: 0,
+    touchStartClientY: 0,
+    touchStartTargetX: 0,
+    touchStartTargetY: 0,
     playerVelocityX: 0,
     playerVelocityY: 0,
     hitFlashTime: 0,
@@ -3413,6 +3418,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.speed = mode.speedStart;
     state.targetX = 0;
     state.targetY = 0.1;
+    state.touchActive = false;
     state.playerVelocityX = 0;
     state.playerVelocityY = 0;
     state.hitFlashTime = 0;
@@ -3448,6 +3454,44 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     pointer.y = THREE.MathUtils.lerp(TRACK_TOP - 0.35, TRACK_BOTTOM + 0.35, y);
     state.targetX = pointer.x;
     state.targetY = pointer.y;
+  }
+
+  function beginTouchDrag(clientX, clientY) {
+    if (!state.running) {
+      return;
+    }
+
+    state.touchActive = true;
+    state.touchStartClientX = clientX;
+    state.touchStartClientY = clientY;
+    state.touchStartTargetX = state.targetX;
+    state.touchStartTargetY = state.targetY;
+  }
+
+  function updateTouchDrag(clientX, clientY) {
+    if (!state.running || !state.touchActive) {
+      return;
+    }
+
+    const usableWidth = TRACK_HALF_WIDTH * 2 - 0.9;
+    const usableHeight = (TRACK_TOP - 0.3) - (TRACK_BOTTOM + 0.38);
+    const deltaX = ((clientX - state.touchStartClientX) / Math.max(window.innerWidth, 1)) * usableWidth;
+    const deltaY = ((clientY - state.touchStartClientY) / Math.max(window.innerHeight, 1)) * usableHeight;
+
+    state.targetX = THREE.MathUtils.clamp(
+      state.touchStartTargetX + deltaX,
+      -TRACK_HALF_WIDTH + 0.42,
+      TRACK_HALF_WIDTH - 0.42
+    );
+    state.targetY = THREE.MathUtils.clamp(
+      state.touchStartTargetY - deltaY,
+      TRACK_BOTTOM + 0.38,
+      TRACK_TOP - 0.3
+    );
+  }
+
+  function endTouchDrag() {
+    state.touchActive = false;
   }
 
   function shouldHandleScreenTouch(target) {
@@ -3608,7 +3652,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return;
     }
 
-    handlePointer(event.clientX, event.clientY);
+    if (event.pointerType === "pen") {
+      handlePointer(event.clientX, event.clientY);
+      return;
+    }
+
+    beginTouchDrag(event.clientX, event.clientY);
   });
 
   window.addEventListener("touchstart", (event) => {
@@ -3617,7 +3666,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return;
     }
 
-    handlePointer(touch.clientX, touch.clientY);
+    beginTouchDrag(touch.clientX, touch.clientY);
   }, { passive: true });
 
   window.addEventListener("touchmove", (event) => {
@@ -3627,8 +3676,16 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
     const touch = event.touches[0];
     if (touch) {
-      handlePointer(touch.clientX, touch.clientY);
+      updateTouchDrag(touch.clientX, touch.clientY);
     }
+  }, { passive: true });
+
+  window.addEventListener("touchend", () => {
+    endTouchDrag();
+  }, { passive: true });
+
+  window.addEventListener("touchcancel", () => {
+    endTouchDrag();
   }, { passive: true });
 
   window.addEventListener("keydown", (event) => {
