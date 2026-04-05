@@ -14,7 +14,21 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const GATE_COUNT = 9;
   const GATE_MARGIN = 0.55;
   const GATE_HOLE_COMPENSATION = 8.4 / 9.4;
-  const PENGUIN_SCALE = 0.5;
+  const PENGUIN_BASE_SCALE = 0.5;
+  const PENGUIN_SCALE = PENGUIN_BASE_SCALE * 0.8;
+  const PLAYER_HITBOX_BASE = {
+    left: 0.58,
+    right: 0.58,
+    top: 2.12,
+    bottom: 0.1
+  };
+  const PLAYER_HITBOX_SCALE = PENGUIN_SCALE / PENGUIN_BASE_SCALE;
+  const PLAYER_HITBOX = {
+    left: PLAYER_HITBOX_BASE.left * PLAYER_HITBOX_SCALE,
+    right: PLAYER_HITBOX_BASE.right * PLAYER_HITBOX_SCALE,
+    top: PLAYER_HITBOX_BASE.top * PLAYER_HITBOX_SCALE,
+    bottom: PLAYER_HITBOX_BASE.bottom * PLAYER_HITBOX_SCALE
+  };
 
   const THEMES = {
     sky: {
@@ -28,8 +42,21 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       hemiSky: 0x5cb8ff,
       hemiGround: 0x082b62,
       pointColor: 0x7fd9ff,
+      gateStyle: "acrylic",
       gateColor: 0xf7ffff,
       gateEmissive: 0x8ce8ff,
+      gatePanelTop: "#f7fdff",
+      gatePanelBottom: "#92bed7",
+      gateFrame: "#d8f5ff",
+      gateTrim: "#8fe8ff",
+      ringInnerColor: "#ffd9ee",
+      ringOuterColor: "#ff2f93",
+      ringGlowColor: 0xff6db1,
+      gateSurfaceOpacity: 0.2,
+      gateTrimOpacity: 0.96,
+      gateEmissiveIntensity: 0.2,
+      gateRoughness: 0.04,
+      gateMetalness: 0.02,
       accentColor: 0x5bd3ff,
       lineColor: 0xa6e6ff,
       railColor: 0xe7fbff,
@@ -50,8 +77,21 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       hemiSky: 0x49d8ff,
       hemiGround: 0x041727,
       pointColor: 0x38f0ff,
+      gateStyle: "acrylic",
       gateColor: 0x7af8ff,
       gateEmissive: 0x10c4de,
+      gatePanelTop: "#6ff4ff",
+      gatePanelBottom: "#103e5a",
+      gateFrame: "#bdfdff",
+      gateTrim: "#6ef7ff",
+      ringInnerColor: "#dff8ff",
+      ringOuterColor: "#2fb8f6",
+      ringGlowColor: 0x6de6ff,
+      gateSurfaceOpacity: 0.18,
+      gateTrimOpacity: 0.94,
+      gateEmissiveIntensity: 0.26,
+      gateRoughness: 0.05,
+      gateMetalness: 0.03,
       accentColor: 0x74f6ff,
       lineColor: 0x54d9ff,
       railColor: 0xaefcff,
@@ -72,8 +112,21 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       hemiSky: 0xa67dff,
       hemiGround: 0x050811,
       pointColor: 0xc17dff,
+      gateStyle: "lux-metal",
       gateColor: 0x8fdfff,
       gateEmissive: 0xa347ff,
+      gatePanelTop: "#29335e",
+      gatePanelBottom: "#090d1d",
+      gateFrame: "#d8bb72",
+      gateTrim: "#ffe29a",
+      ringInnerColor: "#eee4ff",
+      ringOuterColor: "#9466ff",
+      ringGlowColor: 0xc18bff,
+      gateSurfaceOpacity: 1,
+      gateTrimOpacity: 0.94,
+      gateEmissiveIntensity: 0.42,
+      gateRoughness: 0.22,
+      gateMetalness: 0.58,
       accentColor: 0xffffff,
       lineColor: 0x7ae1ff,
       railColor: 0xc89cff,
@@ -87,23 +140,36 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       key: "city",
       label: "街",
       bodyStage: "city",
-      sceneColor: 0x070b15,
+      sceneColor: 0x5d2b3b,
       fogNear: 20,
       fogFar: 126,
       ambientIntensity: 1.08,
-      hemiSky: 0xff9258,
-      hemiGround: 0x04050a,
-      pointColor: 0xffba74,
-      gateColor: 0xffd768,
-      gateEmissive: 0xff9051,
-      accentColor: 0xfff0aa,
-      lineColor: 0xff8e63,
-      railColor: 0xffc56a,
-      burstColor: 0xffae68,
-      runwayColor: 0x2a1620,
-      trailColor: 0xffd9a6,
+      hemiSky: 0xffb179,
+      hemiGround: 0x24161d,
+      pointColor: 0x8aff9a,
+      gateStyle: "lux-metal",
+      gateColor: 0xb8ff73,
+      gateEmissive: 0x52d86d,
+      gatePanelTop: "#395846",
+      gatePanelBottom: "#16251c",
+      gateFrame: "#d6c17e",
+      gateTrim: "#86f29b",
+      ringInnerColor: "#ebffd9",
+      ringOuterColor: "#fff200",
+      ringGlowColor: 0xfff36a,
+      gateSurfaceOpacity: 1,
+      gateTrimOpacity: 0.94,
+      gateEmissiveIntensity: 0.42,
+      gateRoughness: 0.22,
+      gateMetalness: 0.58,
+      accentColor: 0xe4ff9c,
+      lineColor: 0x49f09f,
+      railColor: 0x9fffd1,
+      burstColor: 0xb6ff80,
+      runwayColor: 0x10311b,
+      trailColor: 0xd5ffab,
       bonusColor: 0xfff4bf,
-      metaColor: "#251532"
+      metaColor: "#163824"
     }
   };
 
@@ -165,9 +231,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       speedStep: 0.1,
       maxSpeed: 30,
       gapStartScale: 2,
-      gapStep: 0.15,
+      gapStep: 0.075,
       gapStepEvery: 10,
-      gapMinScale: 1.4,
+      gapMinScale: 1.7,
       summary: "0.1ずつ加速 / 150 WALLでクリア",
       detail: "150 WALL でクリア"
     },
@@ -181,9 +247,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       speedStep: 0.1,
       maxSpeed: 40,
       gapStartScale: 2,
-      gapStep: 0.175,
+      gapStep: 0.1,
       gapStepEvery: 10,
-      gapMinScale: 1.4,
+      gapMinScale: 1.6,
       summary: "0.1ずつ加速 / 200 WALLでクリア",
       detail: "200 WALL でクリア"
     },
@@ -197,9 +263,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       speedStep: 0.1,
       maxSpeed: 50,
       gapStartScale: 2,
-      gapStep: 0.1,
-      gapStepEvery: 10,
-      gapMinScale: 1.3,
+      gapStep: 0.09,
+      gapStepEvery: 20,
+      gapMinScale: 1.55,
       summary: "星ボーナスあり / エンドレス",
       detail: "20 WALLごとに星 / エンドレス",
       bonusEvery: 20,
@@ -214,7 +280,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const resultScreen = document.querySelector("#resultScreen");
   const scoreHud = document.querySelector("#scoreHud");
   const wallValue = document.querySelector("#wallValue");
+  const missValue = document.querySelector("#missValue");
   const scoreValue = document.querySelector("#scoreValue");
+  const timeHud = document.querySelector("#timeHud");
+  const timeValue = document.querySelector("#timeValue");
   const lifeHud = document.querySelector("#lifeHud");
   const lifeTokens = [...document.querySelectorAll("[data-life-index]")];
   const soundButton = document.querySelector("#soundButton");
@@ -273,6 +342,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const resultLead = document.querySelector("#resultLead");
   const resultScore = document.querySelector("#resultScore");
   const resultBest = document.querySelector("#resultBest");
+  const resultTime = document.querySelector("#resultTime");
+  const resultMiss = document.querySelector("#resultMiss");
   const messageBar = document.querySelector("#messageBar");
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const modeButtons = [...document.querySelectorAll("[data-mode]")];
@@ -309,9 +380,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   let playerShadow;
   let trailMesh;
   let trailMaterial;
+  let windGroup;
   let tunnelLines;
   let starField;
   let gateMaterial;
+  let gateTrimMaterial;
+  let gateRingMaterial;
   let gateAccentMaterial;
   let bonusSlotMaterial;
   let bonusStarMaterial;
@@ -321,6 +395,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   let cloudTexturesPromise;
   let mountainTexturesPromise;
   let saturnRingTexture;
+  let gateRingAlphaTexture;
+  const gateSurfaceTextures = new Map();
+  const gateTrimTextures = new Map();
+  const gateRingColorTextures = new Map();
   let audioContext;
 
   const settings = loadSettings();
@@ -332,7 +410,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     modeKey: "sky",
     previewModeKey: "sky",
     score: 0,
+    missCount: 0,
     ringsCleared: 0,
+    runElapsed: 0,
     hitsRemaining: 2,
     nextRingNumber: 1,
     speed: 14,
@@ -351,6 +431,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     musicShuffle: false,
     musicAutoPlay: false,
     musicRepeat: false,
+    musicRepeatOne: false,
     musicHistory: [],
     musicHistoryIndex: -1,
     musicShuffleBag: [],
@@ -371,6 +452,14 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
   scoreValue.textContent = "0";
   syncUi();
+
+  function formatElapsedTime(seconds) {
+    const wholeSeconds = Math.max(0, Math.floor(seconds));
+    const hours = String(Math.floor(wholeSeconds / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((wholeSeconds % 3600) / 60)).padStart(2, "0");
+    const secs = String(wholeSeconds % 60).padStart(2, "0");
+    return `${hours}:${minutes}:${secs}`;
+  }
 
   function detectDeviceMode() {
     const coarse = window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
@@ -513,6 +602,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   }
 
   function drawShuffleTrack(currentTrackKey = state.musicTrackKey) {
+    if (state.musicRepeatOne) {
+      return currentTrackKey;
+    }
+
     if (!state.musicShuffleBag.length) {
       if (!state.musicRepeat) {
         return null;
@@ -560,6 +653,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
   function canPlayNextMusicTrack() {
     if (state.musicAutoPlay) {
+      if (state.musicRepeatOne) {
+        return true;
+      }
+
       if (state.musicShuffle) {
         return state.musicShuffleBag.length > 0 || state.musicRepeat;
       }
@@ -623,7 +720,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   }
 
   function syncMusicPreviewLoopState() {
-    const shouldLoop = !state.musicAutoPlay;
+    const shouldLoop = !state.musicAutoPlay || state.musicRepeatOne;
     bgm.loop = shouldLoop;
     clearBgm.loop = shouldLoop;
     failedBgm.loop = shouldLoop;
@@ -689,11 +786,20 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     resultScreen.hidden = state.screen !== "result";
     resultScreen.dataset.outcome = state.resultOutcome;
     scoreHud.hidden = state.screen !== "running";
+    if (timeHud) {
+      timeHud.hidden = state.screen !== "running";
+    }
     if (wallValue) {
       wallValue.textContent = String(state.ringsCleared);
     }
+    if (missValue) {
+      missValue.textContent = String(state.missCount);
+    }
     if (scoreValue) {
       scoreValue.textContent = String(state.score);
+    }
+    if (timeValue) {
+      timeValue.textContent = formatElapsedTime(state.runElapsed);
     }
     if (lifeHud) {
       lifeHud.hidden = state.screen !== "running";
@@ -718,15 +824,16 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     if (musicPlayButton) {
       musicPlayButton.classList.toggle("is-selected", state.musicAutoPlay);
       musicPlayButton.disabled = !state.soundEnabled;
-      musicPlayButton.textContent = state.musicAutoPlay ? "PLAY ON" : "PLAY";
+      musicPlayButton.textContent = "PLAY";
     }
     if (musicShuffleButton) {
       musicShuffleButton.classList.toggle("is-selected", state.musicShuffle);
       musicShuffleButton.disabled = !state.soundEnabled;
     }
     if (musicRepeatButton) {
-      musicRepeatButton.classList.toggle("is-selected", state.musicRepeat);
+      musicRepeatButton.classList.toggle("is-selected", state.musicRepeat || state.musicRepeatOne);
       musicRepeatButton.disabled = !state.soundEnabled;
+      musicRepeatButton.textContent = state.musicRepeatOne ? "↻1" : "↻";
     }
     if (musicPrevButton) {
       musicPrevButton.disabled = !state.soundEnabled || !canPlayPreviousMusicTrack();
@@ -799,7 +906,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     }
     resultScore.textContent = String(state.score);
     resultBest.textContent = String(state.bests[state.modeKey] || 0);
-
+    if (resultTime) {
+      resultTime.textContent = formatElapsedTime(state.runElapsed);
+    }
+    if (resultMiss) {
+      resultMiss.textContent = String(state.missCount);
+    }
     refreshBestLabels();
     setSoundButtonState();
     updateLifeHud();
@@ -866,6 +978,19 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       && x <= rect.right - insetX
       && y >= rect.bottom + insetY
       && y <= rect.top - insetY
+    );
+  }
+
+  function playerFitsRect(x, y, rect, hitbox = PLAYER_HITBOX) {
+    if (!rect) {
+      return false;
+    }
+
+    return (
+      x - hitbox.left >= rect.left
+      && x + hitbox.right <= rect.right
+      && y - hitbox.bottom >= rect.bottom
+      && y + hitbox.top <= rect.top
     );
   }
 
@@ -965,6 +1090,41 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     mesh.rotation.x = Math.PI * 0.5;
     mesh.position.set(0, TRACK_BOTTOM - 0.18, PLAYER_Z - 2.9);
     return mesh;
+  }
+
+  function createWindParticles() {
+    const group = new THREE.Group();
+    const particles = [];
+
+    for (let index = 0; index < 20; index += 1) {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.035, 8, 8),
+        new THREE.MeshBasicMaterial({
+          color: THEMES.sky.trailColor,
+          transparent: true,
+          opacity: 0,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide
+        })
+      );
+      mesh.userData = {
+        phase: Math.random() * Math.PI * 2,
+        orbit: THREE.MathUtils.randFloat(0.08, 0.42),
+        swaySpeed: THREE.MathUtils.randFloat(1.2, 2.8),
+        driftZ: THREE.MathUtils.randFloat(1.2, 3.8),
+        spreadX: THREE.MathUtils.randFloat(0.12, 0.78),
+        spreadY: THREE.MathUtils.randFloat(-0.5, 0.72),
+        pulse: Math.random() * Math.PI * 2,
+        offset: Math.random()
+      };
+      particles.push(mesh);
+      group.add(mesh);
+    }
+
+    group.userData.particles = particles;
+    group.position.set(0, 0.1, PLAYER_Z - 0.6);
+    return group;
   }
 
   function processPenguinTexture(image) {
@@ -1126,11 +1286,11 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     }
 
     const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
-    gradient.addColorStop(0, "#f8d978");
-    gradient.addColorStop(0.24, "#ffe9a7");
+    gradient.addColorStop(0, "#ffd400");
+    gradient.addColorStop(0.24, "#ffe27a");
     gradient.addColorStop(0.48, "#f6c658");
-    gradient.addColorStop(0.74, "#ffefbb");
-    gradient.addColorStop(1, "#d99b36");
+    gradient.addColorStop(0.74, "#ffe89a");
+    gradient.addColorStop(1, "#ffd400");
     context.fillStyle = gradient;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -1145,6 +1305,237 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     saturnRingTexture.wrapT = THREE.ClampToEdgeWrapping;
     saturnRingTexture.needsUpdate = true;
     return saturnRingTexture;
+  }
+
+  function getGateRingAlphaTexture() {
+    if (gateRingAlphaTexture) {
+      return gateRingAlphaTexture;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 32;
+    canvas.height = 256;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      gateRingAlphaTexture = new THREE.Texture();
+      return gateRingAlphaTexture;
+    }
+
+    context.fillStyle = "rgba(255,255,255,1)";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    gateRingAlphaTexture = new THREE.CanvasTexture(canvas);
+    gateRingAlphaTexture.colorSpace = THREE.SRGBColorSpace;
+    gateRingAlphaTexture.wrapS = THREE.ClampToEdgeWrapping;
+    gateRingAlphaTexture.wrapT = THREE.ClampToEdgeWrapping;
+    gateRingAlphaTexture.needsUpdate = true;
+    return gateRingAlphaTexture;
+  }
+
+  function getGateRingColorTexture(theme) {
+    if (gateRingColorTextures.has(theme.key)) {
+      return gateRingColorTextures.get(theme.key);
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 32;
+    canvas.height = 256;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      const fallback = new THREE.Texture();
+      gateRingColorTextures.set(theme.key, fallback);
+      return fallback;
+    }
+
+    const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, theme.ringOuterColor);
+    gradient.addColorStop(0.2, theme.ringOuterColor);
+    gradient.addColorStop(0.42, theme.ringInnerColor);
+    gradient.addColorStop(0.58, theme.ringInnerColor);
+    gradient.addColorStop(0.8, theme.ringOuterColor);
+    gradient.addColorStop(1, theme.ringOuterColor);
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.needsUpdate = true;
+    gateRingColorTextures.set(theme.key, texture);
+    return texture;
+  }
+
+  function getGateSurfaceTexture(theme, variant = "default") {
+    const cacheKey = `${theme.key}:${variant}`;
+    if (gateSurfaceTextures.has(cacheKey)) {
+      return gateSurfaceTextures.get(cacheKey);
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      const fallback = new THREE.Texture();
+      gateSurfaceTextures.set(cacheKey, fallback);
+      return fallback;
+    }
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (theme.key === "city") {
+      const baseGradient = context.createLinearGradient(0, 0, 0, canvas.height);
+      baseGradient.addColorStop(0, "#69d867");
+      baseGradient.addColorStop(1, "#58c95d");
+      context.fillStyle = baseGradient;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    } else {
+      const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, theme.gatePanelTop);
+      gradient.addColorStop(0.48, theme.gateColor ? `#${theme.gateColor.toString(16).padStart(6, "0")}` : theme.gatePanelTop);
+      gradient.addColorStop(1, theme.gatePanelBottom);
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    if (theme.key === "city" && variant !== "default") {
+      let innerGradient;
+      if (variant === "inner-top") {
+        innerGradient = context.createLinearGradient(0, 0, 0, canvas.height);
+        innerGradient.addColorStop(0, "rgba(4,72,26,0.62)");
+        innerGradient.addColorStop(0.22, "rgba(16,104,42,0.42)");
+        innerGradient.addColorStop(0.66, "rgba(8,74,28,0.08)");
+        innerGradient.addColorStop(1, "rgba(0,0,0,0)");
+      } else if (variant === "inner-bottom") {
+        innerGradient = context.createLinearGradient(0, canvas.height, 0, 0);
+        innerGradient.addColorStop(0, "rgba(4,72,26,0.62)");
+        innerGradient.addColorStop(0.22, "rgba(16,104,42,0.42)");
+        innerGradient.addColorStop(0.66, "rgba(8,74,28,0.08)");
+        innerGradient.addColorStop(1, "rgba(0,0,0,0)");
+      } else if (variant === "inner-left") {
+        innerGradient = context.createLinearGradient(0, 0, canvas.width, 0);
+        innerGradient.addColorStop(0, "rgba(4,72,26,0.62)");
+        innerGradient.addColorStop(0.22, "rgba(16,104,42,0.42)");
+        innerGradient.addColorStop(0.66, "rgba(8,74,28,0.08)");
+        innerGradient.addColorStop(1, "rgba(0,0,0,0)");
+      } else if (variant === "inner-right") {
+        innerGradient = context.createLinearGradient(canvas.width, 0, 0, 0);
+        innerGradient.addColorStop(0, "rgba(4,72,26,0.62)");
+        innerGradient.addColorStop(0.22, "rgba(16,104,42,0.42)");
+        innerGradient.addColorStop(0.66, "rgba(8,74,28,0.08)");
+        innerGradient.addColorStop(1, "rgba(0,0,0,0)");
+      } else if (variant === "inner-both-x") {
+        innerGradient = context.createLinearGradient(0, 0, canvas.width, 0);
+        innerGradient.addColorStop(0, "rgba(4,72,26,0.58)");
+        innerGradient.addColorStop(0.18, "rgba(16,104,42,0.36)");
+        innerGradient.addColorStop(0.38, "rgba(8,74,28,0.06)");
+        innerGradient.addColorStop(0.62, "rgba(8,74,28,0.06)");
+        innerGradient.addColorStop(0.82, "rgba(16,104,42,0.36)");
+        innerGradient.addColorStop(1, "rgba(4,72,26,0.58)");
+      }
+      if (innerGradient) {
+        context.fillStyle = innerGradient;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    if (theme.key !== "city") {
+      const edgeShade = context.createRadialGradient(
+        canvas.width * 0.5,
+        canvas.height * 0.5,
+        canvas.width * 0.12,
+        canvas.width * 0.5,
+        canvas.height * 0.5,
+        canvas.width * 0.72
+      );
+      edgeShade.addColorStop(0, "rgba(255,255,255,0.04)");
+      edgeShade.addColorStop(0.68, "rgba(255,255,255,0)");
+      edgeShade.addColorStop(1, "rgba(0,0,0,0.22)");
+      context.fillStyle = edgeShade;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    if (theme.key !== "city") {
+      const highlight = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+      highlight.addColorStop(0, "rgba(255,255,255,0.24)");
+      highlight.addColorStop(0.18, "rgba(255,255,255,0.08)");
+      highlight.addColorStop(0.42, "rgba(255,255,255,0)");
+      highlight.addColorStop(1, "rgba(255,255,255,0)");
+      context.fillStyle = highlight;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    if (theme.key !== "city") {
+      context.fillStyle = "rgba(0,0,0,0.08)";
+      context.fillRect(0, 0, 18, canvas.height);
+      context.fillRect(canvas.width - 18, 0, 18, canvas.height);
+      context.fillRect(0, canvas.height - 18, canvas.width, 18);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    gateSurfaceTextures.set(cacheKey, texture);
+    return texture;
+  }
+
+  function getGateTrimTexture(theme) {
+    if (gateTrimTextures.has(theme.key)) {
+      return gateTrimTextures.get(theme.key);
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      const fallback = new THREE.Texture();
+      gateTrimTextures.set(theme.key, fallback);
+      return fallback;
+    }
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    if (theme.gateStyle === "acrylic") {
+      context.strokeStyle = "rgba(255,255,255,0.98)";
+      context.lineWidth = 6;
+      context.shadowColor = "rgba(255,255,255,0.95)";
+      context.shadowBlur = 26;
+      context.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+      context.strokeStyle = theme.gateTrim;
+      context.lineWidth = 2;
+      context.shadowColor = theme.gateTrim;
+      context.shadowBlur = 18;
+      context.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+      context.shadowBlur = 0;
+      context.strokeStyle = "rgba(255,255,255,0.48)";
+      context.lineWidth = 1.4;
+      context.strokeRect(34, 34, canvas.width - 68, canvas.height - 68);
+    } else {
+      context.strokeStyle = theme.gateTrim;
+      context.lineWidth = 5;
+      context.shadowColor = theme.gateTrim;
+      context.shadowBlur = 10;
+      context.strokeRect(22, 22, canvas.width - 44, canvas.height - 44);
+
+      context.shadowBlur = 0;
+      context.strokeStyle = theme.key === "city" ? "rgba(186,255,204,0.72)" : "rgba(255,255,255,0.66)";
+      context.lineWidth = 1;
+      context.strokeRect(34, 34, canvas.width - 68, canvas.height - 68);
+
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    gateTrimTextures.set(theme.key, texture);
+    return texture;
   }
 
   function createSaturnGroup() {
@@ -1181,15 +1572,49 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     const shell = [];
     const depth = 0.7;
     const shellMaterial = gateMaterial.clone();
+    const shellTrimMaterial = gateTrimMaterial.clone();
     shellMaterial.transparent = true;
     shellMaterial.opacity = 1;
+    shellTrimMaterial.transparent = true;
+    shellTrimMaterial.opacity = 0;
 
-    const segments = Array.from(
-      { length: 8 },
-      () => new THREE.Mesh(new THREE.BoxGeometry(1, 1, depth), shellMaterial)
-    );
+    const segments = Array.from({ length: 8 }, () => {
+      const frontMaterial = shellMaterial.clone();
+      frontMaterial.transparent = true;
+      frontMaterial.opacity = 1;
+      const backMaterial = shellMaterial.clone();
+      backMaterial.transparent = true;
+      backMaterial.opacity = 1;
+      backMaterial.map = null;
+      const sideMaterial = shellMaterial.clone();
+      sideMaterial.transparent = true;
+      sideMaterial.opacity = 1;
+      sideMaterial.map = null;
+      const boxGeometry = new THREE.BoxGeometry(1, 1, depth);
+      const planeGeometry = new THREE.PlaneGeometry(1, 1);
+      const segment = new THREE.Mesh(
+        boxGeometry,
+        [sideMaterial, sideMaterial, sideMaterial, sideMaterial, frontMaterial, backMaterial]
+      );
+      segment.userData.surfaceVariant = "default";
+      segment.userData.frontMaterial = frontMaterial;
+      segment.userData.backMaterial = backMaterial;
+      segment.userData.sideMaterial = sideMaterial;
+      segment.userData.boxGeometry = boxGeometry;
+      segment.userData.planeGeometry = planeGeometry;
+      return segment;
+    });
 
     segments.forEach((segment) => {
+      const trimMaterial = shellTrimMaterial.clone();
+      trimMaterial.transparent = true;
+      trimMaterial.opacity = 0;
+      const trim = new THREE.Mesh(new THREE.PlaneGeometry(0.78, 0.78), trimMaterial);
+      trim.position.z = depth * 0.5 + 0.012;
+      trim.renderOrder = 2;
+      trim.visible = false;
+      segment.add(trim);
+      segment.userData.trim = trim;
       shell.push(segment);
       group.add(segment);
     });
@@ -1197,12 +1622,35 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     const accent = new THREE.Group();
     accent.position.z = 0.45;
 
+    const accentRingMaterial = gateRingMaterial.clone();
     const accentRing = new THREE.Mesh(
-      new THREE.TorusGeometry(1.3, 0.08, 12, 42),
-      gateAccentMaterial
+      new THREE.TorusGeometry(1.3, 0.16, 12, 42),
+      accentRingMaterial
     );
     accentRing.rotation.y = Math.PI * 0.5;
     accent.add(accentRing);
+
+    const accentDust = new THREE.Group();
+    const accentDustParticles = [];
+    for (let index = 0; index < 24; index += 1) {
+      const dust = new THREE.Mesh(
+        new THREE.SphereGeometry(0.028, 8, 8),
+        new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.72
+        })
+      );
+      dust.userData.orbitPhase = Math.random() * Math.PI * 2;
+      dust.userData.orbitSpeed = THREE.MathUtils.randFloat(0.5, 1.2);
+      dust.userData.orbitRadiusX = THREE.MathUtils.randFloat(0.72, 1.18);
+      dust.userData.orbitRadiusY = THREE.MathUtils.randFloat(0.58, 0.94);
+      dust.userData.floatOffset = THREE.MathUtils.randFloatSpread(0.22);
+      dust.userData.pulseOffset = Math.random() * Math.PI * 2;
+      accentDust.add(dust);
+      accentDustParticles.push(dust);
+    }
+    accent.add(accentDust);
 
     const accentFish = new THREE.Mesh(createFishGeometry(), gateAccentMaterial);
     accentFish.visible = false;
@@ -1228,8 +1676,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       seed,
       shell,
       shellMaterial,
+      shellTrimMaterial,
       accent,
       accentRing,
+      accentRingMaterial,
+      accentDust,
+      accentDustParticles,
       accentFish,
       accentSaturn,
       accentTheme: "sky",
@@ -1237,6 +1689,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       bonusStar,
       outerWidth: 14,
       outerHeight: 9.4,
+      baseShellOpacity: 1,
+      baseBackOpacity: 1,
+      baseSideOpacity: 1,
+      baseTrimOpacity: 0,
       gapX: 0,
       gapY: 0,
       gapWidth: 0,
@@ -1258,14 +1714,21 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   function placeSegment(mesh, minX, maxX, minY, maxY) {
     const width = maxX - minX;
     const height = maxY - minY;
+    const trim = mesh.userData.trim;
 
     if (width <= 0.04 || height <= 0.04) {
       mesh.visible = false;
+      if (trim) {
+        trim.visible = false;
+      }
       mesh.userData.hitRect = null;
       return;
     }
 
     mesh.visible = true;
+    if (trim) {
+      trim.visible = true;
+    }
     mesh.position.set((minX + maxX) * 0.5, (minY + maxY) * 0.5, 0);
     mesh.scale.set(width, height, 1);
     mesh.userData.hitRect = {
@@ -1276,7 +1739,28 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     };
   }
 
-  function layoutGateShell(data, left, right, top, bottom) {
+  function setSegmentSurfaceVariant(segment, theme, variant = "default") {
+    segment.userData.surfaceVariant = variant;
+    if (segment.userData.frontMaterial) {
+      segment.userData.frontMaterial.map = getGateSurfaceTexture(theme, variant);
+      segment.userData.frontMaterial.needsUpdate = true;
+    }
+  }
+
+  function getWallSideStyle(theme) {
+    if (theme.key === "sky") {
+      return { color: "#c5eefb", emissive: "#87e7ff", opacity: 0.9, roughness: 0.16, metalness: 0.04, emissiveIntensity: 0.08 };
+    }
+    if (theme.key === "sea") {
+      return { color: "#2b86a9", emissive: "#37d7ff", opacity: 0.9, roughness: 0.24, metalness: 0.06, emissiveIntensity: 0.08 };
+    }
+    if (theme.key === "space") {
+      return { color: "#3f4170", emissive: "#8f73ff", opacity: 0.9, roughness: 0.24, metalness: 0.08, emissiveIntensity: 0.08 };
+    }
+    return { color: "#4f8f59", emissive: "#2a7a43", opacity: 0.9, roughness: 0.42, metalness: 0.04, emissiveIntensity: 0.08 };
+  }
+
+  function layoutGateShell(data, theme, left, right, top, bottom) {
     const outerLeft = -data.outerWidth * 0.5;
     const outerRight = data.outerWidth * 0.5;
     const outerTop = data.outerHeight * 0.5;
@@ -1286,11 +1770,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       segment.visible = false;
     });
 
+    setSegmentSurfaceVariant(data.shell[2], theme, "inner-bottom");
     placeSegment(data.shell[2], left, right, top, outerTop);
+    setSegmentSurfaceVariant(data.shell[3], theme, "inner-top");
     placeSegment(data.shell[3], left, right, outerBottom, bottom);
 
     if (!data.bonusActive || !data.bonusRect) {
+      setSegmentSurfaceVariant(data.shell[0], theme, "inner-right");
       placeSegment(data.shell[0], outerLeft, left, bottom, top);
+      setSegmentSurfaceVariant(data.shell[1], theme, "inner-left");
       placeSegment(data.shell[1], right, outerRight, bottom, top);
       return;
     }
@@ -1298,26 +1786,39 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     const pocket = data.bonusRect;
 
     if (data.bonusSide === "left") {
+      setSegmentSurfaceVariant(data.shell[0], theme, "inner-right");
       placeSegment(data.shell[0], outerLeft, left, pocket.top, top);
+      setSegmentSurfaceVariant(data.shell[1], theme, "inner-left");
       placeSegment(data.shell[1], right, outerRight, bottom, top);
+      setSegmentSurfaceVariant(data.shell[4], theme, "inner-right");
       placeSegment(data.shell[4], outerLeft, left, bottom, pocket.bottom);
+      setSegmentSurfaceVariant(data.shell[5], theme, "inner-right");
       placeSegment(data.shell[5], outerLeft, pocket.left, pocket.bottom, pocket.top);
+      setSegmentSurfaceVariant(data.shell[6], theme, "inner-both-x");
       placeSegment(data.shell[6], pocket.right, left, pocket.bottom, pocket.top);
       return;
     }
 
+    setSegmentSurfaceVariant(data.shell[0], theme, "inner-right");
     placeSegment(data.shell[0], outerLeft, left, bottom, top);
+    setSegmentSurfaceVariant(data.shell[1], theme, "inner-left");
     placeSegment(data.shell[1], right, outerRight, pocket.top, top);
+    setSegmentSurfaceVariant(data.shell[4], theme, "inner-left");
     placeSegment(data.shell[4], right, outerRight, bottom, pocket.bottom);
+    setSegmentSurfaceVariant(data.shell[5], theme, "inner-both-x");
     placeSegment(data.shell[5], right, pocket.left, pocket.bottom, pocket.top);
+    setSegmentSurfaceVariant(data.shell[6], theme, "inner-left");
     placeSegment(data.shell[6], pocket.right, outerRight, pocket.bottom, pocket.top);
   }
 
-  function pointHitsVisibleWall(data, x, y, insetX = 0, insetY = 0) {
+  function pointHitsVisibleWall(data, x, y, hitbox = PLAYER_HITBOX) {
     return data.shell.some((segment) => (
       segment.visible
       && segment.userData.hitRect
-      && pointInRect(x, y, segment.userData.hitRect, insetX, insetY)
+      && x + hitbox.right >= segment.userData.hitRect.left
+      && x - hitbox.left <= segment.userData.hitRect.right
+      && y + hitbox.top >= segment.userData.hitRect.bottom
+      && y - hitbox.bottom <= segment.userData.hitRect.top
     ));
   }
 
@@ -1406,7 +1907,20 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     data.fadeActive = false;
     gate.group.visible = true;
     gate.group.scale.set(1, 1, 1);
-    data.shellMaterial.opacity = 1;
+    data.shell.forEach((segment) => {
+      if (segment.userData.frontMaterial) {
+        segment.userData.frontMaterial.opacity = data.baseShellOpacity;
+      }
+      if (segment.userData.backMaterial) {
+        segment.userData.backMaterial.opacity = data.baseBackOpacity;
+      }
+      if (segment.userData.sideMaterial) {
+        segment.userData.sideMaterial.opacity = data.baseSideOpacity;
+      }
+      if (segment.userData.trim?.material) {
+        segment.userData.trim.material.opacity = data.baseTrimOpacity;
+      }
+    });
 
     const left = data.gapX - data.gapWidth * 0.5;
     const right = data.gapX + data.gapWidth * 0.5;
@@ -1416,8 +1930,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     data.accentTheme = mode.theme;
     data.accent.scale.set(1, 1, 1);
     data.accent.position.set(data.gapX, data.gapY, 0.45);
-    data.accentRing.scale.set(data.gapHeight * 0.46, data.gapWidth * 0.38, 1);
+    data.accentRing.scale.set(data.gapHeight * 0.23, data.gapWidth * 0.19, 1);
     data.accentRing.visible = mode.theme !== "sea" && mode.theme !== "space";
+    data.accentDust.visible = data.accentRing.visible;
     const fishScale = Math.min(data.gapWidth * 0.34, data.gapHeight * 0.34);
     data.accentFish.scale.set(fishScale, fishScale, 1);
     data.accentFish.visible = mode.theme === "sea";
@@ -1428,7 +1943,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     data.safeRect = { left, right, top, bottom };
 
     activateBonusPocket(data, mode, left, right);
-    layoutGateShell(data, left, right, top, bottom);
+    layoutGateShell(data, THEMES[mode.theme], left, right, top, bottom);
   }
 
   function createSkyDecorations(cloudTextures = [], mountainTextures = []) {
@@ -1460,29 +1975,29 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
         })
       );
       const aspect = texture.image ? texture.image.height / texture.image.width : THREE.MathUtils.randFloat(0.32, 0.52);
-      const width = THREE.MathUtils.randFloat(15, 24);
+      const width = THREE.MathUtils.randFloat(22.5, 36);
       sprite.scale.set(width, width * aspect, 1);
       sprite.center.set(0.5, 0);
       sprite.renderOrder = -8;
       glow.center.set(0.5, 0);
-      glow.scale.set(1.48, 0.9, 1);
+      glow.scale.set(2.22, 1.35, 1);
       glow.position.z = -0.2;
       glow.renderOrder = -9;
       sprite.add(glow);
       sprite.userData.kind = "mountain";
       sprite.userData.speedFactor = THREE.MathUtils.randFloat(0.34, 0.62);
-      sprite.userData.motionCenterX = textureIndex % 2 === 0
-        ? THREE.MathUtils.randFloat(-8.4, -3.6)
-        : THREE.MathUtils.randFloat(3.6, 8.4);
-      sprite.userData.motionRange = THREE.MathUtils.randFloat(1.6, 3.2);
-      sprite.userData.motionPhase = textureIndex % 2 === 0 ? 0 : Math.PI;
-      sprite.userData.motionSpeed = THREE.MathUtils.randFloat(0.22, 0.38);
+      sprite.userData.motionStartX = textureIndex % 2 === 0
+        ? THREE.MathUtils.randFloat(-10.4, -5.6)
+        : THREE.MathUtils.randFloat(5.6, 10.4);
+      sprite.userData.motionDirection = textureIndex % 2 === 0 ? -1 : 1;
+      sprite.userData.motionTravel = THREE.MathUtils.randFloat(8, 12);
+      sprite.userData.motionSpeed = sprite.userData.motionTravel / 90;
       sprite.userData.reset = (initial = false) => {
         if (initial) {
-          sprite.userData.baseZ = THREE.MathUtils.randFloat(-132, -92);
+          sprite.userData.baseZ = THREE.MathUtils.randFloat(-88, -58);
         }
         sprite.position.set(
-          sprite.userData.motionCenterX,
+          sprite.userData.motionStartX,
           getSkyMountainFloorY(sprite),
           sprite.userData.baseZ
         );
@@ -1618,6 +2133,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
           color: 0x9186ff,
           emissive: 0x4d2b77,
           emissiveIntensity: 0.9,
+          transparent: true,
+          opacity: 1,
           roughness: 0.3,
           metalness: 0.28
         })
@@ -1625,6 +2142,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
       crystal.userData.spin = THREE.MathUtils.randFloatSpread(1.2);
       crystal.userData.speedFactor = THREE.MathUtils.randFloat(0.46, 0.86);
+      crystal.userData.fadeActive = false;
+      crystal.userData.fadeOpacity = 1;
       crystal.userData.reset = (initial = false) => {
         crystal.position.set(
           THREE.MathUtils.randFloatSpread(22),
@@ -1636,6 +2155,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
           Math.random() * Math.PI,
           Math.random() * Math.PI
         );
+        crystal.userData.fadeActive = false;
+        crystal.userData.fadeOpacity = 1;
+        crystal.material.opacity = 1;
       };
       crystal.userData.reset(true);
       group.add(crystal);
@@ -1656,10 +2178,11 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       const body = new THREE.Mesh(
         new THREE.BoxGeometry(width, height, THREE.MathUtils.randFloat(1.2, 2.2)),
         new THREE.MeshStandardMaterial({
-          color: 0x130f1c,
-          emissive: 0x2a102c,
-          emissiveIntensity: 0.85,
-          roughness: 0.75
+          color: 0x1c2421,
+          emissive: 0x0b120f,
+          emissiveIntensity: 0.18,
+          roughness: 0.88,
+          metalness: 0.08
         })
       );
       body.position.y = height * 0.5;
@@ -1668,9 +2191,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       const strip = new THREE.Mesh(
         new THREE.PlaneGeometry(width * 0.72, height * 0.86),
         new THREE.MeshBasicMaterial({
-          color: 0xffb66a,
+          color: 0xcde2b7,
           transparent: true,
-          opacity: 0.18,
+          opacity: 0.15,
           side: THREE.DoubleSide
         })
       );
@@ -1711,7 +2234,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
     if (scene) {
       scene.fog = new THREE.Fog(theme.sceneColor, theme.fogNear, theme.fogFar);
-      scene.background = theme.key === "sky" ? null : new THREE.Color(theme.sceneColor);
+      scene.background = theme.key === "sky" || theme.key === "city" ? null : new THREE.Color(theme.sceneColor);
     }
     if (ambientLight) {
       ambientLight.intensity = theme.ambientIntensity;
@@ -1720,23 +2243,98 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       hemiLight.color.setHex(theme.hemiSky);
       hemiLight.groundColor.setHex(theme.hemiGround);
     }
-    if (pointLight) {
-      pointLight.color.setHex(theme.pointColor);
-    }
     if (gateMaterial) {
       gateMaterial.color.setHex(theme.gateColor);
       gateMaterial.emissive.setHex(theme.gateEmissive);
+      gateMaterial.emissiveIntensity = 0.9;
+      gateMaterial.roughness = 0.28;
+      gateMaterial.metalness = 0.16;
+      gateMaterial.map = getGateSurfaceTexture(theme);
+      gateMaterial.needsUpdate = true;
     }
     gates.forEach((gate) => {
-      const shellMaterial = gate.group.userData?.shellMaterial;
-      if (shellMaterial) {
-        shellMaterial.color.setHex(theme.gateColor);
-        shellMaterial.emissive.setHex(theme.gateEmissive);
+      const accentRingMaterial = gate.group.userData?.accentRingMaterial;
+      const sideStyle = getWallSideStyle(theme);
+      gate.group.userData?.shell?.forEach((segment) => {
+        if (segment.userData.frontMaterial) {
+          segment.userData.frontMaterial.color.setHex(theme.gateColor);
+          segment.userData.frontMaterial.emissive.setHex(theme.gateEmissive);
+          segment.userData.frontMaterial.emissiveIntensity = 0.9;
+          segment.userData.frontMaterial.roughness = 0.28;
+          segment.userData.frontMaterial.metalness = 0.16;
+          segment.userData.frontMaterial.map = getGateSurfaceTexture(theme, segment.userData.surfaceVariant ?? "default");
+          segment.userData.frontMaterial.side = THREE.FrontSide;
+          segment.userData.frontMaterial.needsUpdate = true;
+        }
+        if (segment.userData.backMaterial) {
+          segment.userData.backMaterial.color.set(theme.gatePanelBottom);
+          segment.userData.backMaterial.emissive.set("#000000");
+          segment.userData.backMaterial.emissiveIntensity = 0;
+          segment.userData.backMaterial.roughness = 0.28;
+          segment.userData.backMaterial.metalness = 0.16;
+          segment.userData.backMaterial.map = null;
+          segment.userData.backMaterial.opacity = 0;
+          segment.userData.backMaterial.needsUpdate = true;
+        }
+        if (segment.userData.sideMaterial) {
+          segment.userData.sideMaterial.color.set(sideStyle.color);
+          segment.userData.sideMaterial.emissive.set(sideStyle.emissive);
+          segment.userData.sideMaterial.emissiveIntensity = sideStyle.emissiveIntensity;
+          segment.userData.sideMaterial.roughness = sideStyle.roughness;
+          segment.userData.sideMaterial.metalness = sideStyle.metalness;
+          segment.userData.sideMaterial.map = null;
+          segment.userData.sideMaterial.opacity = sideStyle.opacity;
+          segment.userData.sideMaterial.needsUpdate = true;
+        }
+        segment.geometry = segment.userData.boxGeometry;
+        const topFaceMaterial = ["inner-top", "inner-left", "inner-right", "inner-both-x"].includes(segment.userData.surfaceVariant)
+          ? segment.userData.frontMaterial
+          : segment.userData.sideMaterial;
+        segment.material = [
+          segment.userData.sideMaterial,
+          segment.userData.sideMaterial,
+          topFaceMaterial,
+          segment.userData.sideMaterial,
+          segment.userData.frontMaterial,
+          segment.userData.backMaterial
+        ];
+        if (segment.userData.trim?.material) {
+          segment.userData.trim.material.map = null;
+          segment.userData.trim.material.opacity = 0;
+          segment.userData.trim.material.needsUpdate = true;
+        }
+      });
+      if (accentRingMaterial) {
+        accentRingMaterial.color.setHex(0xffffff);
+        accentRingMaterial.map = getGateRingColorTexture(theme);
+        accentRingMaterial.alphaMap = getGateRingAlphaTexture();
+        accentRingMaterial.emissive.setHex(theme.ringGlowColor ?? theme.accentColor);
+        accentRingMaterial.emissiveIntensity = 1.18;
+        accentRingMaterial.needsUpdate = true;
+      }
+      if (gate.group.userData) {
+        gate.group.userData.baseShellOpacity = 1;
+        gate.group.userData.baseBackOpacity = 0;
+        gate.group.userData.baseSideOpacity = sideStyle.opacity;
+        gate.group.userData.baseTrimOpacity = 0;
       }
     });
+    if (gateTrimMaterial) {
+      gateTrimMaterial.map = null;
+      gateTrimMaterial.opacity = 0;
+      gateTrimMaterial.needsUpdate = true;
+    }
     if (gateAccentMaterial) {
       gateAccentMaterial.color.setHex(theme.accentColor);
       gateAccentMaterial.emissive.setHex(theme.accentColor);
+    }
+    if (gateRingMaterial) {
+      gateRingMaterial.color.setHex(0xffffff);
+      gateRingMaterial.map = getGateRingColorTexture(theme);
+      gateRingMaterial.alphaMap = getGateRingAlphaTexture();
+      gateRingMaterial.emissive.setHex(theme.ringGlowColor ?? theme.accentColor);
+      gateRingMaterial.emissiveIntensity = 1.18;
+      gateRingMaterial.needsUpdate = true;
     }
     if (bonusSlotMaterial) {
       bonusSlotMaterial.color.setHex(theme.accentColor);
@@ -1750,12 +2348,17 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     if (trailMaterial) {
       trailMaterial.color.setHex(theme.trailColor);
     }
+    if (windGroup?.userData?.particles) {
+      windGroup.userData.particles.forEach((particle) => {
+        particle.material.color.setHex(theme.trailColor);
+      });
+    }
 
     lineMaterials.forEach((material) => material.color.setHex(theme.lineColor));
     railMaterials.forEach((material) => material.color.setHex(theme.railColor));
 
     if (starField?.material) {
-      starField.material.color.setHex(theme.key === "city" ? 0xffb46b : 0xffffff);
+      starField.material.color.setHex(theme.key === "city" ? 0x97ff8a : 0xffffff);
       starField.material.opacity = theme.key === "sky" ? 0.52 : 0.7;
     }
 
@@ -1849,6 +2452,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.musicShuffle = false;
     state.musicAutoPlay = false;
     state.musicRepeat = false;
+    state.musicRepeatOne = false;
     state.musicShuffleBag = [];
     stopBgmTracks(true);
     setMessage("");
@@ -1863,6 +2467,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.musicShuffle = false;
     state.musicAutoPlay = false;
     state.musicRepeat = false;
+    state.musicRepeatOne = false;
     state.musicHistory = [];
     state.musicHistoryIndex = -1;
     state.musicShuffleBag = [];
@@ -1878,6 +2483,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.musicShuffle = false;
     state.musicAutoPlay = false;
     state.musicRepeat = false;
+    state.musicRepeatOne = false;
     state.musicShuffleBag = [];
     stopBgmTracks(true);
     resetPreviewScene(modeKey);
@@ -1887,6 +2493,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.screen = "result";
     resultScore.textContent = String(state.score);
     resultBest.textContent = String(state.bests[modeKey] || 0);
+    if (resultTime) {
+      resultTime.textContent = formatElapsedTime(state.runElapsed);
+    }
+    if (resultMiss) {
+      resultMiss.textContent = String(state.missCount);
+    }
     setMessage("");
     resetPreviewScene(modeKey);
     if (outcome === "clear") {
@@ -2131,6 +2743,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.musicAutoPlay = true;
     if (state.musicShuffle) {
       resetShuffleBag(state.musicTrackKey);
+    } else {
+      state.musicShuffleBag = [];
     }
 
     if (!state.musicPreviewPlaying) {
@@ -2153,7 +2767,17 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   }
 
   function toggleMusicRepeat() {
-    state.musicRepeat = !state.musicRepeat;
+    if (!state.musicRepeat && !state.musicRepeatOne) {
+      state.musicRepeat = true;
+      state.musicRepeatOne = false;
+    } else if (state.musicRepeat) {
+      state.musicRepeat = false;
+      state.musicRepeatOne = true;
+    } else {
+      state.musicRepeat = false;
+      state.musicRepeatOne = false;
+    }
+    syncMusicPreviewLoopState();
     syncUi();
   }
 
@@ -2217,6 +2841,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.musicAutoPlay = false;
     state.musicShuffle = false;
     state.musicRepeat = false;
+    state.musicRepeatOne = false;
     state.musicShuffleBag = [];
     stopBgmTracks(reset);
     syncUi();
@@ -2253,14 +2878,28 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
       group.children.forEach((item) => {
         if (key === "sky" && item.userData.kind === "mountain") {
-          item.position.x = item.userData.motionCenterX
-            + Math.sin(state.time * item.userData.motionSpeed + item.userData.motionPhase) * item.userData.motionRange;
+          item.position.x += delta * item.userData.motionSpeed * item.userData.motionDirection;
+          if (
+            (item.userData.motionDirection < 0 && item.position.x < item.userData.motionStartX - item.userData.motionTravel)
+            || (item.userData.motionDirection > 0 && item.position.x > item.userData.motionStartX + item.userData.motionTravel)
+          ) {
+            item.position.x = item.userData.motionStartX + item.userData.motionTravel * item.userData.motionDirection;
+          }
           item.position.z = item.userData.baseZ;
           item.position.y = getSkyMountainFloorY(item);
           return;
         }
 
         item.position.z += delta * (state.running ? state.speed : 7.5) * item.userData.speedFactor;
+        if (key === "space" && !item.userData.fadeActive && item.position.z >= PLAYER_Z) {
+          item.userData.fadeActive = true;
+        }
+        if (key === "space") {
+          item.userData.fadeOpacity = item.userData.fadeActive
+            ? Math.max(0.18, item.userData.fadeOpacity - delta * 1.4)
+            : 1;
+          item.material.opacity = item.userData.fadeOpacity;
+        }
         if (item.position.z > 28) {
           item.userData.reset();
         }
@@ -2284,6 +2923,28 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     trailMesh.position.x = player.position.x;
     trailMesh.scale.x = THREE.MathUtils.lerp(trailMesh.scale.x, 0.72 + Math.abs(state.playerVelocityX) * 0.012, 0.14);
     trailMesh.material.opacity = 0.18 + Math.min(0.18, state.speed * 0.004);
+
+    if (!windGroup?.userData?.particles) {
+      return;
+    }
+
+    windGroup.visible = true;
+    windGroup.position.set(player.position.x, player.position.y + 0.12, PLAYER_Z - 0.6);
+    const speedFactor = THREE.MathUtils.clamp((state.speed - 12) / 26, 0.16, 1.3);
+    const lateralFlow = THREE.MathUtils.clamp(state.playerVelocityX * 0.0032, -0.55, 0.55);
+    const verticalFlow = THREE.MathUtils.clamp(state.playerVelocityY * 0.0021, -0.26, 0.26);
+    const driftSpeed = 0.3 + speedFactor * 0.42;
+
+    windGroup.userData.particles.forEach((particle, index) => {
+      const flow = (state.time * driftSpeed + particle.userData.offset) % 1;
+      const fade = 1 - flow;
+      const flutter = state.time * particle.userData.swaySpeed + particle.userData.phase;
+      particle.position.x = Math.sin(flutter) * particle.userData.orbit + Math.sin(flow * Math.PI * 2) * particle.userData.spreadX * 0.14 - lateralFlow * (0.12 + index * 0.006);
+      particle.position.y = particle.userData.spreadY + Math.cos(flutter) * 0.06 - verticalFlow * 0.28;
+      particle.position.z = -0.8 + flow * (3.8 + particle.userData.driftZ + speedFactor * 3.2);
+      particle.scale.setScalar(0.42 + fade * 0.58 + speedFactor * 0.2);
+      particle.material.opacity = (0.03 + speedFactor * 0.1) * fade;
+    });
   }
 
   function updateBursts(delta) {
@@ -2361,10 +3022,6 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       playerShadow.visible = true;
     }
 
-    pointLight.position.x = player.position.x * 0.2;
-    pointLight.position.y = 3 + player.position.y * 0.2;
-    pointLight.intensity = 13 + Math.sin(state.time * 5.4) * 0.8;
-
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, player.position.x * 0.34, 1 - Math.exp(-delta * 4));
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2.7 + player.position.y * 0.24, 1 - Math.exp(-delta * 4));
     camera.position.z = 18 + state.shake;
@@ -2383,26 +3040,57 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     } else {
       data.fadeOpacity = 1;
     }
-    data.shellMaterial.opacity = data.fadeOpacity;
+    data.shell.forEach((segment) => {
+      if (segment.userData.frontMaterial) {
+        segment.userData.frontMaterial.opacity = Math.max(0.05, data.fadeOpacity * data.baseShellOpacity);
+      }
+      if (segment.userData.backMaterial) {
+        segment.userData.backMaterial.opacity = Math.max(0, data.fadeOpacity * data.baseBackOpacity);
+      }
+      if (segment.userData.sideMaterial) {
+        segment.userData.sideMaterial.opacity = Math.max(0, data.fadeOpacity * data.baseSideOpacity);
+      }
+      if (segment.userData.trim?.material) {
+        segment.userData.trim.material.opacity = data.baseTrimOpacity > 0
+          ? Math.max(0.12, data.fadeOpacity * data.baseTrimOpacity)
+          : 0;
+      }
+    });
 
     if (data.accentTheme === "sea") {
       data.accent.rotation.z = Math.sin(state.time * 3.4 + data.ringNumber * 0.35) * 0.16;
       data.accentFish.position.x = Math.sin(state.time * 5 + data.ringNumber) * 0.12;
       data.accentSaturn.rotation.y = 0;
+      data.accentDust.visible = false;
     } else if (data.accentTheme === "space") {
       data.accent.rotation.z += delta * 0.42;
       data.accentSaturn.rotation.y = 0;
       data.accentSaturn.rotation.z = 0;
       data.accentFish.position.x = 0;
+      data.accentDust.visible = false;
     } else {
       data.accent.rotation.z += delta * 1.6;
       data.accentFish.position.x = 0;
       data.accentSaturn.rotation.y = 0;
+      data.accentDust.visible = data.accentRing.visible && data.accent.visible;
+      if (data.accentDust.visible) {
+        data.accentDustParticles.forEach((dust, index) => {
+          const orbit = state.time * dust.userData.orbitSpeed + dust.userData.orbitPhase + data.ringNumber * 0.17;
+          dust.position.set(
+            Math.cos(orbit) * data.gapHeight * 0.09 * dust.userData.orbitRadiusX,
+            Math.sin(orbit * 1.1) * data.gapWidth * 0.075 * dust.userData.orbitRadiusY + dust.userData.floatOffset,
+            0.08 + Math.sin(orbit * 1.7 + index) * 0.06
+          );
+          const sparkle = 0.28 + (Math.sin(state.time * 5.2 + dust.userData.pulseOffset) * 0.5 + 0.5) * 0.34;
+          dust.material.opacity = sparkle + 0.12;
+          dust.scale.setScalar(0.92 + sparkle * 0.95);
+        });
+      }
     }
 
     if (data.bonusStar.visible) {
       data.bonusStar.rotation.z += delta * 4;
-      const pulse = 0.9 + Math.sin(state.time * 10 + data.ringNumber) * 0.12;
+      const pulse = (0.9 + Math.sin(state.time * 10 + data.ringNumber) * 0.12) * 3;
       data.bonusStar.scale.setScalar(pulse);
       data.bonusSlot.material.opacity = 0.32 + Math.sin(state.time * 7 + data.ringNumber) * 0.1;
     }
@@ -2419,20 +3107,21 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
     if (!data.cleared && gate.group.position.z >= PLAYER_Z) {
       data.cleared = true;
-      const hitsVisibleWall = pointHitsVisibleWall(data, player.position.x, player.position.y, 0.34, 0.26);
-      const insideMain = pointInRect(player.position.x, player.position.y, data.safeRect, 0.34, 0.26);
-      const insideBonus = data.bonusActive && pointInRect(player.position.x, player.position.y, data.bonusRect, 0.16, 0.12);
+      const hitsVisibleWall = pointHitsVisibleWall(data, player.position.x, player.position.y, PLAYER_HITBOX);
+      const insideMain = playerFitsRect(player.position.x, player.position.y, data.safeRect, PLAYER_HITBOX);
+      const insideBonus = data.bonusActive && playerFitsRect(player.position.x, player.position.y, data.bonusRect, PLAYER_HITBOX);
+      state.ringsCleared += 1;
+      state.speed = calculateSpeed(mode, state.ringsCleared);
+      data.fadeActive = true;
+      if (wallValue) {
+        wallValue.textContent = String(state.ringsCleared);
+      }
 
       if (!hitsVisibleWall) {
-        state.ringsCleared += 1;
-        state.speed = calculateSpeed(mode, state.ringsCleared);
-        data.fadeActive = true;
-        if (wallValue) {
-          wallValue.textContent = String(state.ringsCleared);
-        }
-
-        if (insideMain || insideBonus) {
+        let scoredThisGate = false;
+        if (insideMain) {
           state.score += 1;
+          scoredThisGate = true;
           spawnBurst(theme.burstColor, new THREE.Vector3(data.gapX, data.gapY, PLAYER_Z - 0.8), 12);
           spawnRingBurst(gate);
           playSfx("clear");
@@ -2449,8 +3138,16 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
             data.bonusCollected = true;
             data.bonusStar.visible = false;
             state.score += mode.bonusValue || 0;
+            scoredThisGate = true;
             spawnBurst(theme.bonusColor, data.bonusStar.position.clone().setZ(PLAYER_Z - 0.55), 22, 0.1);
             playSfx("bonus");
+          }
+        }
+
+        if (!scoredThisGate) {
+          state.missCount += 1;
+          if (missValue) {
+            missValue.textContent = String(state.missCount);
           }
         }
 
@@ -2461,11 +3158,18 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
           return;
         }
       } else {
-        data.fadeActive = true;
+        state.missCount += 1;
+        if (missValue) {
+          missValue.textContent = String(state.missCount);
+        }
         spawnBurst(0xff769e, player.position.clone(), 24, 0.1);
         if (state.hitsRemaining > 0) {
           absorbHit();
           playSfx("hit");
+          if (Number.isFinite(mode.targetRings) && state.ringsCleared >= mode.targetRings) {
+            finishRun(true);
+            return;
+          }
         } else {
           finishRun(false);
         }
@@ -2495,6 +3199,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     penguinAura.visible = false;
     playerShadow.visible = false;
     trailMesh.visible = false;
+    if (windGroup) {
+      windGroup.visible = false;
+    }
     player.position.y = THREE.MathUtils.lerp(player.position.y, 0.2 + Math.sin(state.time * 1.9) * 0.12, 1 - Math.exp(-delta * 4));
     player.position.x = THREE.MathUtils.lerp(player.position.x, Math.sin(state.time * 1.3) * 0.26, 1 - Math.exp(-delta * 4));
     penguinSprite.position.y = Math.sin(state.time * 8) * 0.08 + 0.16;
@@ -2533,6 +3240,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     const delta = Math.min(0.05, (now - state.lastFrame) / 1000 || 0.016);
     state.lastFrame = now;
     state.time += delta;
+    if (state.running) {
+      state.runElapsed += delta;
+      if (timeValue) {
+        timeValue.textContent = formatElapsedTime(state.runElapsed);
+      }
+    }
     state.shake = THREE.MathUtils.lerp(state.shake, 0, 1 - Math.exp(-delta * 12));
 
     updateTunnel();
@@ -2575,12 +3288,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
       ambientLight = new THREE.AmbientLight(0xffffff, THEMES.sky.ambientIntensity);
       hemiLight = new THREE.HemisphereLight(THEMES.sky.hemiSky, THEMES.sky.hemiGround, 1.1);
-      pointLight = new THREE.PointLight(THEMES.sky.pointColor, 13, 80, 2);
-      pointLight.position.set(0, 3, 10);
 
       scene.add(ambientLight);
       scene.add(hemiLight);
-      scene.add(pointLight);
 
       sceneGroup = new THREE.Group();
       scene.add(sceneGroup);
@@ -2590,14 +3300,31 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
         emissive: THEMES.sky.gateEmissive,
         emissiveIntensity: 0.9,
         roughness: 0.28,
-        metalness: 0.16
+        metalness: 0.16,
+        map: getGateSurfaceTexture(THEMES.sky)
+      });
+      gateTrimMaterial = new THREE.MeshBasicMaterial({
+        transparent: true,
+        opacity: 0,
+        depthWrite: false
+      });
+      gateRingMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        map: getGateRingColorTexture(THEMES.sky),
+        alphaMap: getGateRingAlphaTexture(),
+        emissive: THEMES.sky.ringGlowColor,
+        emissiveIntensity: 1.18,
+        transparent: true,
+        opacity: 1,
+        roughness: 0.12,
+        metalness: 0.06
       });
       gateAccentMaterial = new THREE.MeshStandardMaterial({
         color: THEMES.sky.accentColor,
         emissive: THEMES.sky.accentColor,
-        emissiveIntensity: 1,
-        roughness: 0.2,
-        metalness: 0.08
+        emissiveIntensity: 0.58,
+        roughness: 0.18,
+        metalness: 0.22
       });
       bonusSlotMaterial = new THREE.MeshBasicMaterial({
         color: THEMES.sky.accentColor,
@@ -2620,11 +3347,13 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       runway = createRunway();
       tunnelLines = createTunnel();
       trailMesh = createTrail();
+      windGroup = createWindParticles();
       starField = createStarField();
 
       sceneGroup.add(runway);
       sceneGroup.add(tunnelLines);
       sceneGroup.add(trailMesh);
+      sceneGroup.add(windGroup);
       scene.add(starField);
 
       const [texture, cloudTextures, mountainTextures] = await Promise.all([
@@ -2671,11 +3400,14 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.screen = "running";
     state.running = true;
     state.score = 0;
+    state.missCount = 0;
     state.ringsCleared = 0;
+    state.runElapsed = 0;
     state.hitsRemaining = 2;
     state.musicShuffle = false;
     state.musicAutoPlay = false;
     state.musicRepeat = false;
+    state.musicRepeatOne = false;
     state.musicShuffleBag = [];
     state.nextRingNumber = GATE_COUNT + 1;
     state.speed = mode.speedStart;
@@ -2688,6 +3420,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.lastFrame = performance.now();
 
     scoreValue.textContent = "0";
+    if (missValue) {
+      missValue.textContent = "0";
+    }
+    if (timeValue) {
+      timeValue.textContent = "00:00:00";
+    }
     setMessage("");
     syncUi();
     applyTheme(mode.theme);
@@ -2726,9 +3464,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
   modeButtons.forEach((button) => {
     button.addEventListener("pointerenter", () => {
+      if (button.dataset.mode === state.previewModeKey) {
+        return;
+      }
       resetPreviewScene(button.dataset.mode);
     });
     button.addEventListener("focus", () => {
+      if (button.dataset.mode === state.previewModeKey) {
+        return;
+      }
       resetPreviewScene(button.dataset.mode);
     });
     button.addEventListener("click", () => {
@@ -2751,21 +3495,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
 
   musicTrackButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      if (state.musicShuffle) {
-        resetShuffleBag(button.dataset.previewTrack);
-      }
+      state.musicAutoPlay = true;
+      state.musicShuffle = false;
+      state.musicShuffleBag = [];
       void playMusicPreview(button.dataset.previewTrack);
     });
   });
 
   if (musicPlayButton) {
     musicPlayButton.addEventListener("click", () => {
-      if (state.musicAutoPlay) {
-        state.musicAutoPlay = false;
-        syncMusicPreviewLoopState();
-        syncUi();
-        return;
-      }
       void enableMusicAutoPlay();
     });
   }

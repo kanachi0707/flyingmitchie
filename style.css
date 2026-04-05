@@ -113,6 +113,23 @@ body[data-stage="sky"] .music-track-meta strong {
   color: #123d7a;
 }
 
+body[data-stage="sky"] .music-track-button.is-selected,
+body[data-stage="sky"] .music-track-button.is-playing {
+  border-color: rgba(18, 61, 122, 0.42);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(165, 219, 255, 0.72));
+  box-shadow:
+    0 0 0 2px rgba(18, 61, 122, 0.12),
+    0 18px 34px rgba(18, 61, 122, 0.22);
+}
+
+body[data-stage="sky"] .title-credit {
+  color: rgba(18, 61, 122, 0.74);
+}
+
+body[data-stage="sky"] .play-credit {
+  color: rgba(247, 251, 255, 0.82);
+}
+
 body[data-stage="sky"] .track-option:hover,
 body[data-stage="sky"] .track-option:focus-visible,
 body[data-stage="sky"] .track-option.is-selected,
@@ -158,11 +175,11 @@ body[data-stage="space"] {
 }
 
 body[data-stage="city"] {
-  --bg-1: #251532;
-  --bg-2: #0f1327;
-  --bg-3: #04050a;
-  --accent: #ff9a61;
-  --accent-strong: #ffd469;
+  --bg-1: #ffd4a3;
+  --bg-2: #ff8a6b;
+  --bg-3: #5d2b3b;
+  --accent: #2c8f58;
+  --accent-strong: #5abf71;
 }
 
 .scene-root,
@@ -197,7 +214,29 @@ body[data-stage="city"] {
   z-index: 1;
 }
 
-.screen[hidden] {
+.play-credit {
+  position: fixed;
+  left: 20px;
+  bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  z-index: 1;
+  margin: 0;
+  color: rgba(247, 251, 255, 0.6);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+body[data-screen="running"] .play-credit,
+body[data-screen="select"] .play-credit,
+body[data-screen="music"] .play-credit,
+body[data-screen="result"] .play-credit {
+  opacity: 1;
+}
+
+[hidden] {
   display: none !important;
 }
 
@@ -253,13 +292,13 @@ body[data-stage="city"] {
 
 .life-icons {
   display: flex;
-  gap: 10px;
+  gap: 4px;
 }
 
 .life-token {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
   transition: opacity 180ms ease;
 }
 
@@ -324,6 +363,22 @@ body[data-stage="city"] {
   gap: 14px;
 }
 
+.time-hud {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  text-align: right;
+}
+
+.time-value {
+  margin: 0;
+  font-family: "Orbitron", "Segoe UI", sans-serif;
+  font-size: clamp(1.1rem, 2.6vw, 1.5rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.16);
+}
+
 .utility-button,
 .link-button,
 .primary-button,
@@ -356,6 +411,7 @@ body[data-stage="city"] {
   align-content: center;
   justify-items: center;
   padding-top: clamp(12px, 4vh, 48px);
+  position: relative;
 }
 
 .intro-shell,
@@ -367,7 +423,8 @@ body[data-stage="city"] {
 
 .intro-shell {
   min-height: min(68vh, 720px);
-  align-content: center;
+  grid-template-rows: auto auto 1fr auto;
+  align-content: stretch;
   justify-items: center;
   text-align: center;
   transform: translateY(-10vh);
@@ -428,6 +485,14 @@ body[data-stage="city"] {
   align-items: center;
 }
 
+.title-actions {
+  width: min(280px, 72vw);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-inline: auto;
+}
+
 .music-back-row {
   display: flex;
   justify-content: flex-start;
@@ -435,6 +500,24 @@ body[data-stage="city"] {
 
 .title-mode-button {
   min-width: 190px;
+  width: 100%;
+}
+
+.title-credit {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  margin-top: auto;
+  color: rgba(247, 251, 255, 0.5);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+  text-align: center;
+  width: min(90vw, 520px);
+}
+
+.title-credit p {
+  margin: 0;
 }
 
 .music-option-button {
@@ -445,6 +528,7 @@ body[data-stage="city"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
 }
 
 .music-option-button svg {
@@ -453,12 +537,15 @@ body[data-stage="city"] {
   display: block;
 }
 
+#musicPlayButton,
+#musicStopButton,
 #musicPrevButton,
 #musicNextButton,
 #musicShuffleButton,
 #musicRepeatButton {
   min-width: auto;
   padding: 12px 16px;
+  min-height: 51px;
 }
 
 .music-screen {
@@ -643,7 +730,7 @@ body[data-stage="city"] {
 
 .stage-option-card[data-theme="city"] {
   background:
-    linear-gradient(180deg, rgba(255, 156, 90, 0.2), rgba(18, 12, 20, 0.36));
+    linear-gradient(180deg, rgba(121, 242, 168, 0.2), rgba(8, 20, 14, 0.38));
 }
 
 .stage-option-main {
@@ -850,7 +937,7 @@ body[data-stage="city"] {
 
 .stage-option[data-theme="sea"] {
   background:
-    linear-gradient(180deg, rgba(29, 177, 225, 0.22), rgba(6, 16, 32, 0.34));
+    linear-gradient(180deg, rgba(13, 117, 196, 0.3), rgba(4, 20, 46, 0.42));
 }
 
 .stage-option[data-theme="space"] {
@@ -860,7 +947,7 @@ body[data-stage="city"] {
 
 .stage-option[data-theme="city"] {
   background:
-    linear-gradient(180deg, rgba(255, 156, 90, 0.2), rgba(18, 12, 20, 0.36));
+    linear-gradient(180deg, rgba(121, 242, 168, 0.2), rgba(8, 20, 14, 0.38));
 }
 
 .stage-option-card .city-track-panel--inline {
@@ -882,7 +969,7 @@ body[data-stage="city"] {
   white-space: nowrap;
   font-size: 0.68rem;
   letter-spacing: 0.16em;
-  color: rgba(255, 214, 176, 0.92);
+  color: rgba(206, 255, 221, 0.92);
 }
 
 .stage-option-card .city-track-options {
@@ -1039,11 +1126,23 @@ body[data-stage="city"] {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+#musicPlayButton.is-selected,
 #musicShuffleButton.is-selected,
 #musicRepeatButton.is-selected {
   background: rgba(121, 229, 255, 0.24);
   border-color: rgba(121, 229, 255, 0.6);
   box-shadow: 0 0 18px rgba(121, 229, 255, 0.22);
+}
+
+body[data-stage="sky"] #musicPlayButton.is-selected,
+body[data-stage="sky"] #musicShuffleButton.is-selected,
+body[data-stage="sky"] #musicRepeatButton.is-selected {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(165, 219, 255, 0.8));
+  border-color: rgba(18, 61, 122, 0.42);
+  box-shadow:
+    0 0 0 2px rgba(18, 61, 122, 0.12),
+    0 18px 34px rgba(18, 61, 122, 0.22);
+  color: #123d7a;
 }
 
 .utility-button:hover,
@@ -1094,7 +1193,6 @@ body[data-screen="result"] .life-hud {
   display: none;
 }
 
-body[data-screen="running"] .utility-bar,
 body[data-screen="running"] .screen,
 body[data-screen="running"] .message-bar {
   display: none;
@@ -1102,6 +1200,14 @@ body[data-screen="running"] .message-bar {
 
 body[data-screen="running"] .hud-bar {
   align-items: start;
+}
+
+body[data-screen="running"] .utility-bar {
+  display: flex;
+}
+
+body[data-screen="running"] #soundButton {
+  display: none;
 }
 
 body[data-screen="running"] .score-hud {
@@ -1184,8 +1290,8 @@ body[data-screen="running"] .life-hud {
   }
 
   .life-token {
-    width: 34px;
-    height: 34px;
+    width: 68px;
+    height: 68px;
   }
 
   .top-title {

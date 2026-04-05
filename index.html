@@ -31,6 +31,10 @@
               <strong id="wallValue" class="hud-value">0</strong>
             </div>
             <div class="hud-metric">
+              <span class="hud-label">Miss</span>
+              <strong id="missValue" class="hud-value">0</strong>
+            </div>
+            <div class="hud-metric">
               <span class="hud-label">Score</span>
               <strong id="scoreValue" class="hud-value">0</strong>
             </div>
@@ -56,6 +60,10 @@
         </div>
       </div>
       <div class="utility-bar">
+        <div id="timeHud" class="time-hud" hidden>
+          <span class="hud-label">Time</span>
+          <strong id="timeValue" class="time-value">00:00:00</strong>
+        </div>
         <button id="soundButton" class="utility-button" type="button">SOUND ON</button>
       </div>
     </header>
@@ -66,6 +74,11 @@
         <div class="title-actions">
           <button id="gameModeButton" class="title-mode-button primary-button" type="button">GAME MODE</button>
           <button id="musicModeButton" class="title-mode-button secondary-button" type="button">MUSIC MODE</button>
+        </div>
+        <div class="title-credit" aria-label="Credits">
+          <p>©再生の道／みっちー</p>
+          <p>非公式／Created with AI</p>
+          <p>Created by @kanachi0707</p>
         </div>
       </div>
     </section>
@@ -192,7 +205,7 @@
         </div>
       </div>
 
-      <button id="titleButton" class="link-button" type="button">TITLE に戻る</button>
+      <button id="titleButton" class="link-button" type="button">タイトルに戻る</button>
     </section>
 
     <section id="resultScreen" class="screen result-screen" aria-label="Result" hidden>
@@ -218,6 +231,14 @@
           <span>Best</span>
           <strong id="resultBest">0</strong>
         </div>
+        <div class="result-stat">
+          <span>Time</span>
+          <strong id="resultTime">00:00:00</strong>
+        </div>
+        <div class="result-stat">
+          <span>Miss</span>
+          <strong id="resultMiss">0</strong>
+        </div>
       </div>
 
       <div class="result-actions">
@@ -228,6 +249,7 @@
     </section>
 
     <section id="messageBar" class="message-bar" aria-live="polite"></section>
+    <p class="play-credit" aria-label="Gameplay credit">©再生の道／みっちー（非公式）</p>
   </main>
 
   <noscript>このゲームを遊ぶには JavaScript を有効にしてください。</noscript>
