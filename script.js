@@ -3476,7 +3476,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     const usableWidth = TRACK_HALF_WIDTH * 2 - 0.9;
     const usableHeight = (TRACK_TOP - 0.3) - (TRACK_BOTTOM + 0.38);
     const deltaX = ((clientX - state.touchStartClientX) / Math.max(window.innerWidth, 1)) * usableWidth;
-    const deltaY = ((clientY - state.touchStartClientY) / Math.max(window.innerHeight, 1)) * usableHeight;
+    const deltaY = ((clientY - state.touchStartClientY) / Math.max(window.innerHeight, 1)) * usableHeight * 1.5;
 
     state.targetX = THREE.MathUtils.clamp(
       state.touchStartTargetX + deltaX,
