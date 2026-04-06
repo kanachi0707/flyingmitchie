@@ -6,6 +6,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const STORAGE_KEY = "flying-micchi-bests-v1";
   const SETTINGS_KEY = "flying-micchi-settings-v1";
   const SETTINGS_VERSION = 2;
+  const ASSET_VERSION = "20260406a";
   const PLAYER_Z = 8.4;
   const TRACK_HALF_WIDTH = 6;
   const TRACK_TOP = 4.2;
@@ -29,6 +30,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     top: PLAYER_HITBOX_BASE.top * PLAYER_HITBOX_SCALE,
     bottom: PLAYER_HITBOX_BASE.bottom * PLAYER_HITBOX_SCALE
   };
+
+  function assetUrl(path) {
+    return `${path}?v=${ASSET_VERSION}`;
+  }
 
   const THEMES = {
     sky: {
@@ -179,9 +184,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     space: { key: "space", label: "宇宙", src: "./assets/rebirth-8bit-remix.mp3" }
   };
   const DEFAULT_CITY_TRACK_KEY = "city";
-  SOUNDTRACKS.sea.src = "./assets/ramune-8bit.mp3";
-  SOUNDTRACKS.space.src = "./assets/shooting-star-8bit.mp3";
-  SOUNDTRACKS.city = { key: "city", label: "\u8857", src: "./assets/take-the-stage-8bit.mp3" };
+  SOUNDTRACKS.sky.src = assetUrl("./assets/rebirth-8bit-remix.mp3");
+  SOUNDTRACKS.sea.src = assetUrl("./assets/ramune-8bit.mp3");
+  SOUNDTRACKS.space.src = assetUrl("./assets/shooting-star-8bit.mp3");
+  SOUNDTRACKS.city = { key: "city", label: "\u8857", src: assetUrl("./assets/take-the-stage-8bit.mp3") };
   const MUSIC_TRACK_META = {
     sky: { order: "01", title: "空 BGM", subtitle: "Rebirth (8bit Remix)" },
     sea: { order: "02", title: "海 BGM", subtitle: "ラムネ (8bit Remix)" },
@@ -362,8 +368,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const lineMaterials = [];
   const railMaterials = [];
   const bgm = new Audio();
-  const clearBgm = new Audio("./assets/game-clear-8bit.mp3");
-  const failedBgm = new Audio("./assets/game-failed-8bit.mp3");
+  const clearBgm = new Audio(assetUrl("./assets/game-clear-8bit.mp3"));
+  const failedBgm = new Audio(assetUrl("./assets/game-failed-8bit.mp3"));
   let activeBgmTrackKey = "";
 
   let renderer;
@@ -1160,7 +1166,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       const image = new Image();
       image.onload = () => resolve(processPenguinTexture(image));
       image.onerror = () => reject(new Error("Failed to load character image"));
-      image.src = "./assets/penguin.png";
+      image.src = assetUrl("./assets/penguin.png");
     });
     return penguinTexturePromise;
   }
