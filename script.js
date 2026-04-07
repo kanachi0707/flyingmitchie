@@ -1,4 +1,4 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js";
+﻿import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js";
 
 (function () {
   window.__penguinReady = true;
@@ -38,7 +38,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const THEMES = {
     sky: {
       key: "sky",
-      label: "空",
+      label: "遨ｺ",
       bodyStage: "sky",
       sceneColor: 0x0b4ea8,
       fogNear: 22,
@@ -73,7 +73,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     },
     sea: {
       key: "sea",
-      label: "海",
+      label: "豬ｷ",
       bodyStage: "sea",
       sceneColor: 0x083861,
       fogNear: 20,
@@ -108,7 +108,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     },
     space: {
       key: "space",
-      label: "宇宙",
+      label: "螳・ｮ・,
       bodyStage: "space",
       sceneColor: 0x040814,
       fogNear: 18,
@@ -143,7 +143,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     },
     city: {
       key: "city",
-      label: "街",
+      label: "陦・,
       bodyStage: "city",
       sceneColor: 0x5d2b3b,
       fogNear: 20,
@@ -179,9 +179,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   };
 
   const SOUNDTRACKS = {
-    sky: { key: "sky", label: "空", src: "./assets/rebirth-8bit-remix.mp3" },
-    sea: { key: "sea", label: "海", src: "./assets/rebirth-8bit-remix.mp3" },
-    space: { key: "space", label: "宇宙", src: "./assets/rebirth-8bit-remix.mp3" }
+    sky: { key: "sky", label: "遨ｺ", src: "./assets/rebirth-8bit-remix.mp3" },
+    sea: { key: "sea", label: "豬ｷ", src: "./assets/rebirth-8bit-remix.mp3" },
+    space: { key: "space", label: "螳・ｮ・, src: "./assets/rebirth-8bit-remix.mp3" }
   };
   const DEFAULT_CITY_TRACK_KEY = "city";
   SOUNDTRACKS.sky.src = assetUrl("./assets/rebirth-8bit-remix.mp3");
@@ -189,12 +189,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   SOUNDTRACKS.space.src = assetUrl("./assets/shooting-star-8bit.mp3");
   SOUNDTRACKS.city = { key: "city", label: "\u8857", src: assetUrl("./assets/take-the-stage-8bit.mp3") };
   const MUSIC_TRACK_META = {
-    sky: { order: "01", title: "空 BGM", subtitle: "Rebirth (8bit Remix)" },
-    sea: { order: "02", title: "海 BGM", subtitle: "ラムネ (8bit Remix)" },
-    space: { order: "03", title: "宇宙 BGM", subtitle: "Shooting Star (8bit Remix)", locked: true, status: "COMING SOON" },
-    city: { order: "04", title: "街 BGM", subtitle: "Take the stage (8bit Remix)", locked: true, status: "COMING SOON" },
-    clear: { order: "05", title: "クリア BGM", subtitle: "game clear (8bit)" },
-    failed: { order: "06", title: "失敗 BGM", subtitle: "game failed (8bit)" }
+    sky: { order: "01", title: "遨ｺ BGM", subtitle: "Rebirth (8bit Remix)" },
+    sea: { order: "02", title: "豬ｷ BGM", subtitle: "繝ｩ繝繝・(8bit Remix)" },
+    space: { order: "03", title: "螳・ｮ・BGM", subtitle: "Shooting Star (8bit Remix)", locked: true, status: "COMING SOON" },
+    city: { order: "04", title: "陦・BGM", subtitle: "Take the stage (8bit Remix)", locked: true, status: "COMING SOON" },
+    clear: { order: "05", title: "繧ｯ繝ｪ繧｢ BGM", subtitle: "game clear (8bit)" },
+    failed: { order: "06", title: "螟ｱ謨・BGM", subtitle: "game failed (8bit)" }
   };
 
   MUSIC_TRACK_META.sky.title = "\u7a7a BGM";
@@ -213,67 +213,67 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   const MODES = {
     sky: {
       key: "sky",
-      label: "空",
-      difficulty: "初級",
+      label: "遨ｺ",
+      difficulty: "蛻晉ｴ・,
       theme: "sky",
       targetRings: 100,
-      speedStart: 14,
+      speedStart: 15,
       speedStep: 0,
       maxSpeed: 25,
       gapStartScale: 2.2,
       gapStep: 0.1,
       gapStepEvery: 10,
       gapMinScale: 1.8,
-      summary: "速度固定 / 100 WALLでクリア",
-      detail: "100 WALL でクリア"
+      summary: "騾溷ｺｦ蝗ｺ螳・/ 100 WALL縺ｧ繧ｯ繝ｪ繧｢",
+      detail: "100 WALL 縺ｧ繧ｯ繝ｪ繧｢"
     },
     sea: {
       key: "sea",
-      label: "海",
-      difficulty: "中級",
+      label: "豬ｷ",
+      difficulty: "荳ｭ邏・,
       theme: "sea",
       targetRings: 150,
-      speedStart: 14,
+      speedStart: 15,
       speedStep: 0.1,
       maxSpeed: 30,
       gapStartScale: 2,
       gapStep: 0.075,
       gapStepEvery: 10,
       gapMinScale: 1.7,
-      summary: "0.1ずつ加速 / 150 WALLでクリア",
-      detail: "150 WALL でクリア"
+      summary: "謌仙粥縺斐→縺ｫ0.1蜉騾・/ 150 WALL縺ｧ繧ｯ繝ｪ繧｢",
+      detail: "150 WALL 縺ｧ繧ｯ繝ｪ繧｢"
     },
     space: {
       key: "space",
-      label: "宇宙",
-      difficulty: "上級",
+      label: "螳・ｮ・,
+      difficulty: "荳顔ｴ・,
       theme: "space",
       targetRings: 200,
-      speedStart: 14,
+      speedStart: 15,
       speedStep: 0.1,
       maxSpeed: 40,
       gapStartScale: 2,
       gapStep: 0.1,
       gapStepEvery: 10,
       gapMinScale: 1.6,
-      summary: "0.1ずつ加速 / 200 WALLでクリア",
-      detail: "200 WALL でクリア"
+      summary: "謌仙粥縺斐→縺ｫ0.1蜉騾・/ 200 WALL縺ｧ繧ｯ繝ｪ繧｢",
+      detail: "200 WALL 縺ｧ繧ｯ繝ｪ繧｢"
     },
     city: {
       key: "city",
-      label: "街",
+      label: "陦・,
       difficulty: "Score Attack",
       theme: "city",
       targetRings: Number.POSITIVE_INFINITY,
-      speedStart: 14,
+      speedStart: 15,
       speedStep: 0.1,
       maxSpeed: 50,
       gapStartScale: 2,
       gapStep: 0.09,
       gapStepEvery: 20,
       gapMinScale: 1.55,
-      summary: "星ボーナスあり / エンドレス",
-      detail: "20 WALLごとに星 / エンドレス",
+      summary: "謌仙粥縺斐→縺ｫ0.1蜉騾・/ 繧ｨ繝ｳ繝峨Ξ繧ｹ",
+      detail: "20 WALL縺斐→縺ｫ譏・/ 繧ｨ繝ｳ繝峨Ξ繧ｹ",
       bonusEvery: 20,
       bonusValue: 10
     }
@@ -336,7 +336,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     failedButton.innerHTML = `
       <span class="music-track-order">06</span>
       <span class="music-track-meta">
-        <strong>失敗 BGM</strong>
+        <strong>螟ｱ謨・BGM</strong>
         <em>game failed (8bit)</em>
       </span>
     `;
@@ -421,7 +421,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     runElapsed: 0,
     hitsRemaining: 2,
     nextRingNumber: 1,
-    speed: 14,
+    speed: 15,
+    speedProgress: 0,
     targetX: 0,
     targetY: 0.1,
     touchActive: false,
@@ -478,16 +479,16 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return {
         key: "touch",
         badge: "AUTO: MOBILE TOUCH",
-        intro: "ボタンをタップ",
-        controls: "操作: 画面をなぞって移動。遊びたいコースをタップするとすぐ開始します。"
+        intro: "繝懊ち繝ｳ繧偵ち繝・・",
+        controls: "謫堺ｽ・ 逕ｻ髱｢繧偵↑縺槭▲縺ｦ遘ｻ蜍輔る♀縺ｳ縺溘＞繧ｳ繝ｼ繧ｹ繧偵ち繝・・縺吶ｋ縺ｨ縺吶＄髢句ｧ九＠縺ｾ縺吶・
       };
     }
 
     return {
       key: "desktop",
       badge: "AUTO: DESKTOP",
-      intro: "ボタンをクリック",
-      controls: "操作: マウス移動 / 矢印キー / WASD。遊びたいコースをクリックするとすぐ開始します。"
+      intro: "繝懊ち繝ｳ繧偵け繝ｪ繝・け",
+      controls: "謫堺ｽ・ 繝槭え繧ｹ遘ｻ蜍・/ 遏｢蜊ｰ繧ｭ繝ｼ / WASD縲る♀縺ｳ縺溘＞繧ｳ繝ｼ繧ｹ繧偵け繝ｪ繝・け縺吶ｋ縺ｨ縺吶＄髢句ｧ九＠縺ｾ縺吶・
     };
   }
 
@@ -844,7 +845,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     if (musicRepeatButton) {
       musicRepeatButton.classList.toggle("is-selected", state.musicRepeat || state.musicRepeatOne);
       musicRepeatButton.disabled = !state.soundEnabled;
-      musicRepeatButton.textContent = state.musicRepeatOne ? "↻1" : "↻";
+      musicRepeatButton.textContent = state.musicRepeatOne ? "竊ｻ1" : "竊ｻ";
     }
     if (musicPrevButton) {
       musicPrevButton.disabled = !state.soundEnabled || !canPlayPreviousMusicTrack();
@@ -934,10 +935,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     }
 
     if (mode.speedStep <= 0) {
-      return `速度固定 / ${mode.targetRings} WALLでクリア`;
+      return `騾溷ｺｦ蝗ｺ螳・/ ${mode.targetRings} WALL縺ｧ繧ｯ繝ｪ繧｢`;
     }
 
-    return `${mode.speedStep.toFixed(1)}ずつ加速 / ${mode.targetRings} WALLでクリア`;
+    return `謌仙粥縺斐→縺ｫ${mode.speedStep.toFixed(1)}蜉騾・/ ${mode.targetRings} WALL縺ｧ繧ｯ繝ｪ繧｢`;
   }
 
   function getModeDetail(mode) {
@@ -949,7 +950,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return mode.summary;
     }
 
-    return `${mode.targetRings} WALLでクリア`;
+    return `${mode.targetRings} WALL縺ｧ繧ｯ繝ｪ繧｢`;
   }
 
   function getGapScale(ringsCleared, mode) {
@@ -977,6 +978,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return rawSpeed;
     }
     return Math.min(mode.maxSpeed, rawSpeed);
+  }
+
+  function applySuccessfulPickupSpeed(mode) {
+    state.speedProgress += 1;
+    state.speed = calculateSpeed(mode, state.speedProgress);
+  }
+
+  function applyHitSpeedPenalty(mode) {
+    state.speed = Math.max(mode.speedStart, state.speed - 10);
   }
 
   function pointInRect(x, y, rect, insetX, insetY) {
@@ -2532,17 +2542,17 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       state.resultOutcome = "clear";
       state.resultTitle = `${mode.label} Clear`;
       if (mode.key === "city") {
-        state.resultLead = `Score ${state.score}。街ルートのスコアアタックを走り切りました。`;
+        state.resultLead = `Score ${state.score}縲り｡励Ν繝ｼ繝医・繧ｹ繧ｳ繧｢繧｢繧ｿ繝・け繧定ｵｰ繧雁・繧翫∪縺励◆縲Ａ;
       } else {
-        state.resultLead = `${mode.targetRings} WALL でクリア。${mode.difficulty}ルートを飛び切りました。`;
+        state.resultLead = `${mode.targetRings} WALL 縺ｧ繧ｯ繝ｪ繧｢縲・{mode.difficulty}繝ｫ繝ｼ繝医ｒ鬟帙・蛻・ｊ縺ｾ縺励◆縲Ａ;
       }
       playSfx("stage");
     } else {
       state.resultOutcome = "failed";
       state.resultTitle = `${mode.label} Failed`;
       state.resultLead = mode.key === "city"
-        ? `Score ${state.score}。20 WALLごとの星で +${mode.bonusValue} を狙えます。`
-        : `${state.ringsCleared} / ${mode.targetRings} WALL。もう一度同じルートへ挑めます。`;
+        ? `Score ${state.score}縲・0 WALL縺斐→縺ｮ譏溘〒 +${mode.bonusValue} 繧堤漁縺医∪縺吶Ａ
+        : `${state.ringsCleared} / ${mode.targetRings} WALL縲ゅｂ縺・ｸ蠎ｦ蜷後§繝ｫ繝ｼ繝医∈謖代ａ縺ｾ縺吶Ａ;
       playSfx("hit");
     }
 
@@ -2669,7 +2679,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     try {
       await activeTrack.play();
     } catch {
-      setMessage("BGM は SOUND ボタンで再開できます。");
+      setMessage("BGM 縺ｯ SOUND 繝懊ち繝ｳ縺ｧ蜀埼幕縺ｧ縺阪∪縺吶・);
     }
   }
 
@@ -2704,7 +2714,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     try {
       await activeTrack.play();
     } catch {
-      setMessage("BGM は SOUND ボタンで再開できます。");
+      setMessage("BGM 縺ｯ SOUND 繝懊ち繝ｳ縺ｧ蜀埼幕縺ｧ縺阪∪縺吶・);
     }
   }
 
@@ -2721,12 +2731,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     if (MUSIC_TRACK_META[trackKey]?.locked) {
       state.musicPreviewPlaying = false;
       syncUi();
-      setMessage("宇宙 BGM は準備中です。音源を追加したらここで再生できます。");
+      setMessage("螳・ｮ・BGM 縺ｯ貅門ｙ荳ｭ縺ｧ縺吶る浹貅舌ｒ霑ｽ蜉縺励◆繧峨％縺薙〒蜀咲函縺ｧ縺阪∪縺吶・);
       return;
     }
 
     if (!state.soundEnabled) {
-      setMessage("SOUND ON でミュージックを再生できます。");
+      setMessage("SOUND ON 縺ｧ繝溘Η繝ｼ繧ｸ繝・け繧貞・逕溘〒縺阪∪縺吶・);
       return;
     }
 
@@ -2746,7 +2756,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     } catch {
       state.musicPreviewPlaying = false;
       syncUi();
-      setMessage("BGM の再生に失敗しました。");
+      setMessage("BGM 縺ｮ蜀咲函縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲・);
     }
   }
 
@@ -3122,7 +3132,6 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       const insideMain = playerFitsRect(player.position.x, player.position.y, data.safeRect, PLAYER_HITBOX);
       const insideBonus = data.bonusActive && playerFitsRect(player.position.x, player.position.y, data.bonusRect, PLAYER_HITBOX);
       state.ringsCleared += 1;
-      state.speed = calculateSpeed(mode, state.ringsCleared);
       data.fadeActive = true;
       if (wallValue) {
         wallValue.textContent = String(state.ringsCleared);
@@ -3132,6 +3141,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
         let scoredThisGate = false;
         if (insideMain) {
           state.score += 1;
+          applySuccessfulPickupSpeed(mode);
           scoredThisGate = true;
           spawnBurst(theme.burstColor, new THREE.Vector3(data.gapX, data.gapY, PLAYER_Z - 0.8), 12);
           spawnRingBurst(gate);
@@ -3176,6 +3186,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
         spawnBurst(0xff769e, player.position.clone(), 24, 0.1);
         if (state.hitsRemaining > 0) {
           absorbHit();
+          applyHitSpeedPenalty(mode);
           playSfx("hit");
           if (Number.isFinite(mode.targetRings) && state.ringsCleared >= mode.targetRings) {
             finishRun(true);
@@ -3394,7 +3405,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
       return true;
     } catch (error) {
       console.error(error);
-      setMessage("画像または three.js の読み込みに失敗しました。ファイル配置とネットワークを確認してください。");
+      setMessage("逕ｻ蜒上∪縺溘・ three.js 縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲ゅヵ繧｡繧､繝ｫ驟咲ｽｮ縺ｨ繝阪ャ繝医Ρ繝ｼ繧ｯ繧堤｢ｺ隱阪＠縺ｦ縺上□縺輔＞縲・);
       return false;
     }
   }
@@ -3415,6 +3426,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
     state.ringsCleared = 0;
     state.runElapsed = 0;
     state.hitsRemaining = 2;
+    state.speedProgress = 0;
     state.musicShuffle = false;
     state.musicAutoPlay = false;
     state.musicRepeat = false;
@@ -3742,3 +3754,6 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.m
   openIntro();
   void ensureScene();
 })();
+
+
+
