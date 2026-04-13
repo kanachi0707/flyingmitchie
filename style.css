@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg-1: #93dcff;
   --bg-2: #f5fbff;
   --bg-3: #ffffff;
@@ -1314,5 +1314,82 @@ body[data-screen="running"] .life-hud {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 720px) {
+  .stage-option-card {
+    min-height: 156px;
+    height: 156px;
+  }
+
+  .stage-option {
+    grid-template-columns: 38px 1fr;
+    padding: 14px 14px;
+    gap: 10px 12px;
+  }
+
+  .stage-option-main {
+    padding-bottom: 58px;
+  }
+
+  .stage-list {
+    gap: 12px;
+  }
+
+  .stage-order {
+    font-size: 0.72rem;
+  }
+
+  .stage-title {
+    font-size: 1.24rem;
+  }
+
+  .stage-subname,
+  .stage-kicker,
+  .stage-meta em,
+  .stage-best {
+    font-size: 0.64rem;
+  }
+
+  .music-track-grid {
+    gap: 12px;
+  }
+
+  .music-track-button {
+    min-height: 128px;
+    padding: 14px;
+  }
+
+  .music-track-meta {
+    gap: 6px;
+  }
+
+  .music-track-meta strong {
+    font-size: 1.05rem;
+  }
+
+  .music-track-meta em {
+    font-size: 0.78rem;
+  }
+
+  .music-track-order {
+    font-size: 0.7rem;
+  }
+
+  .stage-option-card .city-track-panel--inline {
+    left: 14px;
+    right: 14px;
+    bottom: 12px;
+    gap: 8px;
+  }
+
+  .stage-option-card .city-track-options {
+    gap: 4px;
+  }
+
+  .stage-option-card .track-option {
+    padding: 6px 6px;
+    font-size: 0.72rem;
   }
 }
