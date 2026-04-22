@@ -1,7 +1,9 @@
-﻿import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js";
+import * as THREE from "./vendor/three.module.js";
 
 (function () {
-  window.__penguinReady = true;
+  try {
+    window.__penguinReady = true;
+    window.__bundleReadyStage = "boot";
 
   const STORAGE_KEY = "flying-micchi-bests-v1";
   const SETTINGS_KEY = "flying-micchi-settings-v1";
@@ -38,7 +40,7 @@
   const THEMES = {
     sky: {
       key: "sky",
-      label: "遨ｺ",
+      label: "鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｩ鬮ｯ蜈ｷ・ｽ・ｹ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ",
       bodyStage: "sky",
       sceneColor: 0x0b4ea8,
       fogNear: 22,
@@ -73,7 +75,7 @@
     },
     sea: {
       key: "sea",
-      label: "豬ｷ",
+      label: "鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｮ鬯ｮ・ｮ隲幢ｽｶ繝ｻ・ｽ繝ｻ・｣驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｬ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ",
       bodyStage: "sea",
       sceneColor: 0x083861,
       fogNear: 20,
@@ -108,7 +110,7 @@
     },
     space: {
       key: "space",
-      label: "螳・ｮ・,
+      label: "\u5b87\u5b99",
       bodyStage: "space",
       sceneColor: 0x040814,
       fogNear: 18,
@@ -143,7 +145,7 @@
     },
     city: {
       key: "city",
-      label: "陦・,
+      label: "\u8857",
       bodyStage: "city",
       sceneColor: 0x5d2b3b,
       fogNear: 20,
@@ -179,9 +181,9 @@
   };
 
   const SOUNDTRACKS = {
-    sky: { key: "sky", label: "遨ｺ", src: "./assets/rebirth-8bit-remix.mp3" },
-    sea: { key: "sea", label: "豬ｷ", src: "./assets/rebirth-8bit-remix.mp3" },
-    space: { key: "space", label: "螳・ｮ・, src: "./assets/rebirth-8bit-remix.mp3" }
+    sky: { key: "sky", label: "\u7a7a", src: "./assets/rebirth-8bit-remix.mp3" },
+    sea: { key: "sea", label: "\u6d77", src: "./assets/rebirth-8bit-remix.mp3" },
+    space: { key: "space", label: "\u5b87\u5b99", src: "./assets/rebirth-8bit-remix.mp3" }
   };
   const DEFAULT_CITY_TRACK_KEY = "city";
   SOUNDTRACKS.sky.src = assetUrl("./assets/rebirth-8bit-remix.mp3");
@@ -189,12 +191,12 @@
   SOUNDTRACKS.space.src = assetUrl("./assets/shooting-star-8bit.mp3");
   SOUNDTRACKS.city = { key: "city", label: "\u8857", src: assetUrl("./assets/take-the-stage-8bit.mp3") };
   const MUSIC_TRACK_META = {
-    sky: { order: "01", title: "遨ｺ BGM", subtitle: "Rebirth (8bit Remix)" },
-    sea: { order: "02", title: "豬ｷ BGM", subtitle: "繝ｩ繝繝・(8bit Remix)" },
-    space: { order: "03", title: "螳・ｮ・BGM", subtitle: "Shooting Star (8bit Remix)", locked: true, status: "COMING SOON" },
-    city: { order: "04", title: "陦・BGM", subtitle: "Take the stage (8bit Remix)", locked: true, status: "COMING SOON" },
-    clear: { order: "05", title: "繧ｯ繝ｪ繧｢ BGM", subtitle: "game clear (8bit)" },
-    failed: { order: "06", title: "螟ｱ謨・BGM", subtitle: "game failed (8bit)" }
+    sky: { order: "01", title: "\u7a7a BGM", subtitle: "Rebirth (8bit Remix)" },
+    sea: { order: "02", title: "\u6d77 BGM", subtitle: "\u30e9\u30e0\u30cd (8bit Remix)" },
+    space: { order: "03", title: "\u5b87\u5b99 BGM", subtitle: "Shooting Star (8bit Remix)", locked: true, status: "COMING SOON" },
+    city: { order: "04", title: "\u8857 BGM", subtitle: "Take the stage (8bit Remix)", locked: true, status: "COMING SOON" },
+    clear: { order: "05", title: "\u30af\u30ea\u30a2 BGM", subtitle: "game clear (8bit)" },
+    failed: { order: "06", title: "鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ鬮ｫ・ｶ霓｣蛛・ｽｽ・･郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢繝ｻ・ｧ髫ｰ繝ｻ竏槭・・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｱ鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻBGM", subtitle: "game failed (8bit)" }
   };
 
   MUSIC_TRACK_META.sky.title = "\u7a7a BGM";
@@ -213,8 +215,8 @@
   const MODES = {
     sky: {
       key: "sky",
-      label: "遨ｺ",
-      difficulty: "蛻晉ｴ・,
+      label: "鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｩ鬮ｯ蜈ｷ・ｽ・ｹ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ",
+      difficulty: "\u521d\u7d1a",
       theme: "sky",
       targetRings: 100,
       speedStart: 15,
@@ -224,13 +226,13 @@
       gapStep: 0.1,
       gapStepEvery: 10,
       gapMinScale: 1.8,
-      summary: "騾溷ｺｦ蝗ｺ螳・/ 100 WALL縺ｧ繧ｯ繝ｪ繧｢",
-      detail: "100 WALL 縺ｧ繧ｯ繝ｪ繧｢"
+      summary: "鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｾ鬯ｯ・ｮ繝ｻ・ｮ髣包ｽｵ隴擾ｽｴ郢晢ｽｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｦ鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ鬮ｫ・ｲ陝ｶ謇假ｽｽ・ｺ繝ｻ・･髫ｲ・ｰ繝ｻ・ｧ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ鬮ｫ・ｶ陷ｴ繝ｻ・ｽ・ｽ繝ｻ・ｸ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｳ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ/ 100 WALL鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢",
+      detail: "100 WALL 鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢"
     },
     sea: {
       key: "sea",
-      label: "豬ｷ",
-      difficulty: "荳ｭ邏・,
+      label: "鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｮ鬯ｮ・ｮ隲幢ｽｶ繝ｻ・ｽ繝ｻ・｣驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｬ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ",
+      difficulty: "\u4e2d\u7d1a",
       theme: "sea",
       targetRings: 150,
       speedStart: 15,
@@ -240,13 +242,13 @@
       gapStep: 0.075,
       gapStepEvery: 10,
       gapMinScale: 1.7,
-      summary: "謌仙粥縺斐→縺ｫ0.1蜉騾・/ 150 WALL縺ｧ繧ｯ繝ｪ繧｢",
-      detail: "150 WALL 縺ｧ繧ｯ繝ｪ繧｢"
+      summary: "鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｮ・ｯ雋・ｽｷ隴ｯ竏壹・繝ｻ・ｽ郢晢ｽｻ繝ｻ・｡鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ鬯ｮ・ｯ繝ｻ・ｷ郢晢ｽｻ繝ｻ・･鬮ｫ・ｰ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｾ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｲ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・･鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｯ・ｮ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｴ鬩包ｽｶ隰ｫ・ｾ繝ｻ・ｽ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｶ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｫ0.1鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ鬯ｮ・｣髮具ｽｻ繝ｻ・ｽ繝ｻ・ｨ鬮ｯ讓奇ｽｻ繧托ｽｽ・ｽ繝ｻ・ｲ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｣鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｾ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ/ 150 WALL鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢",
+      detail: "150 WALL 鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢"
     },
     space: {
       key: "space",
-      label: "螳・ｮ・,
-      difficulty: "荳顔ｴ・,
+      label: "\u5b87\u5b99",
+      difficulty: "\u4e0a\u7d1a",
       theme: "space",
       targetRings: 200,
       speedStart: 15,
@@ -256,12 +258,12 @@
       gapStep: 0.1,
       gapStepEvery: 10,
       gapMinScale: 1.6,
-      summary: "謌仙粥縺斐→縺ｫ0.1蜉騾・/ 200 WALL縺ｧ繧ｯ繝ｪ繧｢",
-      detail: "200 WALL 縺ｧ繧ｯ繝ｪ繧｢"
+      summary: "鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｮ・ｯ雋・ｽｷ隴ｯ竏壹・繝ｻ・ｽ郢晢ｽｻ繝ｻ・｡鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ鬯ｮ・ｯ繝ｻ・ｷ郢晢ｽｻ繝ｻ・･鬮ｫ・ｰ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｾ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｲ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・･鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｯ・ｮ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｴ鬩包ｽｶ隰ｫ・ｾ繝ｻ・ｽ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｶ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｫ0.1鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ鬯ｮ・｣髮具ｽｻ繝ｻ・ｽ繝ｻ・ｨ鬮ｯ讓奇ｽｻ繧托ｽｽ・ｽ繝ｻ・ｲ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｣鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｾ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ/ 200 WALL鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢",
+      detail: "200 WALL 鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢"
     },
     city: {
       key: "city",
-      label: "陦・,
+      label: "\u8857",
       difficulty: "Score Attack",
       theme: "city",
       targetRings: Number.POSITIVE_INFINITY,
@@ -272,12 +274,36 @@
       gapStep: 0.09,
       gapStepEvery: 20,
       gapMinScale: 1.55,
-      summary: "謌仙粥縺斐→縺ｫ0.1蜉騾・/ 繧ｨ繝ｳ繝峨Ξ繧ｹ",
-      detail: "20 WALL縺斐→縺ｫ譏・/ 繧ｨ繝ｳ繝峨Ξ繧ｹ",
+      summary: "鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｮ・ｯ雋・ｽｷ隴ｯ竏壹・繝ｻ・ｽ郢晢ｽｻ繝ｻ・｡鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ鬯ｮ・ｯ繝ｻ・ｷ郢晢ｽｻ繝ｻ・･鬮ｫ・ｰ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｾ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｲ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・･鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｯ・ｮ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｴ鬩包ｽｶ隰ｫ・ｾ繝ｻ・ｽ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｶ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｫ0.1鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ鬯ｮ・｣髮具ｽｻ繝ｻ・ｽ繝ｻ・ｨ鬮ｯ讓奇ｽｻ繧托ｽｽ・ｽ繝ｻ・ｲ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｣鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｾ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ/ 鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｳ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ髯ｷ・ｿ鬮｢ﾂ繝ｻ・ｾ陷会ｽｱ郢晢ｽｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｳ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ鬮ｯ・ｷ繝ｻ・ｿ髯ｷ・ｴ郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｨ鬮ｫ・ｰ陞滂ｽｲ繝ｻ・ｽ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｹ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｹ",
+      detail: "20 WALL鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｯ・ｮ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｴ鬩包ｽｶ隰ｫ・ｾ繝ｻ・ｽ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｶ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｫ鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｴ鬯ｮ・｣陋ｹ繝ｻ・ｽ・ｽ繝ｻ・ｳ鬯ｩ諤憺●繝ｻ・ｽ繝ｻ・ｫ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ/ 鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｳ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ髯ｷ・ｿ鬮｢ﾂ繝ｻ・ｾ陷会ｽｱ郢晢ｽｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｳ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ鬮ｯ・ｷ繝ｻ・ｿ髯ｷ・ｴ郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｨ鬮ｫ・ｰ陞滂ｽｲ繝ｻ・ｽ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｹ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｹ",
       bonusEvery: 20,
       bonusValue: 10
     }
   };
+
+  const MODE_DISPLAY_NAMES = {
+    sky: "\u7a7a",
+    sea: "\u6d77",
+    space: "\u5b87\u5b99",
+    city: "\u8857"
+  };
+
+  THEMES.sky.label = "\u7a7a";
+  THEMES.sea.label = "\u6d77";
+
+  MODES.sky.label = "\u7a7a";
+  MODES.sky.summary = "\u901f\u5ea6\u56fa\u5b9a / 100 WALL";
+  MODES.sky.detail = "100 WALL";
+
+  MODES.sea.label = "\u6d77";
+  MODES.sea.summary = "\u6210\u529f\u3054\u3068\u306b\u52a0\u901f / 150 WALL";
+  MODES.sea.detail = "150 WALL";
+
+  MODES.space.summary = "\u6210\u529f\u3054\u3068\u306b\u52a0\u901f / 200 WALL";
+  MODES.space.detail = "200 WALL";
+
+  MODES.city.summary = "\u30b9\u30b3\u30a2\u30a2\u30bf\u30c3\u30af / ENDLESS";
+  MODES.city.detail = "ENDLESS";
 
   const sceneRoot = document.querySelector("#sceneRoot");
   const introScreen = document.querySelector("#introScreen");
@@ -308,6 +334,7 @@
   const homeButton = document.querySelector("#homeButton");
   const cityTrackButtons = [...document.querySelectorAll("[data-city-track]")];
   const musicTrackGrid = document.querySelector(".music-track-grid");
+  window.__bundleReadyStage = "dom";
   if (musicTrackGrid && !musicTrackGrid.querySelector('[data-preview-track="city"]')) {
     const cityButton = document.createElement("button");
     cityButton.className = "music-track-button is-locked";
@@ -336,11 +363,15 @@
     failedButton.innerHTML = `
       <span class="music-track-order">06</span>
       <span class="music-track-meta">
-        <strong>螟ｱ謨・BGM</strong>
+        <strong>鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ鬮ｫ・ｶ霓｣蛛・ｽｽ・･郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢繝ｻ・ｧ髫ｰ繝ｻ竏槭・・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｱ鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻBGM</strong>
         <em>game failed (8bit)</em>
       </span>
     `;
     musicTrackGrid.append(failedButton);
+  }
+  const bootFailedTrackTitle = musicTrackGrid?.querySelector('[data-preview-track="failed"] .music-track-meta strong');
+  if (bootFailedTrackTitle) {
+    bootFailedTrackTitle.textContent = "\u30b2\u30fc\u30e0\u30aa\u30fc\u30d0\u30fc BGM";
   }
   const musicTrackButtons = [...document.querySelectorAll("[data-preview-track]")];
   const resultBadge = document.querySelector("#resultBadge");
@@ -367,9 +398,24 @@
   const burstPool = [];
   const lineMaterials = [];
   const railMaterials = [];
-  const bgm = new Audio();
-  const clearBgm = new Audio(assetUrl("./assets/game-clear-8bit.mp3"));
-  const failedBgm = new Audio(assetUrl("./assets/game-failed-8bit.mp3"));
+  window.__bundleReadyStage = "audio-setup";
+
+  function createAudioElement(src = "") {
+    let audio;
+    try {
+      audio = typeof Audio === "function" ? new Audio() : document.createElement("audio");
+    } catch {
+      audio = document.createElement("audio");
+    }
+    if (src) {
+      audio.src = src;
+    }
+    return audio;
+  }
+
+  const bgm = createAudioElement();
+  const clearBgm = createAudioElement(assetUrl("./assets/game-clear-8bit.mp3"));
+  const failedBgm = createAudioElement(assetUrl("./assets/game-failed-8bit.mp3"));
   let activeBgmTrackKey = "";
 
   let renderer;
@@ -408,6 +454,7 @@
   let audioContext;
 
   const settings = loadSettings();
+  window.__bundleReadyStage = "state";
   const state = {
     bests: loadBests(),
     deviceMode: detectDeviceMode(),
@@ -461,9 +508,13 @@
   failedBgm.loop = true;
   failedBgm.preload = "auto";
   failedBgm.volume = 0.5;
+  window.__bundleReadyStage = "audio";
 
-  scoreValue.textContent = "0";
+  if (scoreValue) {
+    scoreValue.textContent = "0";
+  }
   syncUi();
+  window.__bundleReadyStage = "ui";
 
   function formatElapsedTime(seconds) {
     const wholeSeconds = Math.max(0, Math.floor(seconds));
@@ -474,21 +525,29 @@
   }
 
   function detectDeviceMode() {
-    const coarse = window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+    let coarse = false;
+    try {
+      coarse = !!(
+        (typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches)
+        || navigator.maxTouchPoints > 0
+      );
+    } catch {
+      coarse = false;
+    }
     if (coarse) {
       return {
         key: "touch",
         badge: "AUTO: MOBILE TOUCH",
-        intro: "繝懊ち繝ｳ繧偵ち繝・・",
-        controls: "謫堺ｽ・ 逕ｻ髱｢繧偵↑縺槭▲縺ｦ遘ｻ蜍輔る♀縺ｳ縺溘＞繧ｳ繝ｼ繧ｹ繧偵ち繝・・縺吶ｋ縺ｨ縺吶＄髢句ｧ九＠縺ｾ縺吶・
+        intro: "\u753b\u9762\u3092\u30bf\u30c3\u30c1",
+        controls: "\u64cd\u4f5c: \u753b\u9762\u3092\u306a\u305e\u3063\u3066\u79fb\u52d5\u3002\u7a7a\u3044\u3066\u3044\u308b\u30b3\u30fc\u30b9\u3092\u901a\u3063\u3066\u9032\u307f\u307e\u3059\u3002",
       };
     }
 
     return {
       key: "desktop",
       badge: "AUTO: DESKTOP",
-      intro: "繝懊ち繝ｳ繧偵け繝ｪ繝・け",
-      controls: "謫堺ｽ・ 繝槭え繧ｹ遘ｻ蜍・/ 遏｢蜊ｰ繧ｭ繝ｼ / WASD縲る♀縺ｳ縺溘＞繧ｳ繝ｼ繧ｹ繧偵け繝ｪ繝・け縺吶ｋ縺ｨ縺吶＄髢句ｧ九＠縺ｾ縺吶・
+      intro: "\u30dc\u30bf\u30f3\u3092\u30af\u30ea\u30c3\u30af",
+      controls: "\u64cd\u4f5c: \u30de\u30a6\u30b9\u79fb\u52d5 / \u77e2\u5370\u30ad\u30fc / WASD \u3067\u79fb\u52d5\u3002\u7a7a\u3044\u3066\u3044\u308b\u30b3\u30fc\u30b9\u3092\u901a\u3063\u3066\u9032\u307f\u307e\u3059\u3002"
     };
   }
 
@@ -634,7 +693,7 @@
     return nextTrackKey ?? null;
   }
 
-  function getSequentialMusicTrackKey(step = 1, anchorTrackKey = state.musicTrackKey) {
+  function getSequentialMusicTrackKeyLegacy(step = 1, anchorTrackKey = state.musicTrackKey) {
     const orderedTrackKeys = getOrderedPlayableMusicTrackKeys();
     if (!orderedTrackKeys.length) {
       return anchorTrackKey;
@@ -845,7 +904,10 @@
     if (musicRepeatButton) {
       musicRepeatButton.classList.toggle("is-selected", state.musicRepeat || state.musicRepeatOne);
       musicRepeatButton.disabled = !state.soundEnabled;
-      musicRepeatButton.textContent = state.musicRepeatOne ? "竊ｻ1" : "竊ｻ";
+      musicRepeatButton.textContent = state.musicRepeatOne ? "鬯ｯ・ｯ繝ｻ・ｩ髯具ｽｹ郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｶ鬯ｮ・ｯ隶抵ｽｭ繝ｻ繝ｻ・ｹ譎｢・ｽ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ1" : "鬯ｯ・ｯ繝ｻ・ｩ髯具ｽｹ郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｶ鬯ｮ・ｯ隶抵ｽｭ繝ｻ繝ｻ・ｹ譎｢・ｽ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ";
+    }
+    if (musicRepeatButton) {
+      musicRepeatButton.textContent = state.musicRepeatOne ? "\u21bb1" : "\u21bb";
     }
     if (musicPrevButton) {
       musicPrevButton.disabled = !state.soundEnabled || !canPlayPreviousMusicTrack();
@@ -935,10 +997,10 @@
     }
 
     if (mode.speedStep <= 0) {
-      return `騾溷ｺｦ蝗ｺ螳・/ ${mode.targetRings} WALL縺ｧ繧ｯ繝ｪ繧｢`;
+      return `鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｾ鬯ｯ・ｮ繝ｻ・ｮ髣包ｽｵ隴擾ｽｴ郢晢ｽｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｦ鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ鬮ｫ・ｲ陝ｶ謇假ｽｽ・ｺ繝ｻ・･髫ｲ・ｰ繝ｻ・ｧ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ鬮ｫ・ｶ陷ｴ繝ｻ・ｽ・ｽ繝ｻ・ｸ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｳ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ/ ${mode.targetRings} WALL鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢`;
     }
 
-    return `謌仙粥縺斐→縺ｫ${mode.speedStep.toFixed(1)}蜉騾・/ ${mode.targetRings} WALL縺ｧ繧ｯ繝ｪ繧｢`;
+    return `鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｮ・ｯ雋・ｽｷ隴ｯ竏壹・繝ｻ・ｽ郢晢ｽｻ繝ｻ・｡鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ鬯ｮ・ｯ繝ｻ・ｷ郢晢ｽｻ繝ｻ・･鬮ｫ・ｰ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｾ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｲ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・･鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｯ・ｮ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｴ鬩包ｽｶ隰ｫ・ｾ繝ｻ・ｽ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｶ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｫ${mode.speedStep.toFixed(1)}鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ鬯ｮ・｣髮具ｽｻ繝ｻ・ｽ繝ｻ・ｨ鬮ｯ讓奇ｽｻ繧托ｽｽ・ｽ繝ｻ・ｲ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｣鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｾ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ/ ${mode.targetRings} WALL鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢`;
   }
 
   function getModeDetail(mode) {
@@ -950,7 +1012,7 @@
       return mode.summary;
     }
 
-    return `${mode.targetRings} WALL縺ｧ繧ｯ繝ｪ繧｢`;
+    return `${mode.targetRings} WALL鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｯ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｪ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｢`;
   }
 
   function getGapScale(ringsCleared, mode) {
@@ -962,7 +1024,7 @@
     return Math.max(mode.gapMinScale, mode.gapStartScale - steps * mode.gapStep);
   }
 
-  function getModeDetail(mode, label = mode.difficulty) {
+  function getModeHeadingDetail(mode, label = mode.difficulty) {
     const heading = String(label || mode.difficulty || "").toUpperCase();
 
     if (!Number.isFinite(mode.targetRings)) {
@@ -970,6 +1032,30 @@
     }
 
     return `${heading} / ${mode.targetRings} WALL`;
+  }
+
+  function getModeSummaryLegacy(mode) {
+    if (!Number.isFinite(mode.targetRings)) {
+      return mode.summary;
+    }
+
+    if (mode.speedStep <= 0) {
+      return `\u901f\u5ea6\u56fa\u5b9a / ${mode.targetRings} WALL`;
+    }
+
+    return `\u6210\u529f\u3054\u3068\u306b\u52a0\u901f / ${mode.targetRings} WALL`;
+  }
+
+  function getModeDetailLegacy(mode) {
+    if (mode.detail) {
+      return mode.detail;
+    }
+
+    if (!Number.isFinite(mode.targetRings)) {
+      return mode.summary;
+    }
+
+    return `${mode.targetRings} WALL`;
   }
 
   function calculateSpeed(mode, ringsCleared) {
@@ -1171,11 +1257,95 @@
     return texture;
   }
 
+  function createCanvasTexture(draw, width = 128, height = 128) {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    if (context) {
+      draw(context, width, height);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearFilter;
+    return texture;
+  }
+
+  function createFallbackPenguinTexture() {
+    return createCanvasTexture((context, width, height) => {
+      context.clearRect(0, 0, width, height);
+      context.fillStyle = "#ffffff";
+      context.beginPath();
+      context.ellipse(width * 0.5, height * 0.55, width * 0.22, height * 0.28, 0, 0, Math.PI * 2);
+      context.fill();
+      context.fillStyle = "#1e2f45";
+      context.beginPath();
+      context.ellipse(width * 0.5, height * 0.58, width * 0.15, height * 0.2, 0, 0, Math.PI * 2);
+      context.fill();
+      context.fillStyle = "#ffb347";
+      context.beginPath();
+      context.moveTo(width * 0.5, height * 0.62);
+      context.lineTo(width * 0.44, height * 0.7);
+      context.lineTo(width * 0.56, height * 0.7);
+      context.closePath();
+      context.fill();
+    });
+  }
+
+  function createFallbackCloudTexture() {
+    return createCanvasTexture((context, width, height) => {
+      context.clearRect(0, 0, width, height);
+      context.fillStyle = "rgba(255,255,255,0.92)";
+      context.beginPath();
+      context.arc(width * 0.34, height * 0.56, width * 0.16, 0, Math.PI * 2);
+      context.arc(width * 0.5, height * 0.46, width * 0.2, 0, Math.PI * 2);
+      context.arc(width * 0.68, height * 0.56, width * 0.16, 0, Math.PI * 2);
+      context.fill();
+    });
+  }
+
+  function createFallbackMountainTexture() {
+    return createCanvasTexture((context, width, height) => {
+      context.clearRect(0, 0, width, height);
+      const gradient = context.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, "rgba(255,255,255,0.12)");
+      gradient.addColorStop(1, "rgba(34,86,44,0.95)");
+      context.fillStyle = gradient;
+      context.beginPath();
+      context.moveTo(0, height);
+      context.lineTo(width * 0.22, height * 0.52);
+      context.lineTo(width * 0.42, height * 0.76);
+      context.lineTo(width * 0.62, height * 0.38);
+      context.lineTo(width * 0.82, height * 0.7);
+      context.lineTo(width, height * 0.48);
+      context.lineTo(width, height);
+      context.closePath();
+      context.fill();
+    });
+  }
+
   function loadPenguinTexture() {
-    penguinTexturePromise ??= new Promise((resolve, reject) => {
+    penguinTexturePromise ??= new Promise((resolve) => {
       const image = new Image();
-      image.onload = () => resolve(processPenguinTexture(image));
-      image.onerror = () => reject(new Error("Failed to load character image"));
+      let settled = false;
+      const finish = (texture) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        window.clearTimeout(timeoutId);
+        resolve(texture);
+      };
+      const timeoutId = window.setTimeout(() => {
+        console.warn("Character texture load timed out. Falling back to generated texture.");
+        finish(createFallbackPenguinTexture());
+      }, 250);
+      image.onload = () => finish(processPenguinTexture(image));
+      image.onerror = () => {
+        console.warn("Failed to load character image. Falling back to generated texture.");
+        finish(createFallbackPenguinTexture());
+      };
       image.src = assetUrl("./assets/penguin.png");
     });
     return penguinTexturePromise;
@@ -1185,17 +1355,33 @@
     cloudTexturesPromise ??= Promise.all([
       "./assets/cloud-01.png",
       "./assets/cloud-02.png"
-    ].map((src) => new Promise((resolve, reject) => {
+    ].map((src) => new Promise((resolve) => {
       const loader = new THREE.TextureLoader();
+      let settled = false;
+      const finish = (texture) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        window.clearTimeout(timeoutId);
+        resolve(texture);
+      };
+      const timeoutId = window.setTimeout(() => {
+        console.warn(`Cloud texture timed out: ${src}. Falling back to generated texture.`);
+        finish(createFallbackCloudTexture());
+      }, 250);
       loader.load(
-        src,
+        assetUrl(src),
         (texture) => {
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.minFilter = THREE.LinearFilter;
-          resolve(texture);
+          finish(texture);
         },
         undefined,
-        () => reject(new Error(`Failed to load cloud texture: ${src}`))
+        () => {
+          console.warn(`Failed to load cloud texture: ${src}. Falling back to generated texture.`);
+          finish(createFallbackCloudTexture());
+        }
       );
     })));
 
@@ -1206,17 +1392,33 @@
     mountainTexturesPromise ??= Promise.all([
       "./assets/mountain-01.png",
       "./assets/mountain-02.png"
-    ].map((src) => new Promise((resolve, reject) => {
+    ].map((src) => new Promise((resolve) => {
       const loader = new THREE.TextureLoader();
+      let settled = false;
+      const finish = (texture) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        window.clearTimeout(timeoutId);
+        resolve(texture);
+      };
+      const timeoutId = window.setTimeout(() => {
+        console.warn(`Mountain texture timed out: ${src}. Falling back to generated texture.`);
+        finish(createFallbackMountainTexture());
+      }, 250);
       loader.load(
-        src,
+        assetUrl(src),
         (texture) => {
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.minFilter = THREE.LinearFilter;
-          resolve(texture);
+          finish(texture);
         },
         undefined,
-        () => reject(new Error(`Failed to load mountain texture: ${src}`))
+        () => {
+          console.warn(`Failed to load mountain texture: ${src}. Falling back to generated texture.`);
+          finish(createFallbackMountainTexture());
+        }
       );
     })));
 
@@ -2510,6 +2712,18 @@
     resetPreviewScene(modeKey);
   }
 
+  window.__openGameMode = function () {
+    openSelect("sky");
+  };
+
+  window.__openMusicMode = function () {
+    openMusicMode();
+  };
+
+  window.__openIntro = function () {
+    openIntro();
+  };
+
   function showResultScreen(modeKey, outcome = state.resultOutcome) {
     state.screen = "result";
     resultScore.textContent = String(state.score);
@@ -2531,6 +2745,7 @@
 
   function finishRun(clear) {
     const mode = currentMode();
+    const modeName = MODE_DISPLAY_NAMES[mode.key] || mode.key;
 
     state.running = false;
     state.musicPreviewPlaying = false;
@@ -2540,19 +2755,19 @@
 
     if (clear) {
       state.resultOutcome = "clear";
-      state.resultTitle = `${mode.label} Clear`;
+      state.resultTitle = `${modeName} Clear`;
       if (mode.key === "city") {
-        state.resultLead = `Score ${state.score}縲り｡励Ν繝ｼ繝医・繧ｹ繧ｳ繧｢繧｢繧ｿ繝・け繧定ｵｰ繧雁・繧翫∪縺励◆縲Ａ;
+        state.resultLead = `Score ${state.score} / ENDLESS \u3092\u8d70\u7834\u3057\u307e\u3057\u305f\u3002`;
       } else {
-        state.resultLead = `${mode.targetRings} WALL 縺ｧ繧ｯ繝ｪ繧｢縲・{mode.difficulty}繝ｫ繝ｼ繝医ｒ鬟帙・蛻・ｊ縺ｾ縺励◆縲Ａ;
+        state.resultLead = `${mode.targetRings} WALL \u3067\u30af\u30ea\u30a2\u3002${mode.difficulty} \u30b3\u30fc\u30b9\u3092\u8d70\u308a\u5207\u308a\u307e\u3057\u305f\u3002`;
       }
       playSfx("stage");
     } else {
       state.resultOutcome = "failed";
-      state.resultTitle = `${mode.label} Failed`;
+      state.resultTitle = `${modeName} Failed`;
       state.resultLead = mode.key === "city"
-        ? `Score ${state.score}縲・0 WALL縺斐→縺ｮ譏溘〒 +${mode.bonusValue} 繧堤漁縺医∪縺吶Ａ
-        : `${state.ringsCleared} / ${mode.targetRings} WALL縲ゅｂ縺・ｸ蠎ｦ蜷後§繝ｫ繝ｼ繝医∈謖代ａ縺ｾ縺吶Ａ;
+        ? `Score ${state.score} / ${state.ringsCleared} WALL\u3002\u661f\u30dc\u30fc\u30ca\u30b9\u306f +${mode.bonusValue}\u3002\u3082\u3046\u4e00\u5ea6\u8857\u30b3\u30fc\u30b9\u306b\u6311\u6226\u3067\u304d\u307e\u3059\u3002`
+        : `${state.ringsCleared} / ${mode.targetRings} WALL\u3002\u3082\u3046\u4e00\u5ea6\u540c\u3058\u30b3\u30fc\u30b9\u306b\u6311\u6226\u3067\u304d\u307e\u3059\u3002`;
       playSfx("hit");
     }
 
@@ -2679,7 +2894,7 @@
     try {
       await activeTrack.play();
     } catch {
-      setMessage("BGM 縺ｯ SOUND 繝懊ち繝ｳ縺ｧ蜀埼幕縺ｧ縺阪∪縺吶・);
+      setMessage("BGM \u306e\u518d\u751f\u3092\u59cb\u3081\u3089\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002SOUND ON \u306e\u72b6\u614b\u3067\u753b\u9762\u3092\u4e00\u5ea6\u30bf\u30c3\u30d7\u307e\u305f\u306f\u30af\u30ea\u30c3\u30af\u3057\u3066\u304b\u3089\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002");
     }
   }
 
@@ -2714,7 +2929,7 @@
     try {
       await activeTrack.play();
     } catch {
-      setMessage("BGM 縺ｯ SOUND 繝懊ち繝ｳ縺ｧ蜀埼幕縺ｧ縺阪∪縺吶・);
+      setMessage("BGM \u306e\u518d\u751f\u3092\u59cb\u3081\u3089\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002SOUND ON \u306e\u72b6\u614b\u3067\u753b\u9762\u3092\u4e00\u5ea6\u30bf\u30c3\u30d7\u307e\u305f\u306f\u30af\u30ea\u30c3\u30af\u3057\u3066\u304b\u3089\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002");
     }
   }
 
@@ -2731,12 +2946,12 @@
     if (MUSIC_TRACK_META[trackKey]?.locked) {
       state.musicPreviewPlaying = false;
       syncUi();
-      setMessage("螳・ｮ・BGM 縺ｯ貅門ｙ荳ｭ縺ｧ縺吶る浹貅舌ｒ霑ｽ蜉縺励◆繧峨％縺薙〒蜀咲函縺ｧ縺阪∪縺吶・);
+      setMessage("\u3053\u306e\u66f2\u306f\u307e\u3060\u6e96\u5099\u4e2d\u3067\u3059\u3002\u307b\u304b\u306eBGM\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002");
       return;
     }
 
     if (!state.soundEnabled) {
-      setMessage("SOUND ON 縺ｧ繝溘Η繝ｼ繧ｸ繝・け繧貞・逕溘〒縺阪∪縺吶・);
+      setMessage("SOUND ON \u3092\u6709\u52b9\u306b\u3057\u3066\u304b\u3089\u3001\u3082\u3046\u4e00\u5ea6\u66f2\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002");
       return;
     }
 
@@ -2756,7 +2971,7 @@
     } catch {
       state.musicPreviewPlaying = false;
       syncUi();
-      setMessage("BGM 縺ｮ蜀咲函縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲・);
+      setMessage("BGM \u306e\u518d\u751f\u3092\u59cb\u3081\u3089\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u5225\u306e\u66f2\u3092\u9078\u3076\u304b\u3001\u753b\u9762\u3092\u4e00\u5ea6\u30bf\u30c3\u30d7\u307e\u305f\u306f\u30af\u30ea\u30c3\u30af\u3057\u3066\u304b\u3089\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002");
     }
   }
 
@@ -3405,7 +3620,10 @@
       return true;
     } catch (error) {
       console.error(error);
-      setMessage("逕ｻ蜒上∪縺溘・ three.js 縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲ゅヵ繧｡繧､繝ｫ驟咲ｽｮ縺ｨ繝阪ャ繝医Ρ繝ｼ繧ｯ繧堤｢ｺ隱阪＠縺ｦ縺上□縺輔＞縲・);
+      state.running = false;
+      state.screen = "select";
+      syncUi();
+      setMessage("3D\u30b7\u30fc\u30f3\u306e\u521d\u671f\u5316\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u3053\u306e\u74b0\u5883\u3067\u306f WebGL \u304c\u4f7f\u3048\u306a\u3044\u304b\u3001\u521d\u671f\u5316\u304c\u9014\u4e2d\u3067\u6b62\u307e\u3063\u3066\u3044\u307e\u3059\u3002");
       return false;
     }
   }
@@ -3460,6 +3678,10 @@
     await syncStageBgm(true, "main", modeKey);
     playSfx("stage");
   }
+
+  window.__startMode = function (modeKey) {
+    void startMode(modeKey);
+  };
 
   function handlePointer(clientX, clientY) {
     if (!state.running) {
@@ -3516,11 +3738,18 @@
     return state.running && !!target && !target.closest("button");
   }
 
-  gameModeButton.addEventListener("click", () => {
+  function bindUiEvent(node, type, handler, options) {
+    if (!node) {
+      return;
+    }
+    node.addEventListener(type, handler, options);
+  }
+
+  bindUiEvent(gameModeButton, "click", () => {
     openSelect("sky");
   });
 
-  musicModeButton.addEventListener("click", () => {
+  bindUiEvent(musicModeButton, "click", () => {
     openMusicMode();
   });
 
@@ -3594,11 +3823,11 @@
     });
   }
 
-  musicStopButton.addEventListener("click", () => {
+  bindUiEvent(musicStopButton, "click", () => {
     stopMusicPreview(true);
   });
 
-  musicBackButton.addEventListener("click", () => {
+  bindUiEvent(musicBackButton, "click", () => {
     openIntro();
   });
 
@@ -3615,23 +3844,23 @@
     });
   });
 
-  titleButton.addEventListener("click", () => {
+  bindUiEvent(titleButton, "click", () => {
     openIntro();
   });
 
-  retryButton.addEventListener("click", () => {
+  bindUiEvent(retryButton, "click", () => {
     void startMode(state.modeKey);
   });
 
-  selectButton.addEventListener("click", () => {
+  bindUiEvent(selectButton, "click", () => {
     openSelect(state.modeKey);
   });
 
-  homeButton.addEventListener("click", () => {
+  bindUiEvent(homeButton, "click", () => {
     openIntro();
   });
 
-  soundButton.addEventListener("click", () => {
+  bindUiEvent(soundButton, "click", () => {
     state.soundEnabled = !state.soundEnabled;
     saveSettings();
     syncUi();
@@ -3753,7 +3982,14 @@
 
   openIntro();
   void ensureScene();
+  window.__bundleReadyStage = "ready";
+  } catch (error) {
+    window.__bundleBootError = error && error.message ? error.message : String(error);
+    window.__bundleReadyStage = `${window.__bundleReadyStage || "unknown"}:error`;
+    throw error;
+  }
 })();
+
 
 
 

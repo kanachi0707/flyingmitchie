@@ -42,7 +42,7 @@
           <button class="music-track-button" type="button" data-preview-track="failed">
             <span class="music-track-order">05</span>
             <span class="music-track-meta">
-              <strong>繧ｲ繝ｼ繝繧ｪ繝ｼ繝舌・ BGM</strong>
+              <strong>ゲームオーバー BGM</strong>
               <em>game failed (8bit)</em>
             </span>
           </button>
@@ -72,8 +72,8 @@
       <div class="intro-shell">
         <img class="title-logo" src="./assets/fm-logo-wm.png" alt="フライングみっちー">
         <div class="title-actions">
-          <button id="gameModeButton" class="title-mode-button primary-button" type="button">GAME MODE</button>
-          <button id="musicModeButton" class="title-mode-button secondary-button" type="button">MUSIC MODE</button>
+          <button id="gameModeButton" class="title-mode-button primary-button" type="button" onclick="window.__openGameModeFallback && window.__openGameModeFallback()" onpointerup="window.__openGameModeFallback && window.__openGameModeFallback()">GAME MODE</button>
+          <button id="musicModeButton" class="title-mode-button secondary-button" type="button" onclick="window.__openMusicModeFallback && window.__openMusicModeFallback()" onpointerup="window.__openMusicModeFallback && window.__openMusicModeFallback()">MUSIC MODE</button>
         </div>
         <div class="title-credit" aria-label="Credits">
           <p>©再生の道／みっちー</p>
@@ -86,8 +86,8 @@
     <section id="musicScreen" class="screen music-screen" aria-label="Music mode" hidden>
       <div class="music-shell">
         <p class="music-kicker">MUSIC MODE</p>
-        <h2 class="music-title">Title Sound Select</h2>
-        <p class="music-copy">空、海、クリアのBGMをここで選んで再生できます。</p>
+        <h2 class="music-title">Sound Select</h2>
+        <p class="music-copy">空、海、クリアの BGM をここで選んで再生できます。</p>
 
         <div class="music-track-grid" role="group" aria-label="Music track selection">
           <button class="music-track-button" type="button" data-preview-track="sky">
@@ -107,7 +107,7 @@
           <button class="music-track-button is-locked" type="button" data-preview-track="space">
             <span class="music-track-order">03</span>
             <span class="music-track-meta">
-              <strong>螳・ｮ・BGM</strong>
+              <strong>宇宙 BGM</strong>
               <em>Shooting Star (8bit Remix)</em>
             </span>
             <span class="music-track-status">COMING SOON</span>
@@ -144,7 +144,7 @@
 
     <section id="selectScreen" class="screen select-screen" aria-label="Stage select" hidden>
       <div class="stage-list">
-        <button class="stage-option" type="button" data-mode="sky" data-theme="sky">
+        <button class="stage-option" type="button" data-mode="sky" data-theme="sky" onclick="window.__startModeFallback && window.__startModeFallback('sky')" onpointerup="window.__startModeFallback && window.__startModeFallback('sky')">
           <span class="stage-order">01</span>
           <span class="stage-meta">
             <span class="stage-kicker">Beginner</span>
@@ -156,7 +156,7 @@
           <span id="best-sky" class="stage-best">BEST SCORE 0</span>
         </button>
 
-        <button class="stage-option" type="button" data-mode="sea" data-theme="sea">
+        <button class="stage-option" type="button" data-mode="sea" data-theme="sea" onclick="window.__startModeFallback && window.__startModeFallback('sea')" onpointerup="window.__startModeFallback && window.__startModeFallback('sea')">
           <span class="stage-order">02</span>
           <span class="stage-meta">
             <span class="stage-kicker">Normal</span>
@@ -168,7 +168,7 @@
           <span id="best-sea" class="stage-best">BEST SCORE 0</span>
         </button>
 
-        <button class="stage-option" type="button" data-mode="space" data-theme="space">
+        <button class="stage-option" type="button" data-mode="space" data-theme="space" onclick="window.__startModeFallback && window.__startModeFallback('space')" onpointerup="window.__startModeFallback && window.__startModeFallback('space')">
           <span class="stage-order">03</span>
           <span class="stage-meta">
             <span class="stage-kicker">Hard</span>
@@ -181,7 +181,7 @@
         </button>
 
         <div class="stage-option-card" data-theme="city">
-          <button class="stage-option stage-option-main" type="button" data-mode="city" data-theme="city">
+          <button class="stage-option stage-option-main" type="button" data-mode="city" data-theme="city" onclick="window.__startModeFallback && window.__startModeFallback('city')" onpointerup="window.__startModeFallback && window.__startModeFallback('city')">
             <span class="stage-order">04</span>
             <span class="stage-meta">
               <span class="stage-kicker">Score Attack</span>
@@ -244,7 +244,7 @@
       <div class="result-actions">
         <button id="retryButton" class="primary-button" type="button">もう一度</button>
         <button id="selectButton" class="secondary-button" type="button">コース選択</button>
-        <button id="homeButton" class="secondary-button" type="button">タイトルへ戻る</button>
+        <button id="homeButton" class="secondary-button" type="button">タイトルに戻る</button>
       </div>
     </section>
 
@@ -253,9 +253,95 @@
   </main>
 
   <noscript>このゲームを遊ぶには JavaScript を有効にしてください。</noscript>
-  <script type="module" src="./script.js?v=20260406a"></script>
+  <script src="./app.bundle.js?v=20260422f"></script>
   <script>
-    window.__penguinReady = false;
+    window.__bundleBootError = "";
+    window.addEventListener("error", function (event) {
+      window.__bundleBootError = event && event.message ? event.message : "unknown error";
+    });
+
+    window.__setMessageFallback = function (text) {
+      var message = document.getElementById("messageBar");
+      if (message) {
+        message.textContent = text || "";
+      }
+    };
+
+    window.__setScreenFallback = function (screen) {
+      var intro = document.getElementById("introScreen");
+      var music = document.getElementById("musicScreen");
+      var select = document.getElementById("selectScreen");
+      var result = document.getElementById("resultScreen");
+
+      if (intro) intro.hidden = screen !== "intro";
+      if (music) music.hidden = screen !== "music";
+      if (select) select.hidden = screen !== "select";
+      if (result) result.hidden = screen !== "result";
+      if (document.body) document.body.dataset.screen = screen;
+    };
+
+    window.__supportsWebGLFallback = function () {
+      try {
+        var canvas = document.createElement("canvas");
+        return !!(
+          canvas.getContext("webgl2")
+          || canvas.getContext("webgl")
+          || canvas.getContext("experimental-webgl")
+        );
+      } catch (error) {
+        return false;
+      }
+    };
+
+    window.__openGameModeFallback = function () {
+      window.__setScreenFallback("select");
+      if (window.__openGameMode) {
+        window.__openGameMode();
+      }
+    };
+
+    window.__openMusicModeFallback = function () {
+      window.__setScreenFallback("music");
+      if (window.__openMusicMode) {
+        window.__openMusicMode();
+      }
+    };
+
+    window.__startModeFallback = function (modeKey) {
+      if (window.__bundleReadyStage !== "ready" || !window.__startMode) {
+        var stage = window.__bundleReadyStage || "unknown";
+        var detail = window.__bundleBootError ? " / " + window.__bundleBootError : "";
+        window.__setMessageFallback("ゲーム本体の初期化が途中で止まっています。stage: " + stage + detail);
+        return;
+      }
+
+      if (!window.__supportsWebGLFallback()) {
+        window.__setMessageFallback("この IAB では WebGL が使えないため、3Dゲームを開始できません。");
+        return;
+      }
+
+      window.__setMessageFallback("3Dシーンを起動しています...");
+      window.__setScreenFallback("running");
+      if (window.__startMode) {
+        window.setTimeout(function () {
+          window.__startMode(modeKey);
+        }, 0);
+      }
+
+      window.setTimeout(function () {
+        var sceneRoot = document.getElementById("sceneRoot");
+        var hasCanvas = sceneRoot && sceneRoot.querySelector("canvas");
+        if (!hasCanvas || document.body.dataset.screen !== "running") {
+          window.__setScreenFallback("select");
+          window.__setMessageFallback("3Dシーンの起動に失敗しました。IAB では WebGL 初期化が止まることがあります。");
+          return;
+        }
+
+        window.__setMessageFallback("");
+      }, 1000);
+    };
+
+    window.__penguinReady = window.__penguinReady === true;
     window.addEventListener("load", function () {
       window.setTimeout(function () {
         if (window.__penguinReady) {
