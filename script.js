@@ -305,6 +305,7 @@ import * as THREE from "./vendor/three.module.js";
   MODES.city.summary = "\u30b9\u30b3\u30a2\u30a2\u30bf\u30c3\u30af / ENDLESS";
   MODES.city.detail = "ENDLESS";
 
+  const viewportFrame = document.querySelector("#viewportFrame");
   const sceneRoot = document.querySelector("#sceneRoot");
   const introScreen = document.querySelector("#introScreen");
   const musicScreen = document.querySelector("#musicScreen");
@@ -549,6 +550,84 @@ import * as THREE from "./vendor/three.module.js";
       intro: "\u30dc\u30bf\u30f3\u3092\u30af\u30ea\u30c3\u30af",
       controls: "\u64cd\u4f5c: \u30de\u30a6\u30b9\u79fb\u52d5 / \u77e2\u5370\u30ad\u30fc / WASD \u3067\u79fb\u52d5\u3002\u7a7a\u3044\u3066\u3044\u308b\u30b3\u30fc\u30b9\u3092\u901a\u3063\u3066\u9032\u307f\u307e\u3059\u3002"
     };
+  }
+
+  function isTouchLandscape() {
+    return state.deviceMode.key === "touch" && window.innerWidth > window.innerHeight;
+  }
+
+  function updateTouchOrientationState() {
+    document.body.dataset.touchOrientation = isTouchLandscape() ? "landscape" : "portrait";
+  }
+
+  function getViewportMetrics() {
+    if (viewportFrame) {
+      const rect = viewportFrame.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        return {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height
+        };
+      }
+    }
+
+    return {
+      left: 0,
+      top: 0,
+      width: Math.max(window.innerWidth, 1),
+      height: Math.max(window.innerHeight, 1)
+    };
+  }
+
+  function getViewportPoint(clientX, clientY) {
+    const viewport = getViewportMetrics();
+    return {
+      left: viewport.left,
+      top: viewport.top,
+      width: viewport.width,
+      height: viewport.height,
+      x: THREE.MathUtils.clamp(clientX - viewport.left, 0, viewport.width),
+      y: THREE.MathUtils.clamp(clientY - viewport.top, 0, viewport.height)
+    };
+  }
+
+  function isClientInsideViewport(clientX, clientY) {
+    const viewport = getViewportMetrics();
+    return (
+      clientX >= viewport.left
+      && clientX <= viewport.left + viewport.width
+      && clientY >= viewport.top
+      && clientY <= viewport.top + viewport.height
+    );
+  }
+
+  async function requestPortraitLock() {
+    if (state.deviceMode.key !== "touch") {
+      return;
+    }
+
+    const orientationApi = globalThis.screen?.orientation;
+    if (orientationApi && typeof orientationApi.lock === "function") {
+      try {
+        await orientationApi.lock("portrait");
+      } catch {
+        // Safari / IAB often rejects this. We keep the portrait viewport layout as a fallback.
+      }
+      return;
+    }
+
+    const legacyLock = globalThis.screen?.lockOrientation
+      || globalThis.screen?.mozLockOrientation
+      || globalThis.screen?.msLockOrientation;
+    if (typeof legacyLock === "function") {
+      try {
+        legacyLock.call(globalThis.screen, "portrait");
+      } catch {
+        // Ignore unsupported legacy APIs.
+      }
+    }
   }
 
   function loadBests() {
@@ -849,6 +928,7 @@ import * as THREE from "./vendor/three.module.js";
 
   function syncUi() {
     document.body.dataset.screen = state.screen;
+    updateTouchOrientationState();
     applyBodyTheme(activeThemeKey());
 
     introScreen.hidden = state.screen !== "intro";
@@ -2683,6 +2763,7 @@ import * as THREE from "./vendor/three.module.js";
   }
 
   function openMusicMode(trackKey = state.musicTrackKey) {
+    void requestPortraitLock();
     state.running = false;
     state.screen = "music";
     state.musicTrackKey = trackKey;
@@ -2700,6 +2781,7 @@ import * as THREE from "./vendor/three.module.js";
   }
 
   function openSelect(modeKey = state.previewModeKey) {
+    void requestPortraitLock();
     state.running = false;
     state.screen = "select";
     state.musicPreviewPlaying = false;
@@ -3513,14 +3595,15 @@ import * as THREE from "./vendor/three.module.js";
     }
 
     try {
+      const viewport = getViewportMetrics();
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(viewport.width, viewport.height);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       sceneRoot.append(renderer.domElement);
 
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.1, 320);
+      camera = new THREE.PerspectiveCamera(54, viewport.width / viewport.height, 0.1, 320);
       camera.position.set(0, 2.7, 18);
 
       ambientLight = new THREE.AmbientLight(0xffffff, THEMES.sky.ambientIntensity);
@@ -3629,6 +3712,7 @@ import * as THREE from "./vendor/three.module.js";
   }
 
   async function startMode(modeKey) {
+    await requestPortraitLock();
     const ready = await ensureScene();
     if (!ready) {
       return;
@@ -3688,8 +3772,9 @@ import * as THREE from "./vendor/three.module.js";
       return;
     }
 
-    const x = clientX / window.innerWidth;
-    const y = clientY / window.innerHeight;
+    const viewportPoint = getViewportPoint(clientX, clientY);
+    const x = viewportPoint.x / Math.max(viewportPoint.width, 1);
+    const y = viewportPoint.y / Math.max(viewportPoint.height, 1);
     pointer.x = THREE.MathUtils.lerp(-TRACK_HALF_WIDTH + 0.45, TRACK_HALF_WIDTH - 0.45, x);
     pointer.y = THREE.MathUtils.lerp(TRACK_TOP - 0.35, TRACK_BOTTOM + 0.35, y);
     state.targetX = pointer.x;
@@ -3713,10 +3798,11 @@ import * as THREE from "./vendor/three.module.js";
       return;
     }
 
+    const viewportPoint = getViewportPoint(clientX, clientY);
     const usableWidth = TRACK_HALF_WIDTH * 2 - 0.9;
     const usableHeight = (TRACK_TOP - 0.3) - (TRACK_BOTTOM + 0.38);
-    const deltaX = ((clientX - state.touchStartClientX) / Math.max(window.innerWidth, 1)) * usableWidth;
-    const deltaY = ((clientY - state.touchStartClientY) / Math.max(window.innerHeight, 1)) * usableHeight * 1.5;
+    const deltaX = ((clientX - state.touchStartClientX) / Math.max(viewportPoint.width, 1)) * usableWidth;
+    const deltaY = ((clientY - state.touchStartClientY) / Math.max(viewportPoint.height, 1)) * usableHeight * 1.5;
 
     state.targetX = THREE.MathUtils.clamp(
       state.touchStartTargetX + deltaX,
@@ -3734,8 +3820,11 @@ import * as THREE from "./vendor/three.module.js";
     state.touchActive = false;
   }
 
-  function shouldHandleScreenTouch(target) {
-    return state.running && !!target && !target.closest("button");
+  function shouldHandleScreenTouch(target, clientX, clientY) {
+    return state.running
+      && !!target
+      && !target.closest("button")
+      && isClientInsideViewport(clientX, clientY);
   }
 
   function bindUiEvent(node, type, handler, options) {
@@ -3895,7 +3984,7 @@ import * as THREE from "./vendor/three.module.js";
       return;
     }
 
-    if (!shouldHandleScreenTouch(event.target)) {
+    if (!shouldHandleScreenTouch(event.target, event.clientX, event.clientY)) {
       return;
     }
 
@@ -3909,7 +3998,7 @@ import * as THREE from "./vendor/three.module.js";
 
   window.addEventListener("touchstart", (event) => {
     const touch = event.touches[0];
-    if (!touch || !shouldHandleScreenTouch(event.target)) {
+    if (!touch || !shouldHandleScreenTouch(event.target, touch.clientX, touch.clientY)) {
       return;
     }
 
@@ -3974,9 +4063,10 @@ import * as THREE from "./vendor/three.module.js";
       return;
     }
 
-    camera.aspect = window.innerWidth / window.innerHeight;
+    const viewport = getViewportMetrics();
+    camera.aspect = viewport.width / viewport.height;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(viewport.width, viewport.height);
     pinSkyMountainsToViewportFloor();
   });
 

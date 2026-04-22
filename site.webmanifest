@@ -1,0 +1,10 @@
+{
+  "name": "フライングみっちー",
+  "short_name": "みっちー",
+  "lang": "ja",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#80d5ff",
+  "theme_color": "#80d5ff"
+}

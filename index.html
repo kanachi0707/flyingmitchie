@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>フライングみっちー</title>
   <meta
     name="description"
     content="タイトル画面からコースを選んで遊べる three.js のフライングランナー。空、海、宇宙、街の 4 モードを収録。"
   >
   <meta name="theme-color" content="#80d5ff">
+  <link rel="manifest" href="./site.webmanifest?v=20260422g">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -18,10 +21,12 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body data-stage="sky" data-screen="intro">
-  <div id="sceneRoot" class="scene-root" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
+  <div id="viewportRoot" class="viewport-root">
+    <div id="viewportFrame" class="viewport-frame">
+      <div id="sceneRoot" class="scene-root" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
 
-  <main class="ui-shell">
+      <main class="ui-shell">
     <header class="hud-bar" aria-label="Game HUD">
       <div class="hud-stack">
         <div id="scoreHud" class="score-hud" hidden>
@@ -217,10 +222,11 @@
         <span></span>
         <span></span>
       </div>
-      <p class="eyebrow">Result</p>
-      <p id="resultBadge" class="result-badge">RESULT</p>
-      <h2 id="resultTitle">Result</h2>
-      <p id="resultLead" class="result-copy"></p>
+      <div class="result-card">
+        <p class="eyebrow">Result</p>
+        <p id="resultBadge" class="result-badge">RESULT</p>
+        <h2 id="resultTitle">Result</h2>
+        <p id="resultLead" class="result-copy"></p>
 
       <div class="result-stats">
         <div class="result-stat">
@@ -246,14 +252,17 @@
         <button id="selectButton" class="secondary-button" type="button">コース選択</button>
         <button id="homeButton" class="secondary-button" type="button">タイトルに戻る</button>
       </div>
+      </div>
     </section>
 
     <section id="messageBar" class="message-bar" aria-live="polite"></section>
     <p class="play-credit" aria-label="Gameplay credit">©再生の道／みっちー（非公式）</p>
   </main>
+    </div>
+  </div>
 
   <noscript>このゲームを遊ぶには JavaScript を有効にしてください。</noscript>
-  <script src="./app.bundle.js?v=20260422f"></script>
+  <script src="./app.bundle.js?v=20260422g"></script>
   <script>
     window.__bundleBootError = "";
     window.addEventListener("error", function (event) {
