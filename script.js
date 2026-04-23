@@ -8,7 +8,7 @@ import * as THREE from "./vendor/three.module.js";
   const STORAGE_KEY = "flying-micchi-bests-v1";
   const SETTINGS_KEY = "flying-micchi-settings-v1";
   const SETTINGS_VERSION = 2;
-  const ASSET_VERSION = "20260406a";
+  const ASSET_VERSION = "20260423a";
   const PLAYER_Z = 8.4;
   const TRACK_HALF_WIDTH = 6;
   const TRACK_TOP = 4.2;
