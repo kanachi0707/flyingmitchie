@@ -22311,6 +22311,37 @@ void main() {
             track.currentTime = 0;
           }
         });
+      }, unlockResultBgmTracks = function() {
+        if (resultBgmUnlocked || !state.soundEnabled) {
+          return;
+        }
+        resultBgmUnlocked = true;
+        [clearBgm, failedBgm].forEach((track) => {
+          const wasMuted = track.muted;
+          const previousTime = Number.isFinite(track.currentTime) ? track.currentTime : 0;
+          track.muted = true;
+          track.playsInline = true;
+          const playPromise = track.play();
+          if (!playPromise || typeof playPromise.then !== "function") {
+            track.pause();
+            track.muted = wasMuted;
+            try {
+              track.currentTime = previousTime;
+            } catch {
+            }
+            return;
+          }
+          playPromise.then(() => {
+            track.pause();
+            track.muted = wasMuted;
+            try {
+              track.currentTime = previousTime;
+            } catch {
+            }
+          }).catch(() => {
+            track.muted = wasMuted;
+          });
+        });
       }, syncMusicPreviewLoopState = function() {
         const shouldLoop = !state.musicAutoPlay || state.musicRepeatOne;
         bgm.loop = shouldLoop;
@@ -24885,6 +24916,7 @@ void main() {
       const clearBgm = createAudioElement(assetUrl("./assets/game-clear-8bit.mp3"));
       const failedBgm = createAudioElement(assetUrl("./assets/game-failed-8bit.mp3"));
       let activeBgmTrackKey = "";
+      let resultBgmUnlocked = false;
       let renderer;
       let scene;
       let camera;
@@ -25028,6 +25060,21 @@ void main() {
         try {
           await activeTrack.play();
         } catch {
+          if ((trackType === "clear" || trackType === "failed") && activeTrack !== bgm) {
+            try {
+              bgm.pause();
+              clearBgm.pause();
+              failedBgm.pause();
+              bgm.src = activeTrack.src;
+              bgm.loop = true;
+              if (reset) {
+                bgm.currentTime = 0;
+              }
+              await bgm.play();
+              return;
+            } catch {
+            }
+          }
           setMessage("BGM \u306E\u518D\u751F\u3092\u59CB\u3081\u3089\u308C\u307E\u305B\u3093\u3067\u3057\u305F\u3002SOUND ON \u306E\u72B6\u614B\u3067\u753B\u9762\u3092\u4E00\u5EA6\u30BF\u30C3\u30D7\u307E\u305F\u306F\u30AF\u30EA\u30C3\u30AF\u3057\u3066\u304B\u3089\u3001\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002");
         }
       }
@@ -25262,6 +25309,7 @@ void main() {
         }
       }
       async function startMode(modeKey) {
+        unlockResultBgmTracks();
         await requestPortraitLock();
         const ready = await ensureScene();
         if (!ready) {
@@ -25409,6 +25457,7 @@ void main() {
         saveSettings();
         syncUi();
         if (state.soundEnabled) {
+          unlockResultBgmTracks();
           const trackType = state.screen === "result" ? state.resultOutcome === "clear" ? "clear" : "failed" : "main";
           if (state.screen === "music" && state.musicPreviewPlaying) {
             void playMusicPreview(state.musicTrackKey);

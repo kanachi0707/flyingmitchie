@@ -418,6 +418,7 @@ import * as THREE from "./vendor/three.module.js";
   const clearBgm = createAudioElement(assetUrl("./assets/game-clear-8bit.mp3"));
   const failedBgm = createAudioElement(assetUrl("./assets/game-failed-8bit.mp3"));
   let activeBgmTrackKey = "";
+  let resultBgmUnlocked = false;
 
   let renderer;
   let scene;
@@ -866,6 +867,44 @@ import * as THREE from "./vendor/three.module.js";
       if (reset) {
         track.currentTime = 0;
       }
+    });
+  }
+
+  function unlockResultBgmTracks() {
+    if (resultBgmUnlocked || !state.soundEnabled) {
+      return;
+    }
+    resultBgmUnlocked = true;
+
+    [clearBgm, failedBgm].forEach((track) => {
+      const wasMuted = track.muted;
+      const previousTime = Number.isFinite(track.currentTime) ? track.currentTime : 0;
+      track.muted = true;
+      track.playsInline = true;
+
+      const playPromise = track.play();
+      if (!playPromise || typeof playPromise.then !== "function") {
+        track.pause();
+        track.muted = wasMuted;
+        try {
+          track.currentTime = previousTime;
+        } catch {
+          // Some mobile browsers reject currentTime until metadata is loaded.
+        }
+        return;
+      }
+
+      playPromise.then(() => {
+        track.pause();
+        track.muted = wasMuted;
+        try {
+          track.currentTime = previousTime;
+        } catch {
+          // Keep the unlock best-effort; playback will still be retried on result.
+        }
+      }).catch(() => {
+        track.muted = wasMuted;
+      });
     });
   }
 
@@ -2976,6 +3015,22 @@ import * as THREE from "./vendor/three.module.js";
     try {
       await activeTrack.play();
     } catch {
+      if ((trackType === "clear" || trackType === "failed") && activeTrack !== bgm) {
+        try {
+          bgm.pause();
+          clearBgm.pause();
+          failedBgm.pause();
+          bgm.src = activeTrack.src;
+          bgm.loop = true;
+          if (reset) {
+            bgm.currentTime = 0;
+          }
+          await bgm.play();
+          return;
+        } catch {
+          // Fall through to the user-facing retry message.
+        }
+      }
       setMessage("BGM \u306e\u518d\u751f\u3092\u59cb\u3081\u3089\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002SOUND ON \u306e\u72b6\u614b\u3067\u753b\u9762\u3092\u4e00\u5ea6\u30bf\u30c3\u30d7\u307e\u305f\u306f\u30af\u30ea\u30c3\u30af\u3057\u3066\u304b\u3089\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002");
     }
   }
@@ -3712,6 +3767,7 @@ import * as THREE from "./vendor/three.module.js";
   }
 
   async function startMode(modeKey) {
+    unlockResultBgmTracks();
     await requestPortraitLock();
     const ready = await ensureScene();
     if (!ready) {
@@ -3955,6 +4011,7 @@ import * as THREE from "./vendor/three.module.js";
     syncUi();
 
     if (state.soundEnabled) {
+      unlockResultBgmTracks();
       const trackType = state.screen === "result"
         ? (state.resultOutcome === "clear" ? "clear" : "failed")
         : "main";
