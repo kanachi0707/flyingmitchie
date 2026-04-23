@@ -24008,7 +24008,7 @@ void main() {
         } else {
           state.resultOutcome = "failed";
           state.resultTitle = `${modeName} Failed`;
-          state.resultLead = mode.key === "city" ? `Score ${state.score} / ${state.ringsCleared} WALL\u3002\u661F\u30DC\u30FC\u30CA\u30B9\u306F +${mode.bonusValue}\u3002\u3082\u3046\u4E00\u5EA6\u8857\u30B3\u30FC\u30B9\u306B\u6311\u6226\u3067\u304D\u307E\u3059\u3002` : `${state.ringsCleared} / ${mode.targetRings} WALL\u3002\u3082\u3046\u4E00\u5EA6\u540C\u3058\u30B3\u30FC\u30B9\u306B\u6311\u6226\u3067\u304D\u307E\u3059\u3002`;
+          state.resultLead = mode.key === "city" ? "\u661F\u3092\u53D6\u308B\u3068\u30DC\u30FC\u30CA\u30B9\u30DD\u30A4\u30F3\u30C8\uFF01" : `${mode.targetRings} WALL\u3092\u76EE\u6307\u3057\u3066\u518D\u6311\u6226\u3057\u3066\u307F\u3088\u3046\uFF01`;
           playSfx("hit");
         }
         showResultScreen(mode.key, state.resultOutcome);

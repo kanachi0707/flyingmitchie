@@ -2887,8 +2887,8 @@ import * as THREE from "./vendor/three.module.js";
       state.resultOutcome = "failed";
       state.resultTitle = `${modeName} Failed`;
       state.resultLead = mode.key === "city"
-        ? `Score ${state.score} / ${state.ringsCleared} WALL\u3002\u661f\u30dc\u30fc\u30ca\u30b9\u306f +${mode.bonusValue}\u3002\u3082\u3046\u4e00\u5ea6\u8857\u30b3\u30fc\u30b9\u306b\u6311\u6226\u3067\u304d\u307e\u3059\u3002`
-        : `${state.ringsCleared} / ${mode.targetRings} WALL\u3002\u3082\u3046\u4e00\u5ea6\u540c\u3058\u30b3\u30fc\u30b9\u306b\u6311\u6226\u3067\u304d\u307e\u3059\u3002`;
+        ? "\u661f\u3092\u53d6\u308b\u3068\u30dc\u30fc\u30ca\u30b9\u30dd\u30a4\u30f3\u30c8\uff01"
+        : `${mode.targetRings} WALL\u3092\u76ee\u6307\u3057\u3066\u518d\u6311\u6226\u3057\u3066\u307f\u3088\u3046\uff01`;
       playSfx("hit");
     }
 
