@@ -1128,6 +1128,26 @@ body[data-screen="result"] .play-credit {
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
+body[data-stage] .result-screen .result-card .eyebrow,
+body[data-stage] .result-screen .result-card h2,
+body[data-stage] .result-screen .result-card .result-copy,
+body[data-stage] .result-screen .result-card .result-stat strong {
+  color: rgba(247, 251, 255, 0.98);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.32);
+}
+
+body[data-stage] .result-screen .result-card .result-stat span {
+  color: rgba(150, 231, 255, 0.92);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.26);
+}
+
+body[data-stage] .result-screen .result-card .result-badge {
+  color: rgba(255, 247, 191, 0.98);
+  border-color: rgba(255, 239, 153, 0.42);
+  background: rgba(6, 12, 28, 0.42);
+  box-shadow: 0 0 24px rgba(255, 228, 124, 0.18);
+}
+
 .result-screen[data-outcome="clear"] .result-badge {
   color: #fff7bf;
   border-color: rgba(255, 239, 153, 0.42);
