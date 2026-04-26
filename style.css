@@ -69,6 +69,17 @@ body[data-touch-orientation="landscape"] .viewport-frame {
   height: min(100vh, calc(100vw / var(--portrait-lock-ratio)));
 }
 
+@media (pointer: coarse) {
+  body[data-screen="running"] .viewport-frame {
+    transform: scale(0.94) translateZ(0);
+    transform-origin: center center;
+  }
+
+  body[data-screen="running"][data-touch-orientation="landscape"] .viewport-frame {
+    transform: scale(0.9) translateZ(0);
+  }
+}
+
 body[data-stage="sky"] {
   --bg-1: #bfefff;
   --bg-2: #69b8ff;
@@ -573,21 +584,41 @@ body[data-screen="result"] .play-credit {
   min-height: 51px;
 }
 
-.music-screen {
+.music-screen,
+.select-screen {
   width: 100%;
   justify-items: end;
   align-self: stretch;
 }
 
-.music-shell {
+.screen-heading {
+  width: min(760px, 100%);
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+}
+
+.music-shell,
+.select-shell {
   min-height: min(60vh, 620px);
   align-content: end;
   justify-items: stretch;
+  width: min(760px, 100%);
+  display: grid;
+  gap: 18px;
 }
 
 .music-title {
-  font-size: clamp(2rem, 5vw, 3.4rem);
-  line-height: 0.96;
+  font-family: "Orbitron", "Segoe UI", sans-serif;
+  font-size: clamp(1.02rem, 2vw, 1.3rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.select-title {
+  text-align: left;
 }
 
 .music-track-grid {
@@ -704,17 +735,11 @@ body[data-screen="result"] .play-credit {
   line-height: 1.75;
 }
 
-.select-screen,
 .result-screen {
   display: grid;
   gap: 22px;
   align-content: end;
   padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
-}
-
-.select-screen {
-  width: 100%;
-  justify-items: end;
 }
 
 .stage-list {
@@ -926,6 +951,13 @@ body[data-screen="result"] .play-credit {
   text-transform: uppercase;
   font-style: normal;
   color: var(--accent);
+}
+
+body[data-screen="select"][data-stage="city"] .stage-kicker,
+body[data-screen="select"][data-stage="city"] .stage-subname,
+body[data-screen="select"][data-stage="city"] .stage-meta em {
+  color: #153d22;
+  text-shadow: none;
 }
 
 .stage-meta em:empty {
@@ -1377,8 +1409,12 @@ body[data-touch-orientation="landscape"] .stage-list {
 }
 
 body[data-touch-orientation="landscape"] .select-screen {
-  width: 100%;
   justify-items: stretch;
+}
+
+body[data-touch-orientation="landscape"] .music-shell,
+body[data-touch-orientation="landscape"] .select-shell {
+  width: 100%;
 }
 
 body[data-touch-orientation="landscape"] .music-screen {
@@ -1401,12 +1437,65 @@ body[data-touch-orientation="landscape"] .music-actions {
   align-items: stretch;
 }
 
+body[data-touch-orientation="landscape"] .music-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(6, 12, 28, 0.22);
+  backdrop-filter: blur(12px);
+}
+
 body[data-touch-orientation="landscape"] .title-mode-button,
 body[data-touch-orientation="landscape"] .music-track-button,
 body[data-touch-orientation="landscape"] .link-button,
 body[data-touch-orientation="landscape"] .primary-button,
 body[data-touch-orientation="landscape"] .secondary-button {
   width: 100%;
+}
+
+body[data-touch-orientation="landscape"] .music-actions .secondary-button {
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 8px 10px;
+  font-size: 0.86rem;
+  line-height: 1;
+}
+
+body[data-touch-orientation="landscape"] .music-actions .music-option-button {
+  font-size: 0.92rem;
+}
+
+body[data-touch-orientation="landscape"] .music-actions .music-option-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+body[data-touch-orientation="landscape"] #musicPlayButton {
+  grid-column: 2;
+}
+
+body[data-touch-orientation="landscape"] #musicPrevButton {
+  grid-column: 1;
+}
+
+body[data-touch-orientation="landscape"] #musicNextButton {
+  grid-column: 3;
+}
+
+body[data-touch-orientation="landscape"] #musicShuffleButton {
+  grid-column: 3;
+}
+
+body[data-touch-orientation="landscape"] #musicRepeatButton {
+  grid-column: 1;
+}
+
+body[data-touch-orientation="landscape"] #musicStopButton {
+  grid-column: 2;
 }
 
 body[data-touch-orientation="landscape"] .result-actions {
@@ -1418,6 +1507,37 @@ body[data-touch-orientation="landscape"] .utility-bar {
   width: 100%;
   justify-content: space-between;
   gap: 12px;
+}
+
+body[data-touch-orientation="landscape"][data-screen="select"] #soundButton,
+body[data-touch-orientation="landscape"][data-screen="select"] #titleButton,
+body[data-touch-orientation="landscape"][data-screen="music"] #soundButton,
+body[data-touch-orientation="landscape"][data-screen="music"] #musicBackButton {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  z-index: 18;
+  width: auto;
+  min-width: 0;
+  padding: 8px 10px;
+  font-size: 0.74rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+body[data-touch-orientation="landscape"][data-screen="select"] #titleButton {
+  right: 16px;
+}
+
+body[data-touch-orientation="landscape"][data-screen="music"] #musicBackButton {
+  right: 16px;
+}
+
+body[data-touch-orientation="landscape"][data-screen="select"] #soundButton {
+  right: 128px;
+}
+
+body[data-touch-orientation="landscape"][data-screen="music"] #soundButton {
+  right: 128px;
 }
 
 body[data-touch-orientation="landscape"] .life-token {
@@ -1448,8 +1568,8 @@ body[data-touch-orientation="landscape"] .stage-best {
 }
 
 body[data-touch-orientation="landscape"] .music-track-button {
-  min-height: 128px;
-  padding: 14px;
+  min-height: 92px;
+  padding: 10px 12px;
 }
 
 body[data-touch-orientation="landscape"] .music-track-meta {
@@ -1529,8 +1649,12 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
   }
 
   .select-screen {
-    width: 100%;
     justify-items: stretch;
+  }
+
+  .music-shell,
+  .select-shell {
+    width: 100%;
   }
 
   .music-screen {
@@ -1556,6 +1680,17 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
     align-items: stretch;
   }
 
+  .music-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(6, 12, 28, 0.22);
+    backdrop-filter: blur(12px);
+  }
+
   .title-mode-button,
   .music-track-button,
   .link-button {
@@ -1573,10 +1708,83 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
     width: 100%;
   }
 
+  .music-actions .secondary-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+    line-height: 1;
+  }
+
+  .music-actions .music-option-button {
+    font-size: 0.92rem;
+  }
+
+  .music-actions .music-option-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #musicPrevButton {
+    grid-column: 1;
+  }
+
+  #musicPlayButton {
+    grid-column: 2;
+  }
+
+  #musicNextButton {
+    grid-column: 3;
+  }
+
+  #musicShuffleButton {
+    grid-column: 3;
+  }
+
+  #musicRepeatButton {
+    grid-column: 1;
+  }
+
+  #musicStopButton {
+    grid-column: 2;
+  }
+
   .utility-bar {
     width: 100%;
     justify-content: space-between;
     gap: 12px;
+  }
+
+  body[data-screen="select"] #soundButton,
+  body[data-screen="select"] #titleButton,
+  body[data-screen="music"] #soundButton,
+  body[data-screen="music"] #musicBackButton {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    z-index: 18;
+    width: auto;
+    min-width: 0;
+    padding: 8px 10px;
+    font-size: 0.74rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  body[data-screen="select"] #titleButton {
+    right: 16px;
+  }
+
+  body[data-screen="music"] #musicBackButton {
+    right: 16px;
+  }
+
+  body[data-screen="select"] #soundButton {
+    right: 128px;
+  }
+
+  body[data-screen="music"] #soundButton {
+    right: 128px;
   }
 
   .life-token {
@@ -1632,8 +1840,8 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
   }
 
   .music-track-button {
-    min-height: 128px;
-    padding: 14px;
+    min-height: 92px;
+    padding: 10px 12px;
   }
 
   .music-track-meta {
@@ -1666,5 +1874,44 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
   .stage-option-card .track-option {
     padding: 6px 6px;
     font-size: 0.72rem;
+  }
+
+  .music-track-button {
+    min-height: auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .music-track-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .music-track-meta strong,
+  .music-track-meta em {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .music-track-meta strong {
+    flex: 0 1 auto;
+    font-size: 0.92rem;
+  }
+
+  .music-track-meta em {
+    flex: 1 1 auto;
+    font-size: 0.72rem;
+  }
+
+  .music-track-status {
+    justify-self: end;
+    white-space: nowrap;
+    font-size: 0.62rem;
   }
 }

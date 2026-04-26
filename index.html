@@ -48,7 +48,7 @@
             <span class="music-track-order">05</span>
             <span class="music-track-meta">
               <strong>ゲームオーバー BGM</strong>
-              <em>game failed (8bit)</em>
+              <em>Game Failed</em>
             </span>
           </button>
         </div>
@@ -90,8 +90,10 @@
 
     <section id="musicScreen" class="screen music-screen" aria-label="Music mode" hidden>
       <div class="music-shell">
+        <div class="screen-heading">
         <p class="music-kicker">MUSIC MODE</p>
         <h2 class="music-title">Sound Select</h2>
+        </div>
         <p class="music-copy">空、海、クリアの BGM をここで選んで再生できます。</p>
 
         <div class="music-track-grid" role="group" aria-label="Music track selection">
@@ -121,7 +123,7 @@
             <span class="music-track-order">04</span>
             <span class="music-track-meta">
               <strong>クリア BGM</strong>
-              <em>game clear (8bit)</em>
+              <em>Game Cleared</em>
             </span>
           </button>
         </div>
@@ -148,6 +150,11 @@
     </section>
 
     <section id="selectScreen" class="screen select-screen" aria-label="Stage select" hidden>
+      <div class="select-shell">
+      <div class="select-heading screen-heading">
+        <p class="music-kicker">GAME MODE</p>
+        <h2 class="music-title select-title">Stage Select</h2>
+      </div>
       <div class="stage-list">
         <button class="stage-option" type="button" data-mode="sky" data-theme="sky" onclick="window.__startModeFallback && window.__startModeFallback('sky')" onpointerup="window.__startModeFallback && window.__startModeFallback('sky')">
           <span class="stage-order">01</span>
@@ -211,6 +218,7 @@
       </div>
 
       <button id="titleButton" class="link-button" type="button">タイトルに戻る</button>
+      </div>
     </section>
 
     <section id="resultScreen" class="screen result-screen" aria-label="Result" hidden>
