@@ -64,6 +64,7 @@ body::before {
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   isolation: isolate;
   transform: translateZ(0);
@@ -75,24 +76,8 @@ body[data-touch-orientation="landscape"] .viewport-frame {
   height: min(100vh, calc(100vw / var(--portrait-lock-ratio)));
 }
 
-@media (pointer: coarse) {
-  body[data-screen="running"] .viewport-frame {
-    transform: scale(0.88) translateZ(0);
-    transform-origin: center center;
-  }
-
-  body[data-screen="running"][data-touch-orientation="landscape"] .viewport-frame {
-    transform: scale(0.82) translateZ(0);
-  }
-}
-
 body[data-screen="running"][data-mobile-layout="true"] .viewport-frame {
-  transform: scale(0.9) translateZ(0);
-  transform-origin: center center;
-}
-
-body[data-screen="running"][data-mobile-layout="true"][data-touch-orientation="landscape"] .viewport-frame {
-  transform: scale(0.86) translateZ(0);
+  transform: translateZ(0);
 }
 
 body[data-stage="sky"] {

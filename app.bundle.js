@@ -21956,7 +21956,7 @@ if (typeof window !== "undefined") {
 (function() {
   try {
     let assetUrl = function(path) {
-      return `${path}?v=${ASSET_VERSION}`;
+      return `${path}?v=${ASSET_VERSION}&r=${assetReloadToken}`;
     }, createAudioElement = function(src = "") {
       let audio;
       try {
@@ -21968,6 +21968,90 @@ if (typeof window !== "undefined") {
         audio.src = src;
       }
       return audio;
+    }, refreshRuntimeAssetSources = function() {
+      SOUNDTRACKS.sky.src = assetUrl("./assets/rebirth-8bit-remix.mp3");
+      SOUNDTRACKS.sea.src = assetUrl("./assets/ramune-8bit.mp3");
+      SOUNDTRACKS.space.src = assetUrl("./assets/shooting-star-8bit.mp3");
+      SOUNDTRACKS.city.src = assetUrl("./assets/take-the-stage-8bit.mp3");
+      clearBgm.src = assetUrl("./assets/game-clear-8bit.mp3");
+      failedBgm.src = assetUrl("./assets/game-failed-8bit.mp3");
+      sfxTracks.clear.src = assetUrl("./assets/sfx-ring.mp3");
+      sfxTracks.hit.src = assetUrl("./assets/sfx-hit.mp3");
+      sfxTracks.bonus.src = assetUrl("./assets/sfx-bonus.mp3");
+      activeBgmTrackKey = "";
+    }, resetAssetPromises = function() {
+      penguinTexturePromise = void 0;
+      cloudTexturesPromise = void 0;
+      mountainTexturesPromise = void 0;
+      seaDecorationTexturesPromise = void 0;
+      spaceDecorationTexturesPromise = void 0;
+      cityDecorationTexturesPromise = void 0;
+    }, disposeSceneNode = function(node) {
+      if (!node) {
+        return;
+      }
+      if (node.geometry?.dispose) {
+        node.geometry.dispose();
+      }
+      if (Array.isArray(node.material)) {
+        node.material.forEach((material) => material?.dispose?.());
+      } else if (node.material?.dispose) {
+        node.material.dispose();
+      }
+    }, teardownScene = function() {
+      if (animationFrameId) {
+        window.cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      }
+      activeSceneRunId += 1;
+      stopBgmTracks(false);
+      if (scene) {
+        scene.traverse((node) => {
+          disposeSceneNode(node);
+        });
+      }
+      renderer?.dispose?.();
+      if (renderer?.domElement?.parentNode) {
+        renderer.domElement.parentNode.removeChild(renderer.domElement);
+      }
+      gates.length = 0;
+      burstPool.length = 0;
+      lineMaterials.length = 0;
+      railMaterials.length = 0;
+      Object.keys(stageGroups).forEach((key) => {
+        delete stageGroups[key];
+      });
+      renderer = null;
+      scene = null;
+      camera = null;
+      ambientLight = null;
+      hemiLight = null;
+      pointLight = null;
+      sceneGroup = null;
+      runway = null;
+      player = null;
+      penguinSprite = null;
+      penguinAura = null;
+      playerShadow = null;
+      trailMesh = null;
+      trailMaterial = null;
+      windGroup = null;
+      tunnelLines = null;
+      starField = null;
+      gateMaterial = null;
+      gateTrimMaterial = null;
+      gateRingMaterial = null;
+      gateAccentMaterial = null;
+      bonusSlotMaterial = null;
+      bonusStarMaterial = null;
+      burstMaterial = null;
+      initialized = false;
+      ensureScenePromise = null;
+    }, prepareAssetReloadForGameStart = function() {
+      assetReloadToken = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      resetAssetPromises();
+      refreshRuntimeAssetSources();
+      teardownScene();
     }, formatElapsedTime = function(seconds) {
       const wholeSeconds = Math.max(0, Math.floor(seconds));
       const hours = String(Math.floor(wholeSeconds / 3600)).padStart(2, "0");
@@ -22034,12 +22118,29 @@ if (typeof window !== "undefined") {
     }, useMobileCameraRig = function() {
       const viewportMin = Math.min(window.innerWidth || 0, window.innerHeight || 0);
       return state.deviceMode.key === "touch" || viewportMin <= 640;
+    }, getMobileViewportProfile = function() {
+      const viewport = getViewportMetrics();
+      const shortEdge = Math.max(1, Math.min(viewport.width, viewport.height));
+      const longEdge = Math.max(1, Math.max(viewport.width, viewport.height));
+      const aspect2 = longEdge / shortEdge;
+      const narrowBlend = MathUtils.clamp((430 - shortEdge) / 110, 0, 1);
+      const tallBlend = MathUtils.clamp((aspect2 - 1.75) / 0.55, 0, 1);
+      return {
+        shortEdge,
+        longEdge,
+        aspect: aspect2,
+        narrowBlend,
+        tallBlend,
+        fitBlend: Math.max(narrowBlend, tallBlend * 0.85)
+      };
     }, getCameraRigConfig = function() {
       if (useMobileCameraRig()) {
+        const mobileViewport = getMobileViewportProfile();
+        const fitBlend = mobileViewport.fitBlend;
         return {
-          fov: 68,
+          fov: MathUtils.lerp(63, 70, fitBlend),
           baseY: 2.5,
-          baseZ: 24,
+          baseZ: MathUtils.lerp(21.5, 25.8, fitBlend),
           runXFactor: 1,
           runXFollowSpeed: 8,
           runYFactor: 0.2,
@@ -24750,7 +24851,10 @@ if (typeof window !== "undefined") {
           randomizeGate(gate, nextGateRingNumber(gate.group.userData.ringNumber, mode), mode);
         }
       });
-    }, tick = function(now) {
+    }, tick = function(now, runId = activeSceneRunId) {
+      if (runId !== activeSceneRunId || !renderer || !scene || !camera) {
+        return;
+      }
       const delta = Math.min(0.05, (now - state.lastFrame) / 1e3 || 0.016);
       state.lastFrame = now;
       state.time += delta;
@@ -24778,7 +24882,7 @@ if (typeof window !== "undefined") {
         updateIdleGates(delta);
       }
       renderer.render(scene, camera);
-      requestAnimationFrame(tick);
+      animationFrameId = requestAnimationFrame((nextNow) => tick(nextNow, runId));
     }, handlePointer = function(clientX, clientY) {
       if (!state.running) {
         return;
@@ -24834,6 +24938,7 @@ if (typeof window !== "undefined") {
     const SETTINGS_KEY = "flying-micchi-settings-v1";
     const SETTINGS_VERSION = 2;
     const ASSET_VERSION = "20260428a";
+    let assetReloadToken = "boot";
     const PLAYER_Z = 8.4;
     const TRACK_HALF_WIDTH = 6;
     const TRACK_TOP = 4.2;
@@ -25260,6 +25365,8 @@ if (typeof window !== "undefined") {
     const gateTrimTextures = /* @__PURE__ */ new Map();
     const gateRingColorTextures = /* @__PURE__ */ new Map();
     let audioContext;
+    let animationFrameId = 0;
+    let activeSceneRunId = 0;
     const settings = loadSettings();
     window.__bundleReadyStage = "state";
     const state = {
@@ -25322,6 +25429,7 @@ if (typeof window !== "undefined") {
     sfxTracks.clear.volume = 0.56;
     sfxTracks.hit.volume = 0.62;
     sfxTracks.bonus.volume = 0.66;
+    refreshRuntimeAssetSources();
     window.__bundleReadyStage = "audio";
     if (scoreValue) {
       scoreValue.textContent = "0";
@@ -25622,8 +25730,10 @@ if (typeof window !== "undefined") {
           layoutGates(previewMode());
           applyTheme(activeThemeKey());
           initialized = true;
+          const runId = activeSceneRunId + 1;
+          activeSceneRunId = runId;
           state.lastFrame = performance.now();
-          requestAnimationFrame(tick);
+          animationFrameId = requestAnimationFrame((nextNow) => tick(nextNow, runId));
           return true;
         } catch (error) {
           console.error(error);
@@ -25647,6 +25757,7 @@ if (typeof window !== "undefined") {
         return startModePromise;
       }
       startModePromise = (async () => {
+        prepareAssetReloadForGameStart();
         unlockResultBgmTracks();
         unlockSfxTracks();
         window.__lastSceneInitError = "";

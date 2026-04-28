@@ -9,6 +9,7 @@ import * as THREE from "./vendor/three.module.js";
   const SETTINGS_KEY = "flying-micchi-settings-v1";
   const SETTINGS_VERSION = 2;
   const ASSET_VERSION = "20260428a";
+  let assetReloadToken = "boot";
   const PLAYER_Z = 8.4;
   const TRACK_HALF_WIDTH = 6;
   const TRACK_TOP = 4.2;
@@ -34,7 +35,7 @@ import * as THREE from "./vendor/three.module.js";
   };
 
   function assetUrl(path) {
-    return `${path}?v=${ASSET_VERSION}`;
+    return `${path}?v=${ASSET_VERSION}&r=${assetReloadToken}`;
   }
 
   const THEMES = {
@@ -466,6 +467,8 @@ import * as THREE from "./vendor/three.module.js";
   const gateTrimTextures = new Map();
   const gateRingColorTextures = new Map();
   let audioContext;
+  let animationFrameId = 0;
+  let activeSceneRunId = 0;
 
   const settings = loadSettings();
   window.__bundleReadyStage = "state";
@@ -530,6 +533,106 @@ import * as THREE from "./vendor/three.module.js";
   sfxTracks.clear.volume = 0.56;
   sfxTracks.hit.volume = 0.62;
   sfxTracks.bonus.volume = 0.66;
+  function refreshRuntimeAssetSources() {
+    SOUNDTRACKS.sky.src = assetUrl("./assets/rebirth-8bit-remix.mp3");
+    SOUNDTRACKS.sea.src = assetUrl("./assets/ramune-8bit.mp3");
+    SOUNDTRACKS.space.src = assetUrl("./assets/shooting-star-8bit.mp3");
+    SOUNDTRACKS.city.src = assetUrl("./assets/take-the-stage-8bit.mp3");
+    clearBgm.src = assetUrl("./assets/game-clear-8bit.mp3");
+    failedBgm.src = assetUrl("./assets/game-failed-8bit.mp3");
+    sfxTracks.clear.src = assetUrl("./assets/sfx-ring.mp3");
+    sfxTracks.hit.src = assetUrl("./assets/sfx-hit.mp3");
+    sfxTracks.bonus.src = assetUrl("./assets/sfx-bonus.mp3");
+    activeBgmTrackKey = "";
+  }
+
+  function resetAssetPromises() {
+    penguinTexturePromise = undefined;
+    cloudTexturesPromise = undefined;
+    mountainTexturesPromise = undefined;
+    seaDecorationTexturesPromise = undefined;
+    spaceDecorationTexturesPromise = undefined;
+    cityDecorationTexturesPromise = undefined;
+  }
+
+  function disposeSceneNode(node) {
+    if (!node) {
+      return;
+    }
+    if (node.geometry?.dispose) {
+      node.geometry.dispose();
+    }
+    if (Array.isArray(node.material)) {
+      node.material.forEach((material) => material?.dispose?.());
+    } else if (node.material?.dispose) {
+      node.material.dispose();
+    }
+  }
+
+  function teardownScene() {
+    if (animationFrameId) {
+      window.cancelAnimationFrame(animationFrameId);
+      animationFrameId = 0;
+    }
+    activeSceneRunId += 1;
+
+    stopBgmTracks(false);
+
+    if (scene) {
+      scene.traverse((node) => {
+        disposeSceneNode(node);
+      });
+    }
+    renderer?.dispose?.();
+    if (renderer?.domElement?.parentNode) {
+      renderer.domElement.parentNode.removeChild(renderer.domElement);
+    }
+
+    gates.length = 0;
+    burstPool.length = 0;
+    lineMaterials.length = 0;
+    railMaterials.length = 0;
+    Object.keys(stageGroups).forEach((key) => {
+      delete stageGroups[key];
+    });
+
+    renderer = null;
+    scene = null;
+    camera = null;
+    ambientLight = null;
+    hemiLight = null;
+    pointLight = null;
+    sceneGroup = null;
+    runway = null;
+    player = null;
+    penguinSprite = null;
+    penguinAura = null;
+    playerShadow = null;
+    trailMesh = null;
+    trailMaterial = null;
+    windGroup = null;
+    tunnelLines = null;
+    starField = null;
+    gateMaterial = null;
+    gateTrimMaterial = null;
+    gateRingMaterial = null;
+    gateAccentMaterial = null;
+    bonusSlotMaterial = null;
+    bonusStarMaterial = null;
+    burstMaterial = null;
+
+    initialized = false;
+    ensureScenePromise = null;
+  }
+
+  function prepareAssetReloadForGameStart() {
+    assetReloadToken = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    resetAssetPromises();
+    refreshRuntimeAssetSources();
+    teardownScene();
+  }
+
+  refreshRuntimeAssetSources();
   window.__bundleReadyStage = "audio";
 
   if (scoreValue) {
@@ -657,12 +760,31 @@ import * as THREE from "./vendor/three.module.js";
     return state.deviceMode.key === "touch" || viewportMin <= 640;
   }
 
+  function getMobileViewportProfile() {
+    const viewport = getViewportMetrics();
+    const shortEdge = Math.max(1, Math.min(viewport.width, viewport.height));
+    const longEdge = Math.max(1, Math.max(viewport.width, viewport.height));
+    const aspect = longEdge / shortEdge;
+    const narrowBlend = THREE.MathUtils.clamp((430 - shortEdge) / 110, 0, 1);
+    const tallBlend = THREE.MathUtils.clamp((aspect - 1.75) / 0.55, 0, 1);
+    return {
+      shortEdge,
+      longEdge,
+      aspect,
+      narrowBlend,
+      tallBlend,
+      fitBlend: Math.max(narrowBlend, tallBlend * 0.85)
+    };
+  }
+
   function getCameraRigConfig() {
     if (useMobileCameraRig()) {
+      const mobileViewport = getMobileViewportProfile();
+      const fitBlend = mobileViewport.fitBlend;
       return {
-        fov: 68,
+        fov: THREE.MathUtils.lerp(63, 70, fitBlend),
         baseY: 2.5,
-        baseZ: 24,
+        baseZ: THREE.MathUtils.lerp(21.5, 25.8, fitBlend),
         runXFactor: 1.0,
         runXFollowSpeed: 8,
         runYFactor: 0.2,
@@ -4108,7 +4230,11 @@ import * as THREE from "./vendor/three.module.js";
     });
   }
 
-  function tick(now) {
+  function tick(now, runId = activeSceneRunId) {
+    if (runId !== activeSceneRunId || !renderer || !scene || !camera) {
+      return;
+    }
+
     const delta = Math.min(0.05, (now - state.lastFrame) / 1000 || 0.016);
     state.lastFrame = now;
     state.time += delta;
@@ -4139,7 +4265,7 @@ import * as THREE from "./vendor/three.module.js";
     }
 
     renderer.render(scene, camera);
-    requestAnimationFrame(tick);
+    animationFrameId = requestAnimationFrame((nextNow) => tick(nextNow, runId));
   }
 
   async function ensureScene(options = {}) {
@@ -4261,8 +4387,10 @@ import * as THREE from "./vendor/three.module.js";
       applyTheme(activeThemeKey());
 
       initialized = true;
+      const runId = activeSceneRunId + 1;
+      activeSceneRunId = runId;
       state.lastFrame = performance.now();
-      requestAnimationFrame(tick);
+      animationFrameId = requestAnimationFrame((nextNow) => tick(nextNow, runId));
       return true;
       } catch (error) {
       console.error(error);
@@ -4289,6 +4417,7 @@ import * as THREE from "./vendor/three.module.js";
     }
 
     startModePromise = (async () => {
+      prepareAssetReloadForGameStart();
       unlockResultBgmTracks();
       unlockSfxTracks();
       window.__lastSceneInitError = "";
