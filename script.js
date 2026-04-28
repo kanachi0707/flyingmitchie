@@ -8,7 +8,7 @@ import * as THREE from "./vendor/three.module.js";
   const STORAGE_KEY = "flying-micchi-bests-v1";
   const SETTINGS_KEY = "flying-micchi-settings-v1";
   const SETTINGS_VERSION = 2;
-  const ASSET_VERSION = "20260423a";
+  const ASSET_VERSION = "20260428a";
   const PLAYER_Z = 8.4;
   const TRACK_HALF_WIDTH = 6;
   const TRACK_TOP = 4.2;
@@ -270,8 +270,8 @@ import * as THREE from "./vendor/three.module.js";
       speedStart: 15,
       speedStep: 0.1,
       maxSpeed: 50,
-      gapStartScale: 2,
-      gapStep: 0.09,
+      gapStartScale: 1.8,
+      gapStep: 0.05,
       gapStepEvery: 20,
       gapMinScale: 1.55,
       summary: "鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｮ・ｯ雋・ｽｷ隴ｯ竏壹・繝ｻ・ｽ郢晢ｽｻ繝ｻ・｡鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ鬯ｮ・ｯ繝ｻ・ｷ郢晢ｽｻ繝ｻ・･鬮ｫ・ｰ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｾ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｲ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・･鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｯ・ｮ繝ｻ・ｫ郢晢ｽｻ繝ｻ・ｴ鬩包ｽｶ隰ｫ・ｾ繝ｻ・ｽ繝ｻ・ｫ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｶ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬯ｯ・ｯ繝ｻ・ｩ髫ｰ・ｳ繝ｻ・ｾ郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｵ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｺ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｫ0.1鬯ｯ・ｯ繝ｻ・ｮ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｷ鬯ｮ・｣髮具ｽｻ繝ｻ・ｽ繝ｻ・ｨ鬮ｯ讓奇ｽｻ繧托ｽｽ・ｽ繝ｻ・ｲ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・｣鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｰ鬯ｯ・ｯ繝ｻ・ｯ郢晢ｽｻ繝ｻ・ｯ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｾ鬯ｯ・ｩ陝ｷ・｢繝ｻ・ｽ繝ｻ・｢鬮ｫ・ｴ髮懶ｽ｣繝ｻ・ｽ繝ｻ・｢驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｻ/ 鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ鬮ｮ諛ｶ・ｽ・｣郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｳ鬯ｯ・ｯ繝ｻ・ｩ髯晢ｽｷ繝ｻ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・｢鬯ｮ・ｫ繝ｻ・ｴ髯ｷ・ｿ鬮｢ﾂ繝ｻ・ｾ陷会ｽｱ郢晢ｽｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｳ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｨ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ鬮ｯ・ｷ繝ｻ・ｿ髯ｷ・ｴ郢晢ｽｻ繝ｻ・ｽ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｨ鬮ｫ・ｰ陞滂ｽｲ繝ｻ・ｽ繝ｻ・ｵ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｽ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｹ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｧ鬯ｩ蟷｢・ｽ・｢髫ｴ雜｣・ｽ・｢郢晢ｽｻ繝ｻ・ｽ郢晢ｽｻ繝ｻ・ｻ鬩幢ｽ｢隴趣ｽ｢繝ｻ・ｽ繝ｻ・ｻ驛｢譎｢・ｽ・ｻ郢晢ｽｻ繝ｻ・ｹ",
@@ -320,6 +320,7 @@ import * as THREE from "./vendor/three.module.js";
   const lifeHud = document.querySelector("#lifeHud");
   const lifeTokens = [...document.querySelectorAll("[data-life-index]")];
   const soundButton = document.querySelector("#soundButton");
+  const resultTopHomeButton = document.querySelector("#resultTopHomeButton");
   const gameModeButton = document.querySelector("#gameModeButton");
   const musicModeButton = document.querySelector("#musicModeButton");
   const musicStopButton = document.querySelector("#musicStopButton");
@@ -417,8 +418,14 @@ import * as THREE from "./vendor/three.module.js";
   const bgm = createAudioElement();
   const clearBgm = createAudioElement(assetUrl("./assets/game-clear-8bit.mp3"));
   const failedBgm = createAudioElement(assetUrl("./assets/game-failed-8bit.mp3"));
+  const sfxTracks = {
+    clear: createAudioElement(assetUrl("./assets/sfx-ring.mp3")),
+    hit: createAudioElement(assetUrl("./assets/sfx-hit.mp3")),
+    bonus: createAudioElement(assetUrl("./assets/sfx-bonus.mp3"))
+  };
   let activeBgmTrackKey = "";
   let resultBgmUnlocked = false;
+  let sfxUnlocked = false;
 
   let renderer;
   let scene;
@@ -445,9 +452,14 @@ import * as THREE from "./vendor/three.module.js";
   let bonusStarMaterial;
   let burstMaterial;
   let initialized = false;
+  let ensureScenePromise = null;
+  let startModePromise = null;
   let penguinTexturePromise;
   let cloudTexturesPromise;
   let mountainTexturesPromise;
+  let seaDecorationTexturesPromise;
+  let spaceDecorationTexturesPromise;
+  let cityDecorationTexturesPromise;
   let saturnRingTexture;
   let gateRingAlphaTexture;
   const gateSurfaceTextures = new Map();
@@ -510,6 +522,14 @@ import * as THREE from "./vendor/three.module.js";
   failedBgm.loop = true;
   failedBgm.preload = "auto";
   failedBgm.volume = 0.5;
+  Object.values(sfxTracks).forEach((track) => {
+    track.preload = "auto";
+    track.loop = false;
+    track.playsInline = true;
+  });
+  sfxTracks.clear.volume = 0.56;
+  sfxTracks.hit.volume = 0.62;
+  sfxTracks.bonus.volume = 0.66;
   window.__bundleReadyStage = "audio";
 
   if (scoreValue) {
@@ -559,6 +579,7 @@ import * as THREE from "./vendor/three.module.js";
 
   function updateTouchOrientationState() {
     document.body.dataset.touchOrientation = isTouchLandscape() ? "landscape" : "portrait";
+    document.body.dataset.mobileLayout = useMobileCameraRig() ? "true" : "false";
   }
 
   function getViewportMetrics() {
@@ -629,6 +650,43 @@ import * as THREE from "./vendor/three.module.js";
         // Ignore unsupported legacy APIs.
       }
     }
+  }
+
+  function useMobileCameraRig() {
+    const viewportMin = Math.min(window.innerWidth || 0, window.innerHeight || 0);
+    return state.deviceMode.key === "touch" || viewportMin <= 640;
+  }
+
+  function getCameraRigConfig() {
+    if (useMobileCameraRig()) {
+      return {
+        fov: 68,
+        baseY: 2.5,
+        baseZ: 24,
+        runXFactor: 1.0,
+        runXFollowSpeed: 8,
+        runYFactor: 0.2,
+        idleXFactor: 0.16,
+        idleYFactor: 0.16,
+        lookXFactor: 1.0,
+        lookYFactor: 0.08,
+        lookZ: -36
+      };
+    }
+
+    return {
+      fov: 54,
+      baseY: 2.5,
+      baseZ: 18,
+      runXFactor: 0.34,
+      runXFollowSpeed: 4,
+      runYFactor: 0.24,
+      idleXFactor: 0.18,
+      idleYFactor: 0.18,
+      lookXFactor: 0.14,
+      lookYFactor: 0.1,
+      lookZ: -18
+    };
   }
 
   function loadBests() {
@@ -908,6 +966,48 @@ import * as THREE from "./vendor/three.module.js";
     });
   }
 
+  function unlockSfxTracks() {
+    if (sfxUnlocked || !state.soundEnabled) {
+      return;
+    }
+    sfxUnlocked = true;
+
+    Object.values(sfxTracks).forEach((track) => {
+      const wasMuted = track.muted;
+      const previousTime = Number.isFinite(track.currentTime) ? track.currentTime : 0;
+      track.muted = true;
+
+      const playPromise = track.play();
+      if (!playPromise || typeof playPromise.then !== "function") {
+        track.pause();
+        track.muted = wasMuted;
+        try {
+          track.currentTime = previousTime;
+        } catch {
+          // Some mobile browsers reject currentTime until metadata is loaded.
+        }
+        return;
+      }
+
+      playPromise.then(() => {
+        track.pause();
+        track.muted = wasMuted;
+        try {
+          track.currentTime = previousTime;
+        } catch {
+          // Ignore currentTime reset failures during warm-up.
+        }
+      }).catch(() => {
+        track.muted = wasMuted;
+        try {
+          track.currentTime = previousTime;
+        } catch {
+          // Ignore currentTime reset failures during warm-up.
+        }
+      });
+    });
+  }
+
   function syncMusicPreviewLoopState() {
     const shouldLoop = !state.musicAutoPlay || state.musicRepeatOne;
     bgm.loop = shouldLoop;
@@ -967,6 +1067,7 @@ import * as THREE from "./vendor/three.module.js";
 
   function syncUi() {
     document.body.dataset.screen = state.screen;
+    document.body.dataset.deviceMode = state.deviceMode.key;
     updateTouchOrientationState();
     applyBodyTheme(activeThemeKey());
 
@@ -976,6 +1077,9 @@ import * as THREE from "./vendor/three.module.js";
     resultScreen.hidden = state.screen !== "result";
     resultScreen.dataset.outcome = state.resultOutcome;
     scoreHud.hidden = state.screen !== "running";
+    if (resultTopHomeButton) {
+      resultTopHomeButton.hidden = state.screen !== "result";
+    }
     if (timeHud) {
       timeHud.hidden = state.screen !== "running";
     }
@@ -1444,6 +1548,53 @@ import * as THREE from "./vendor/three.module.js";
     });
   }
 
+  function createFallbackSeaDecorationTexture(kind = "fish") {
+    return createCanvasTexture((context, width, height) => {
+      context.clearRect(0, 0, width, height);
+      const fill = context.createLinearGradient(0, 0, width, height);
+      fill.addColorStop(0, "rgba(194,255,247,0.96)");
+      fill.addColorStop(1, "rgba(47,184,246,0.92)");
+      context.fillStyle = fill;
+
+      if (kind === "coral") {
+        context.beginPath();
+        context.moveTo(width * 0.48, height * 0.96);
+        context.lineTo(width * 0.42, height * 0.62);
+        context.bezierCurveTo(width * 0.36, height * 0.42, width * 0.28, height * 0.26, width * 0.24, height * 0.08);
+        context.lineTo(width * 0.3, height * 0.08);
+        context.bezierCurveTo(width * 0.34, height * 0.24, width * 0.42, height * 0.42, width * 0.5, height * 0.58);
+        context.lineTo(width * 0.5, height * 0.08);
+        context.lineTo(width * 0.56, height * 0.08);
+        context.lineTo(width * 0.58, height * 0.42);
+        context.bezierCurveTo(width * 0.62, height * 0.28, width * 0.7, height * 0.18, width * 0.78, height * 0.06);
+        context.lineTo(width * 0.84, height * 0.12);
+        context.bezierCurveTo(width * 0.76, height * 0.24, width * 0.68, height * 0.42, width * 0.62, height * 0.64);
+        context.lineTo(width * 0.58, height * 0.96);
+        context.closePath();
+        context.fill();
+        return;
+      }
+
+      context.beginPath();
+      context.moveTo(width * 0.12, height * 0.54);
+      context.quadraticCurveTo(width * 0.26, height * 0.28, width * 0.56, height * 0.3);
+      context.quadraticCurveTo(width * 0.84, height * 0.3, width * 0.9, height * 0.48);
+      context.quadraticCurveTo(width * 0.82, height * 0.7, width * 0.56, height * 0.72);
+      context.quadraticCurveTo(width * 0.24, height * 0.72, width * 0.12, height * 0.54);
+      context.closePath();
+      context.fill();
+
+      context.beginPath();
+      context.moveTo(width * 0.08, height * 0.5);
+      context.lineTo(width * 0.01, height * 0.28);
+      context.lineTo(width * 0.18, height * 0.42);
+      context.lineTo(width * 0.18, height * 0.58);
+      context.lineTo(width * 0.01, height * 0.72);
+      context.closePath();
+      context.fill();
+    });
+  }
+
   function loadPenguinTexture() {
     penguinTexturePromise ??= new Promise((resolve) => {
       const image = new Image();
@@ -1542,6 +1693,129 @@ import * as THREE from "./vendor/three.module.js";
     })));
 
     return mountainTexturesPromise;
+  }
+
+  function loadSeaDecorationTextures() {
+    const textureEntries = [
+      { key: "coral", src: "./assets/04_coral.png" },
+      { key: "dolphin", src: "./assets/02_dolphin.png" },
+      { key: "fish", src: "./assets/03_fish.png" }
+    ];
+
+    seaDecorationTexturesPromise ??= Promise.all(textureEntries.map(({ key, src }) => new Promise((resolve) => {
+      const loader = new THREE.TextureLoader();
+      let settled = false;
+      const finish = (texture) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        window.clearTimeout(timeoutId);
+        resolve([key, texture]);
+      };
+      const timeoutId = window.setTimeout(() => {
+        console.warn(`Sea decoration texture timed out: ${src}. Falling back to generated texture.`);
+        finish(createFallbackSeaDecorationTexture(key));
+      }, 250);
+      loader.load(
+        assetUrl(src),
+        (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.minFilter = THREE.LinearFilter;
+          finish(texture);
+        },
+        undefined,
+        () => {
+          console.warn(`Failed to load sea decoration texture: ${src}. Falling back to generated texture.`);
+          finish(createFallbackSeaDecorationTexture(key));
+        }
+      );
+    }))).then((entries) => Object.fromEntries(entries));
+
+    return seaDecorationTexturesPromise;
+  }
+
+  function loadSpaceDecorationTextures() {
+    const textureEntries = [
+      { key: "space01", src: "./assets/space-side-01.png" },
+      { key: "space03", src: "./assets/space-side-03.png" },
+      { key: "space04", src: "./assets/space-side-04.png" },
+      { key: "space05", src: "./assets/space-side-05.png" }
+    ];
+
+    spaceDecorationTexturesPromise ??= Promise.all(textureEntries.map(({ key, src }) => new Promise((resolve) => {
+      const loader = new THREE.TextureLoader();
+      let settled = false;
+      const finish = (texture) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        window.clearTimeout(timeoutId);
+        resolve([key, texture]);
+      };
+      const timeoutId = window.setTimeout(() => {
+        console.warn(`Space decoration texture timed out: ${src}. Falling back to generated texture.`);
+        finish(createFallbackSeaDecorationTexture("fish"));
+      }, 250);
+      loader.load(
+        assetUrl(src),
+        (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.minFilter = THREE.LinearFilter;
+          finish(texture);
+        },
+        undefined,
+        () => {
+          console.warn(`Failed to load space decoration texture: ${src}. Falling back to generated texture.`);
+          finish(createFallbackSeaDecorationTexture("fish"));
+        }
+      );
+    }))).then((entries) => Object.fromEntries(entries));
+
+    return spaceDecorationTexturesPromise;
+  }
+
+  function loadCityDecorationTextures() {
+    const textureEntries = [
+      { key: "city01", src: "./assets/city-side-01.png" },
+      { key: "city02", src: "./assets/city-side-02.png" },
+      { key: "city03", src: "./assets/city-side-03.png" },
+      { key: "city04", src: "./assets/city-side-04.png" },
+      { key: "city05", src: "./assets/city-side-05.png" }
+    ];
+
+    cityDecorationTexturesPromise ??= Promise.all(textureEntries.map(({ key, src }) => new Promise((resolve) => {
+      const loader = new THREE.TextureLoader();
+      let settled = false;
+      const finish = (texture) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        window.clearTimeout(timeoutId);
+        resolve([key, texture]);
+      };
+      const timeoutId = window.setTimeout(() => {
+        console.warn(`City decoration texture timed out: ${src}. Falling back to generated texture.`);
+        finish(createFallbackSeaDecorationTexture("coral"));
+      }, 250);
+      loader.load(
+        assetUrl(src),
+        (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.minFilter = THREE.LinearFilter;
+          finish(texture);
+        },
+        undefined,
+        () => {
+          console.warn(`Failed to load city decoration texture: ${src}. Falling back to generated texture.`);
+          finish(createFallbackSeaDecorationTexture("coral"));
+        }
+      );
+    }))).then((entries) => Object.fromEntries(entries));
+
+    return cityDecorationTexturesPromise;
   }
 
   function createPenguin(texture) {
@@ -2164,7 +2438,17 @@ import * as THREE from "./vendor/three.module.js";
     ));
   }
 
-  function activateBonusPocket(data, mode, left, right) {
+  function getBonusPocketMetrics() {
+    const bonusPocketScale = 1.55 * GATE_HOLE_COMPENSATION;
+    return {
+      pocketWidth: 2.4 * bonusPocketScale,
+      pocketHeight: 2.2 * bonusPocketScale,
+      outerMargin: 0.52,
+      gapMargin: 0.42
+    };
+  }
+
+  function activateBonusPocket(data, mode) {
     data.bonusActive = false;
     data.bonusCollected = false;
     data.bonusRect = null;
@@ -2178,22 +2462,9 @@ import * as THREE from "./vendor/three.module.js";
 
     const outerLeft = -data.outerWidth * 0.5;
     const outerRight = data.outerWidth * 0.5;
-    const pocketWidth = data.gapWidth;
-    const pocketHeight = data.gapHeight;
-    const outerMargin = 0.52;
-    const gapMargin = 0.24;
-    const leftPocketMinX = outerLeft + outerMargin + pocketWidth + gapMargin;
-    const rightPocketMaxX = outerRight - outerMargin - pocketWidth - gapMargin;
-    const canUseLeft = left >= leftPocketMinX;
-    const canUseRight = right <= rightPocketMaxX;
+    const { pocketWidth, pocketHeight, outerMargin } = getBonusPocketMetrics();
     const preferredSide = data.ringNumber % 2 === 0 ? "left" : "right";
-    const side = preferredSide === "left"
-      ? (canUseLeft ? "left" : (canUseRight ? "right" : null))
-      : (canUseRight ? "right" : (canUseLeft ? "left" : null));
-
-    if (!side) {
-      return;
-    }
+    const side = preferredSide;
 
     const centerY = THREE.MathUtils.clamp(
       data.gapY + Math.sin(data.ringNumber * 0.9) * 0.7,
@@ -2204,11 +2475,11 @@ import * as THREE from "./vendor/three.module.js";
     let pocketLeft;
     let pocketRight;
     if (side === "left") {
-      pocketRight = left - gapMargin;
-      pocketLeft = pocketRight - pocketWidth;
-    } else {
-      pocketLeft = right + gapMargin;
+      pocketLeft = outerLeft + outerMargin;
       pocketRight = pocketLeft + pocketWidth;
+    } else {
+      pocketRight = outerRight - outerMargin;
+      pocketLeft = pocketRight - pocketWidth;
     }
 
     data.bonusRect = {
@@ -2233,6 +2504,7 @@ import * as THREE from "./vendor/three.module.js";
     const data = gate.group.userData;
     const t = performance.now() * 0.001 + ringNumber * 0.38 + Math.random();
     const gapScale = getGapScale(Math.max(0, ringNumber - 1), mode);
+    const bonusGate = !!mode.bonusEvery && ringNumber % mode.bonusEvery === 0;
 
     data.ringNumber = ringNumber;
     data.gapWidth = THREE.MathUtils.randFloat(2.4 * gapScale, 4.1 * gapScale) * GATE_HOLE_COMPENSATION;
@@ -2244,6 +2516,24 @@ import * as THREE from "./vendor/three.module.js";
     data.gapX = Math.sin(t * 1.6) * maxGapX;
     data.gapY = Math.cos(t * 1.2) * maxGapY * 0.88 + Math.min(0.28, maxGapY);
     data.gapY = THREE.MathUtils.clamp(data.gapY, -maxGapY, maxGapY);
+
+    if (bonusGate) {
+      const { pocketWidth, outerMargin, gapMargin } = getBonusPocketMetrics();
+      const preferredSide = ringNumber % 2 === 0 ? "left" : "right";
+      const oppositeBias = data.outerWidth * 0.18;
+      const xPhase = Math.sin(t * 1.6) * 0.5 + 0.5;
+
+      if (preferredSide === "left") {
+        const minGapX = -data.outerWidth * 0.5 + outerMargin + pocketWidth + gapMargin + data.gapWidth * 0.5;
+        const lowerBound = Math.min(maxGapX, Math.max(minGapX, oppositeBias));
+        data.gapX = THREE.MathUtils.lerp(lowerBound, maxGapX, xPhase);
+      } else {
+        const maxGapXForRightPocket = data.outerWidth * 0.5 - outerMargin - pocketWidth - gapMargin - data.gapWidth * 0.5;
+        const upperBound = Math.max(-maxGapX, Math.min(maxGapXForRightPocket, -oppositeBias));
+        data.gapX = THREE.MathUtils.lerp(-maxGapX, upperBound, xPhase);
+      }
+    }
+
     data.cleared = false;
     data.fadeOpacity = 1;
     data.fadeActive = false;
@@ -2284,7 +2574,7 @@ import * as THREE from "./vendor/three.module.js";
     data.accent.visible = true;
     data.safeRect = { left, right, top, bottom };
 
-    activateBonusPocket(data, mode, left, right);
+    activateBonusPocket(data, mode);
     layoutGateShell(data, THEMES[mode.theme], left, right, top, bottom);
   }
 
@@ -2426,7 +2716,7 @@ import * as THREE from "./vendor/three.module.js";
     });
   }
 
-  function createSeaDecorations() {
+  function createSeaDecorations(textures = {}) {
     const group = new THREE.Group();
     group.userData.key = "sea";
 
@@ -2461,108 +2751,251 @@ import * as THREE from "./vendor/three.module.js";
       group.add(column);
     }
 
+    const decorationConfigs = [
+      {
+        key: "coral",
+        count: 4,
+        yMin: TRACK_BOTTOM - 0.25,
+        yMax: TRACK_BOTTOM + 1.15,
+        sideMin: 8.6,
+        sideMax: 11.3,
+        zMin: -210,
+        zMax: -36,
+        widthMin: 3.2,
+        widthMax: 5.1,
+        speedMin: 0.2,
+        speedMax: 0.3,
+        sway: 0.18,
+        bob: 0.08,
+        centerY: 0,
+        opacity: 0.96
+      },
+      {
+        key: "fish",
+        count: 6,
+        yMin: -2.2,
+        yMax: 2.8,
+        sideMin: 8.1,
+        sideMax: 10.8,
+        zMin: -220,
+        zMax: -40,
+        widthMin: 2.9,
+        widthMax: 4.4,
+        speedMin: 0.34,
+        speedMax: 0.52,
+        sway: 0.26,
+        bob: 0.16,
+        centerY: 0.5,
+        opacity: 0.94
+      },
+      {
+        key: "dolphin",
+        count: 4,
+        yMin: -1.8,
+        yMax: 3.6,
+        sideMin: 8.8,
+        sideMax: 11.6,
+        zMin: -216,
+        zMax: -42,
+        widthMin: 4.7,
+        widthMax: 6.9,
+        speedMin: 0.28,
+        speedMax: 0.44,
+        sway: 0.22,
+        bob: 0.18,
+        centerY: 0.5,
+        opacity: 0.96
+      },
+    ];
+
+    decorationConfigs.forEach((config) => {
+      const texture = textures[config.key];
+      if (!texture) {
+        return;
+      }
+      const mirroredTexture = texture.clone();
+      mirroredTexture.wrapS = THREE.RepeatWrapping;
+      mirroredTexture.repeat.x = -1;
+      mirroredTexture.offset.x = 1;
+      mirroredTexture.needsUpdate = true;
+
+      const aspect = texture.image?.height && texture.image?.width
+        ? texture.image.height / texture.image.width
+        : config.key === "coral" ? 1.1 : 0.58;
+
+      for (let index = 0; index < config.count; index += 1) {
+        const side = index % 2 === 0 ? -1 : 1;
+        const material = new THREE.SpriteMaterial({
+          map: side > 0 ? mirroredTexture : texture,
+          transparent: true,
+          opacity: config.opacity,
+          depthWrite: false,
+          depthTest: true,
+          fog: false
+        });
+        const sprite = new THREE.Sprite(material);
+        sprite.center.set(0.5, config.centerY);
+        sprite.renderOrder = -4;
+        sprite.userData.kind = "sea-image";
+        sprite.userData.side = side;
+        sprite.userData.speedFactor = THREE.MathUtils.randFloat(config.speedMin, config.speedMax);
+        sprite.userData.swayAmount = THREE.MathUtils.randFloat(config.sway * 0.7, config.sway);
+        sprite.userData.bobAmount = THREE.MathUtils.randFloat(config.bob * 0.65, config.bob);
+        sprite.userData.bobSpeed = THREE.MathUtils.randFloat(0.7, 1.35);
+        sprite.userData.phase = Math.random() * Math.PI * 2;
+        sprite.userData.reset = (initial = false) => {
+          const width = THREE.MathUtils.randFloat(config.widthMin, config.widthMax);
+          sprite.userData.baseX = side * THREE.MathUtils.randFloat(config.sideMin, config.sideMax);
+          sprite.userData.baseY = THREE.MathUtils.randFloat(config.yMin, config.yMax);
+          sprite.position.set(
+            sprite.userData.baseX,
+            sprite.userData.baseY,
+            initial ? THREE.MathUtils.randFloat(config.zMin, config.zMax) : config.zMin - Math.random() * 30
+          );
+          sprite.scale.set(width, width * aspect, 1);
+        };
+        sprite.userData.reset(true);
+        group.add(sprite);
+      }
+    });
+
     return group;
   }
 
-  function createSpaceDecorations() {
+  function createSpaceDecorations(textures = {}) {
     const group = new THREE.Group();
     group.userData.key = "space";
+    const decorationKeys = ["space01", "space03", "space04", "space05"];
 
-    for (let index = 0; index < 18; index += 1) {
-      const crystal = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(THREE.MathUtils.randFloat(0.25, 1.1), 0),
-        new THREE.MeshStandardMaterial({
-          color: 0x9186ff,
-          emissive: 0x4d2b77,
-          emissiveIntensity: 0.9,
+    decorationKeys.forEach((key, textureIndex) => {
+      const texture = textures[key];
+      if (!texture) {
+        return;
+      }
+
+      const mirroredTexture = texture.clone();
+      mirroredTexture.wrapS = THREE.RepeatWrapping;
+      mirroredTexture.repeat.x = -1;
+      mirroredTexture.offset.x = 1;
+      mirroredTexture.needsUpdate = true;
+
+      const aspect = texture.image?.height && texture.image?.width
+        ? texture.image.height / texture.image.width
+        : THREE.MathUtils.randFloat(0.55, 1.2);
+
+      for (let index = 0; index < 2; index += 1) {
+        const side = index === 0 ? -1 : 1;
+        const material = new THREE.SpriteMaterial({
+          map: side > 0 ? mirroredTexture : texture,
           transparent: true,
-          opacity: 1,
-          roughness: 0.3,
-          metalness: 0.28
-        })
-      );
-
-      crystal.userData.spin = THREE.MathUtils.randFloatSpread(1.2);
-      crystal.userData.speedFactor = THREE.MathUtils.randFloat(0.46, 0.86);
-      crystal.userData.fadeActive = false;
-      crystal.userData.fadeOpacity = 1;
-      crystal.userData.reset = (initial = false) => {
-        crystal.position.set(
-          THREE.MathUtils.randFloatSpread(22),
-          THREE.MathUtils.randFloatSpread(10),
-          initial ? THREE.MathUtils.randFloat(-210, -30) : -210 - Math.random() * 30
-        );
-        crystal.rotation.set(
-          Math.random() * Math.PI,
-          Math.random() * Math.PI,
-          Math.random() * Math.PI
-        );
-        crystal.userData.fadeActive = false;
-        crystal.userData.fadeOpacity = 1;
-        crystal.material.opacity = 1;
-      };
-      crystal.userData.reset(true);
-      group.add(crystal);
-    }
+          opacity: 0.96,
+          depthWrite: false,
+          depthTest: true,
+          fog: false
+        });
+        const sprite = new THREE.Sprite(material);
+        sprite.center.set(0.5, 0.5);
+        sprite.renderOrder = -4;
+        sprite.userData.kind = "space-image";
+        sprite.userData.side = side;
+        sprite.userData.speedFactor = THREE.MathUtils.randFloat(0.5, 0.84);
+        sprite.userData.fadeActive = false;
+        sprite.userData.fadeOpacity = 1;
+        sprite.userData.swayAmount = THREE.MathUtils.randFloat(0.12, 0.28);
+        sprite.userData.bobAmount = THREE.MathUtils.randFloat(0.08, 0.22);
+        sprite.userData.bobSpeed = THREE.MathUtils.randFloat(0.5, 1.05);
+        sprite.userData.phase = Math.random() * Math.PI * 2;
+        sprite.userData.reset = (initial = false) => {
+          const width = THREE.MathUtils.randFloat(3.8, 7.4);
+          sprite.userData.baseX = side * THREE.MathUtils.randFloat(8.4, 13.4);
+          sprite.userData.baseY = THREE.MathUtils.randFloat(-4.8, 5.6);
+          sprite.position.set(
+            sprite.userData.baseX,
+            sprite.userData.baseY,
+            initial
+              ? THREE.MathUtils.randFloat(-210 - textureIndex * 5, -34)
+              : -214 - Math.random() * 34
+          );
+          sprite.scale.set(width, width * aspect, 1);
+          sprite.userData.fadeActive = false;
+          sprite.userData.fadeOpacity = 1;
+          sprite.material.opacity = 0.96;
+        };
+        sprite.userData.reset(true);
+        group.add(sprite);
+      }
+    });
 
     return group;
   }
 
-  function createCityDecorations() {
+  function createCityDecorations(textures = {}) {
     const group = new THREE.Group();
     group.userData.key = "city";
+    const decorationKeys = ["city01", "city02", "city03", "city04", "city05"];
 
-    for (let index = 0; index < 18; index += 1) {
-      const side = index % 2 === 0 ? -1 : 1;
-      const building = new THREE.Group();
-      const width = THREE.MathUtils.randFloat(1.2, 3.2);
-      const height = THREE.MathUtils.randFloat(4.4, 10.8);
-      const body = new THREE.Mesh(
-        new THREE.BoxGeometry(width, height, THREE.MathUtils.randFloat(1.2, 2.2)),
-        new THREE.MeshStandardMaterial({
-          color: 0x1c2421,
-          emissive: 0x0b120f,
-          emissiveIntensity: 0.18,
-          roughness: 0.88,
-          metalness: 0.08
-        })
-      );
-      body.position.y = height * 0.5;
-      building.add(body);
+    decorationKeys.forEach((key, textureIndex) => {
+      const texture = textures[key];
+      if (!texture) {
+        return;
+      }
 
-      const strip = new THREE.Mesh(
-        new THREE.PlaneGeometry(width * 0.72, height * 0.86),
-        new THREE.MeshBasicMaterial({
-          color: 0xcde2b7,
+      const mirroredTexture = texture.clone();
+      mirroredTexture.wrapS = THREE.RepeatWrapping;
+      mirroredTexture.repeat.x = -1;
+      mirroredTexture.offset.x = 1;
+      mirroredTexture.needsUpdate = true;
+
+      const aspect = texture.image?.height && texture.image?.width
+        ? texture.image.height / texture.image.width
+        : THREE.MathUtils.randFloat(0.7, 1.45);
+
+      for (let index = 0; index < 2; index += 1) {
+        const side = index === 0 ? -1 : 1;
+        const material = new THREE.SpriteMaterial({
+          map: side > 0 ? mirroredTexture : texture,
           transparent: true,
-          opacity: 0.15,
-          side: THREE.DoubleSide
-        })
-      );
-      strip.position.set(0, height * 0.5, 1.12);
-      building.add(strip);
-
-      building.userData.side = side;
-      building.userData.speedFactor = THREE.MathUtils.randFloat(0.88, 1.12);
-      building.userData.reset = (initial = false) => {
-        building.position.set(
-          side * THREE.MathUtils.randFloat(8.2, 13.2),
-          TRACK_BOTTOM - 0.55,
-          initial ? THREE.MathUtils.randFloat(-210, -38) : -210 - Math.random() * 28
-        );
-      };
-      building.userData.reset(true);
-      group.add(building);
-    }
+          opacity: 0.98,
+          depthWrite: false,
+          depthTest: true,
+          fog: false
+        });
+        const sprite = new THREE.Sprite(material);
+        sprite.center.set(0.5, 0.08);
+        sprite.renderOrder = -4;
+        sprite.userData.kind = "city-image";
+        sprite.userData.side = side;
+        sprite.userData.speedFactor = THREE.MathUtils.randFloat(0.78, 1.04);
+        sprite.userData.swayAmount = THREE.MathUtils.randFloat(0.08, 0.18);
+        sprite.userData.bobAmount = THREE.MathUtils.randFloat(0.03, 0.12);
+        sprite.userData.bobSpeed = THREE.MathUtils.randFloat(0.55, 1.05);
+        sprite.userData.phase = Math.random() * Math.PI * 2;
+        sprite.userData.reset = (initial = false) => {
+          const width = THREE.MathUtils.randFloat(4.8, 8.8);
+          sprite.userData.baseX = side * THREE.MathUtils.randFloat(8.4, 13.1);
+          sprite.userData.baseY = TRACK_BOTTOM - 0.8 + THREE.MathUtils.randFloat(-0.18, 0.12);
+          sprite.position.set(
+            sprite.userData.baseX,
+            sprite.userData.baseY,
+            initial
+              ? THREE.MathUtils.randFloat(-210 - textureIndex * 6, -42)
+              : -218 - Math.random() * 34
+          );
+          sprite.scale.set(width, width * aspect, 1);
+        };
+        sprite.userData.reset(true);
+        group.add(sprite);
+      }
+    });
 
     return group;
   }
 
-  function createStageGroups(cloudTextures = [], mountainTextures = []) {
+  function createStageGroups(cloudTextures = [], mountainTextures = [], seaDecorationTextures = {}, spaceDecorationTextures = {}, cityDecorationTextures = {}) {
     stageGroups.sky = createSkyDecorations(cloudTextures, mountainTextures);
-    stageGroups.sea = createSeaDecorations();
-    stageGroups.space = createSpaceDecorations();
-    stageGroups.city = createCityDecorations();
+    stageGroups.sea = createSeaDecorations(seaDecorationTextures);
+    stageGroups.space = createSpaceDecorations(spaceDecorationTextures);
+    stageGroups.city = createCityDecorations(cityDecorationTextures);
 
     Object.values(stageGroups).forEach((group) => {
       group.visible = false;
@@ -2771,10 +3204,13 @@ import * as THREE from "./vendor/three.module.js";
       return;
     }
 
+    const cameraRig = getCameraRigConfig();
     player.position.set(0, 0.1, PLAYER_Z);
     player.rotation.set(0, 0, 0);
-    camera.position.set(0, 2.7, 18);
-    camera.lookAt(0, 0.1, -18);
+    camera.fov = cameraRig.fov;
+    camera.updateProjectionMatrix();
+    camera.position.set(0, cameraRig.baseY, cameraRig.baseZ);
+    camera.lookAt(0, 0.1, cameraRig.lookZ);
   }
 
   function resetPreviewScene(modeKey) {
@@ -2957,8 +3393,37 @@ import * as THREE from "./vendor/three.module.js";
     return Promise.resolve(audioContext);
   }
 
+  function playAudioSfx(type) {
+    const track = sfxTracks[type];
+    if (!track || !state.soundEnabled) {
+      return false;
+    }
+
+    try {
+      track.pause();
+      track.currentTime = 0;
+      const playPromise = track.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {
+          return;
+        });
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   function playSfx(type) {
-    if (!state.soundEnabled || (!window.AudioContext && !window.webkitAudioContext)) {
+    if (!state.soundEnabled) {
+      return;
+    }
+
+    if (playAudioSfx(type)) {
+      return;
+    }
+
+    if (!window.AudioContext && !window.webkitAudioContext) {
       return;
     }
 
@@ -3280,12 +3745,39 @@ import * as THREE from "./vendor/three.module.js";
         if (key === "sky") {
           item.position.y += Math.sin(state.time * 0.8 + item.position.z * 0.02) * delta * 0.26;
         } else if (key === "sea") {
-          item.position.x += Math.sin(state.time * 1.2 + item.position.z * 0.04) * delta * 0.18;
+          if (item.userData.kind === "sea-image") {
+            item.position.x = item.userData.baseX
+              + Math.sin(state.time * item.userData.bobSpeed + item.userData.phase + item.position.z * 0.012)
+                * item.userData.swayAmount;
+            item.position.y = item.userData.baseY
+              + Math.cos(state.time * (item.userData.bobSpeed * 0.86) + item.userData.phase)
+                * item.userData.bobAmount;
+          } else {
+            item.position.x += Math.sin(state.time * 1.2 + item.position.z * 0.04) * delta * 0.18;
+          }
         } else if (key === "space") {
-          item.rotation.x += delta * item.userData.spin * 0.6;
-          item.rotation.y += delta * item.userData.spin * 0.9;
+          if (item.userData.kind === "space-image") {
+            item.position.x = item.userData.baseX
+              + Math.sin(state.time * item.userData.bobSpeed + item.userData.phase + item.position.z * 0.01)
+                * item.userData.swayAmount;
+            item.position.y = item.userData.baseY
+              + Math.cos(state.time * (item.userData.bobSpeed * 0.84) + item.userData.phase)
+                * item.userData.bobAmount;
+          } else {
+            item.rotation.x += delta * item.userData.spin * 0.6;
+            item.rotation.y += delta * item.userData.spin * 0.9;
+          }
         } else if (key === "city") {
-          item.rotation.y = Math.sin(state.time * 0.4 + item.position.z * 0.02) * 0.06;
+          if (item.userData.kind === "city-image") {
+            item.position.x = item.userData.baseX
+              + Math.sin(state.time * item.userData.bobSpeed + item.userData.phase + item.position.z * 0.01)
+                * item.userData.swayAmount;
+            item.position.y = item.userData.baseY
+              + Math.cos(state.time * (item.userData.bobSpeed * 0.82) + item.userData.phase)
+                * item.userData.bobAmount;
+          } else {
+            item.rotation.y = Math.sin(state.time * 0.4 + item.position.z * 0.02) * 0.06;
+          }
         }
       });
     });
@@ -3360,6 +3852,7 @@ import * as THREE from "./vendor/three.module.js";
   }
 
   function updatePlayer(delta) {
+    const cameraRig = getCameraRigConfig();
     updateKeyboard(delta);
 
     const previousX = player.position.x;
@@ -3395,10 +3888,14 @@ import * as THREE from "./vendor/three.module.js";
       playerShadow.visible = true;
     }
 
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, player.position.x * 0.34, 1 - Math.exp(-delta * 4));
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2.7 + player.position.y * 0.24, 1 - Math.exp(-delta * 4));
-    camera.position.z = 18 + state.shake;
-    camera.lookAt(player.position.x * 0.14, player.position.y * 0.1, -18);
+    camera.position.x = THREE.MathUtils.lerp(
+      camera.position.x,
+      player.position.x * cameraRig.runXFactor,
+      1 - Math.exp(-delta * cameraRig.runXFollowSpeed)
+    );
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, cameraRig.baseY + player.position.y * cameraRig.runYFactor, 1 - Math.exp(-delta * 4));
+    camera.position.z = cameraRig.baseZ + state.shake;
+    camera.lookAt(player.position.x * cameraRig.lookXFactor, player.position.y * cameraRig.lookYFactor, cameraRig.lookZ);
     updateTrail();
   }
 
@@ -3569,6 +4066,7 @@ import * as THREE from "./vendor/three.module.js";
   }
 
   function animateIdle(delta) {
+    const cameraRig = getCameraRigConfig();
     penguinSprite.visible = false;
     penguinAura.visible = false;
     playerShadow.visible = false;
@@ -3580,10 +4078,10 @@ import * as THREE from "./vendor/three.module.js";
     player.position.x = THREE.MathUtils.lerp(player.position.x, Math.sin(state.time * 1.3) * 0.26, 1 - Math.exp(-delta * 4));
     penguinSprite.position.y = Math.sin(state.time * 8) * 0.08 + 0.16;
     penguinSprite.scale.set(3.55 * PENGUIN_SCALE, 4.2 * PENGUIN_SCALE, 1);
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, player.position.x * 0.18, 1 - Math.exp(-delta * 4));
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2.8 + player.position.y * 0.18, 1 - Math.exp(-delta * 4));
-    camera.position.z = 18;
-    camera.lookAt(player.position.x * 0.12, player.position.y * 0.1, -18);
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, player.position.x * cameraRig.idleXFactor, 1 - Math.exp(-delta * 4));
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, cameraRig.baseY + 0.1 + player.position.y * cameraRig.idleYFactor, 1 - Math.exp(-delta * 4));
+    camera.position.z = cameraRig.baseZ;
+    camera.lookAt(player.position.x * cameraRig.lookXFactor, player.position.y * cameraRig.lookYFactor, cameraRig.lookZ);
   }
 
   function updateIdleGates(delta) {
@@ -3644,12 +4142,18 @@ import * as THREE from "./vendor/three.module.js";
     requestAnimationFrame(tick);
   }
 
-  async function ensureScene() {
+  async function ensureScene(options = {}) {
+    const { interactive = false } = options;
     if (initialized) {
       return true;
     }
 
-    try {
+    if (ensureScenePromise) {
+      return ensureScenePromise;
+    }
+
+    ensureScenePromise = (async () => {
+      try {
       const viewport = getViewportMetrics();
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -3658,8 +4162,9 @@ import * as THREE from "./vendor/three.module.js";
       sceneRoot.append(renderer.domElement);
 
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(54, viewport.width / viewport.height, 0.1, 320);
-      camera.position.set(0, 2.7, 18);
+      const cameraRig = getCameraRigConfig();
+      camera = new THREE.PerspectiveCamera(cameraRig.fov, viewport.width / viewport.height, 0.1, 320);
+      camera.position.set(0, cameraRig.baseY, cameraRig.baseZ);
 
       ambientLight = new THREE.AmbientLight(0xffffff, THEMES.sky.ambientIntensity);
       hemiLight = new THREE.HemisphereLight(THEMES.sky.hemiSky, THEMES.sky.hemiGround, 1.1);
@@ -3731,15 +4236,18 @@ import * as THREE from "./vendor/three.module.js";
       sceneGroup.add(windGroup);
       scene.add(starField);
 
-      const [texture, cloudTextures, mountainTextures] = await Promise.all([
+      const [texture, cloudTextures, mountainTextures, seaDecorationTextures, spaceDecorationTextures, cityDecorationTextures] = await Promise.all([
         loadPenguinTexture(),
         loadCloudTextures(),
-        loadMountainTextures()
+        loadMountainTextures(),
+        loadSeaDecorationTextures(),
+        loadSpaceDecorationTextures(),
+        loadCityDecorationTextures()
       ]);
       player = createPenguin(texture);
       sceneGroup.add(player);
 
-      createStageGroups(cloudTextures, mountainTextures);
+      createStageGroups(cloudTextures, mountainTextures, seaDecorationTextures, spaceDecorationTextures, cityDecorationTextures);
       pinSkyMountainsToViewportFloor();
 
       for (let index = 0; index < GATE_COUNT; index += 1) {
@@ -3756,71 +4264,93 @@ import * as THREE from "./vendor/three.module.js";
       state.lastFrame = performance.now();
       requestAnimationFrame(tick);
       return true;
-    } catch (error) {
+      } catch (error) {
       console.error(error);
-      state.running = false;
-      state.screen = "select";
-      syncUi();
-      setMessage("3D\u30b7\u30fc\u30f3\u306e\u521d\u671f\u5316\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u3053\u306e\u74b0\u5883\u3067\u306f WebGL \u304c\u4f7f\u3048\u306a\u3044\u304b\u3001\u521d\u671f\u5316\u304c\u9014\u4e2d\u3067\u6b62\u307e\u3063\u3066\u3044\u307e\u3059\u3002");
+      window.__lastSceneInitError = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+      if (interactive) {
+        state.running = false;
+        state.screen = "select";
+        syncUi();
+        const detail = window.__lastSceneInitError ? ` (${window.__lastSceneInitError})` : "";
+        setMessage(`3Dシーンの初期化に失敗しました。この環境では WebGL が使えないか、初期化が途中で止まっています。${detail}`);
+      }
       return false;
-    }
+      } finally {
+        ensureScenePromise = null;
+      }
+    })();
+
+    return ensureScenePromise;
   }
 
   async function startMode(modeKey) {
-    unlockResultBgmTracks();
-    await requestPortraitLock();
-    const ready = await ensureScene();
-    if (!ready) {
-      return;
+    if (startModePromise) {
+      return startModePromise;
     }
 
-    const mode = MODES[modeKey];
-    state.modeKey = modeKey;
-    state.previewModeKey = modeKey;
-    state.screen = "running";
-    state.running = true;
-    state.score = 0;
-    state.missCount = 0;
-    state.ringsCleared = 0;
-    state.runElapsed = 0;
-    state.hitsRemaining = 2;
-    state.speedProgress = 0;
-    state.musicShuffle = false;
-    state.musicAutoPlay = false;
-    state.musicRepeat = false;
-    state.musicRepeatOne = false;
-    state.musicShuffleBag = [];
-    state.nextRingNumber = GATE_COUNT + 1;
-    state.speed = mode.speedStart;
-    state.targetX = 0;
-    state.targetY = 0.1;
-    state.touchActive = false;
-    state.playerVelocityX = 0;
-    state.playerVelocityY = 0;
-    state.hitFlashTime = 0;
-    state.shake = 0;
-    state.lastFrame = performance.now();
+    startModePromise = (async () => {
+      unlockResultBgmTracks();
+      unlockSfxTracks();
+      window.__lastSceneInitError = "";
+      await requestPortraitLock();
+      const ready = await ensureScene({ interactive: true });
+      if (!ready) {
+        return false;
+      }
 
-    scoreValue.textContent = "0";
-    if (missValue) {
-      missValue.textContent = "0";
-    }
-    if (timeValue) {
-      timeValue.textContent = "00:00:00";
-    }
-    setMessage("");
-    syncUi();
-    applyTheme(mode.theme);
-    resetPlayerPose();
-    layoutGates(mode);
-    resetBursts();
+      const mode = MODES[modeKey];
+      state.modeKey = modeKey;
+      state.previewModeKey = modeKey;
+      state.screen = "running";
+      state.running = true;
+      state.score = 0;
+      state.missCount = 0;
+      state.ringsCleared = 0;
+      state.runElapsed = 0;
+      state.hitsRemaining = 2;
+      state.speedProgress = 0;
+      state.musicShuffle = false;
+      state.musicAutoPlay = false;
+      state.musicRepeat = false;
+      state.musicRepeatOne = false;
+      state.musicShuffleBag = [];
+      state.nextRingNumber = GATE_COUNT + 1;
+      state.speed = mode.speedStart;
+      state.targetX = 0;
+      state.targetY = 0.1;
+      state.touchActive = false;
+      state.playerVelocityX = 0;
+      state.playerVelocityY = 0;
+      state.hitFlashTime = 0;
+      state.shake = 0;
+      state.lastFrame = performance.now();
 
-    await syncStageBgm(true, "main", modeKey);
-    playSfx("stage");
+      scoreValue.textContent = "0";
+      if (missValue) {
+        missValue.textContent = "0";
+      }
+      if (timeValue) {
+        timeValue.textContent = "00:00:00";
+      }
+      setMessage("");
+      syncUi();
+      applyTheme(mode.theme);
+      resetPlayerPose();
+      layoutGates(mode);
+      resetBursts();
+
+      await syncStageBgm(true, "main", modeKey);
+      playSfx("stage");
+      return true;
+    })().finally(() => {
+      startModePromise = null;
+    });
+
+    return startModePromise;
   }
 
   window.__startMode = function (modeKey) {
-    void startMode(modeKey);
+    return startMode(modeKey);
   };
 
   function handlePointer(clientX, clientY) {
@@ -3891,10 +4421,18 @@ import * as THREE from "./vendor/three.module.js";
   }
 
   bindUiEvent(gameModeButton, "click", () => {
+    if (window.__openGameModeFallback) {
+      window.__openGameModeFallback();
+      return;
+    }
     openSelect("sky");
   });
 
   bindUiEvent(musicModeButton, "click", () => {
+    if (window.__openMusicModeFallback) {
+      window.__openMusicModeFallback();
+      return;
+    }
     openMusicMode();
   });
 
@@ -3912,6 +4450,10 @@ import * as THREE from "./vendor/three.module.js";
       resetPreviewScene(button.dataset.mode);
     });
     button.addEventListener("click", () => {
+      if (window.__startModeFallback) {
+        window.__startModeFallback(button.dataset.mode);
+        return;
+      }
       void startMode(button.dataset.mode);
     });
   });
@@ -4005,6 +4547,10 @@ import * as THREE from "./vendor/three.module.js";
     openIntro();
   });
 
+  bindUiEvent(resultTopHomeButton, "click", () => {
+    openIntro();
+  });
+
   bindUiEvent(soundButton, "click", () => {
     state.soundEnabled = !state.soundEnabled;
     saveSettings();
@@ -4012,6 +4558,7 @@ import * as THREE from "./vendor/three.module.js";
 
     if (state.soundEnabled) {
       unlockResultBgmTracks();
+      unlockSfxTracks();
       const trackType = state.screen === "result"
         ? (state.resultOutcome === "clear" ? "clear" : "failed")
         : "main";
@@ -4037,6 +4584,11 @@ import * as THREE from "./vendor/three.module.js";
   });
 
   window.addEventListener("pointerdown", (event) => {
+    if (state.soundEnabled) {
+      unlockResultBgmTracks();
+      unlockSfxTracks();
+    }
+
     if (event.pointerType !== "touch" && event.pointerType !== "pen") {
       return;
     }
@@ -4054,6 +4606,11 @@ import * as THREE from "./vendor/three.module.js";
   });
 
   window.addEventListener("touchstart", (event) => {
+    if (state.soundEnabled) {
+      unlockResultBgmTracks();
+      unlockSfxTracks();
+    }
+
     const touch = event.touches[0];
     if (!touch || !shouldHandleScreenTouch(event.target, touch.clientX, touch.clientY)) {
       return;
@@ -4121,14 +4678,16 @@ import * as THREE from "./vendor/three.module.js";
     }
 
     const viewport = getViewportMetrics();
+    const cameraRig = getCameraRigConfig();
     camera.aspect = viewport.width / viewport.height;
+    camera.fov = cameraRig.fov;
     camera.updateProjectionMatrix();
     renderer.setSize(viewport.width, viewport.height);
     pinSkyMountainsToViewportFloor();
   });
 
   openIntro();
-  void ensureScene();
+  void ensureScene({ interactive: false });
   window.__bundleReadyStage = "ready";
   } catch (error) {
     window.__bundleBootError = error && error.message ? error.message : String(error);

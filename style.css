@@ -33,6 +33,12 @@ body[data-screen="running"] {
   touch-action: none;
 }
 
+body[data-screen="running"][data-device-mode="desktop"],
+body[data-screen="running"][data-device-mode="desktop"] .viewport-frame,
+body[data-screen="running"][data-device-mode="desktop"] canvas {
+  cursor: none;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -71,13 +77,22 @@ body[data-touch-orientation="landscape"] .viewport-frame {
 
 @media (pointer: coarse) {
   body[data-screen="running"] .viewport-frame {
-    transform: scale(0.94) translateZ(0);
+    transform: scale(0.88) translateZ(0);
     transform-origin: center center;
   }
 
   body[data-screen="running"][data-touch-orientation="landscape"] .viewport-frame {
-    transform: scale(0.9) translateZ(0);
+    transform: scale(0.82) translateZ(0);
   }
+}
+
+body[data-screen="running"][data-mobile-layout="true"] .viewport-frame {
+  transform: scale(0.9) translateZ(0);
+  transform-origin: center center;
+}
+
+body[data-screen="running"][data-mobile-layout="true"][data-touch-orientation="landscape"] .viewport-frame {
+  transform: scale(0.86) translateZ(0);
 }
 
 body[data-stage="sky"] {
@@ -1354,6 +1369,29 @@ body[data-screen="running"] #soundButton {
   display: none;
 }
 
+body[data-screen="result"] #soundButton {
+  display: none;
+}
+
+body[data-screen="result"] #resultTopHomeButton {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  z-index: 18;
+  width: auto;
+  min-width: 136px;
+  padding: 8px 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+body[data-screen="result"] #resultTopHomeButton {
+  right: 16px;
+}
+
+body[data-screen="result"] #homeButton {
+  display: none;
+}
+
 body[data-screen="running"] .score-hud {
   display: grid;
 }
@@ -1512,7 +1550,8 @@ body[data-touch-orientation="landscape"] .utility-bar {
 body[data-touch-orientation="landscape"][data-screen="select"] #soundButton,
 body[data-touch-orientation="landscape"][data-screen="select"] #titleButton,
 body[data-touch-orientation="landscape"][data-screen="music"] #soundButton,
-body[data-touch-orientation="landscape"][data-screen="music"] #musicBackButton {
+body[data-touch-orientation="landscape"][data-screen="music"] #musicBackButton,
+body[data-touch-orientation="landscape"][data-screen="result"] #resultTopHomeButton {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + 16px);
   z-index: 18;
@@ -1524,11 +1563,22 @@ body[data-touch-orientation="landscape"][data-screen="music"] #musicBackButton {
   white-space: nowrap;
 }
 
+body[data-touch-orientation="landscape"][data-screen="result"] #resultTopHomeButton {
+  width: auto;
+  min-width: 124px;
+  text-align: center;
+  white-space: nowrap;
+}
+
 body[data-touch-orientation="landscape"][data-screen="select"] #titleButton {
   right: 16px;
 }
 
 body[data-touch-orientation="landscape"][data-screen="music"] #musicBackButton {
+  right: 16px;
+}
+
+body[data-touch-orientation="landscape"][data-screen="result"] #resultTopHomeButton {
   right: 16px;
 }
 
@@ -1759,7 +1809,9 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
   body[data-screen="select"] #soundButton,
   body[data-screen="select"] #titleButton,
   body[data-screen="music"] #soundButton,
-  body[data-screen="music"] #musicBackButton {
+  body[data-screen="music"] #musicBackButton,
+  body[data-screen="result"] #soundButton,
+  body[data-screen="result"] #homeButton {
     position: fixed;
     top: calc(env(safe-area-inset-top, 0px) + 16px);
     z-index: 18;
@@ -1776,6 +1828,10 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
   }
 
   body[data-screen="music"] #musicBackButton {
+    right: 16px;
+  }
+
+  body[data-screen="result"] #resultTopHomeButton {
     right: 16px;
   }
 

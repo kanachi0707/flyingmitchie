@@ -70,6 +70,7 @@
           <strong id="timeValue" class="time-value">00:00:00</strong>
         </div>
         <button id="soundButton" class="utility-button" type="button">SOUND ON</button>
+        <button id="resultTopHomeButton" class="utility-button" type="button" hidden>タイトルに戻る</button>
       </div>
     </header>
 
@@ -77,8 +78,8 @@
       <div class="intro-shell">
         <img class="title-logo" src="./assets/fm-logo-wm.png" alt="フライングみっちー">
         <div class="title-actions">
-          <button id="gameModeButton" class="title-mode-button primary-button" type="button" onclick="window.__openGameModeFallback && window.__openGameModeFallback()" onpointerup="window.__openGameModeFallback && window.__openGameModeFallback()">GAME MODE</button>
-          <button id="musicModeButton" class="title-mode-button secondary-button" type="button" onclick="window.__openMusicModeFallback && window.__openMusicModeFallback()" onpointerup="window.__openMusicModeFallback && window.__openMusicModeFallback()">MUSIC MODE</button>
+          <button id="gameModeButton" class="title-mode-button primary-button" type="button">GAME MODE</button>
+          <button id="musicModeButton" class="title-mode-button secondary-button" type="button">MUSIC MODE</button>
         </div>
         <div class="title-credit" aria-label="Credits">
           <p>©再生の道／みっちー</p>
@@ -156,7 +157,7 @@
         <h2 class="music-title select-title">Stage Select</h2>
       </div>
       <div class="stage-list">
-        <button class="stage-option" type="button" data-mode="sky" data-theme="sky" onclick="window.__startModeFallback && window.__startModeFallback('sky')" onpointerup="window.__startModeFallback && window.__startModeFallback('sky')">
+        <button class="stage-option" type="button" data-mode="sky" data-theme="sky">
           <span class="stage-order">01</span>
           <span class="stage-meta">
             <span class="stage-kicker">Beginner</span>
@@ -168,7 +169,7 @@
           <span id="best-sky" class="stage-best">BEST SCORE 0</span>
         </button>
 
-        <button class="stage-option" type="button" data-mode="sea" data-theme="sea" onclick="window.__startModeFallback && window.__startModeFallback('sea')" onpointerup="window.__startModeFallback && window.__startModeFallback('sea')">
+        <button class="stage-option" type="button" data-mode="sea" data-theme="sea">
           <span class="stage-order">02</span>
           <span class="stage-meta">
             <span class="stage-kicker">Normal</span>
@@ -180,7 +181,7 @@
           <span id="best-sea" class="stage-best">BEST SCORE 0</span>
         </button>
 
-        <button class="stage-option" type="button" data-mode="space" data-theme="space" onclick="window.__startModeFallback && window.__startModeFallback('space')" onpointerup="window.__startModeFallback && window.__startModeFallback('space')">
+        <button class="stage-option" type="button" data-mode="space" data-theme="space">
           <span class="stage-order">03</span>
           <span class="stage-meta">
             <span class="stage-kicker">Hard</span>
@@ -193,7 +194,7 @@
         </button>
 
         <div class="stage-option-card" data-theme="city">
-          <button class="stage-option stage-option-main" type="button" data-mode="city" data-theme="city" onclick="window.__startModeFallback && window.__startModeFallback('city')" onpointerup="window.__startModeFallback && window.__startModeFallback('city')">
+          <button class="stage-option stage-option-main" type="button" data-mode="city" data-theme="city">
             <span class="stage-order">04</span>
             <span class="stage-meta">
               <span class="stage-kicker">Score Attack</span>
@@ -339,23 +340,21 @@
 
       window.__setMessageFallback("3Dシーンを起動しています...");
       window.__setScreenFallback("running");
-      if (window.__startMode) {
-        window.setTimeout(function () {
-          window.__startMode(modeKey);
-        }, 0);
-      }
-
       window.setTimeout(function () {
-        var sceneRoot = document.getElementById("sceneRoot");
-        var hasCanvas = sceneRoot && sceneRoot.querySelector("canvas");
-        if (!hasCanvas || document.body.dataset.screen !== "running") {
+        Promise.resolve(window.__startMode(modeKey)).then(function (started) {
+          if (started === false) {
+            if (document.body && document.body.dataset.screen !== "select") {
+              window.__setScreenFallback("select");
+            }
+            return;
+          }
+          window.__setMessageFallback("");
+        }).catch(function (error) {
+          var detail = error && error.message ? " / " + error.message : "";
           window.__setScreenFallback("select");
-          window.__setMessageFallback("3Dシーンの起動に失敗しました。IAB では WebGL 初期化が止まることがあります。");
-          return;
-        }
-
-        window.__setMessageFallback("");
-      }, 1000);
+          window.__setMessageFallback("3Dシーンの起動に失敗しました。IAB では WebGL 初期化が止まることがあります。" + detail);
+        });
+      }, 0);
     };
 
     window.__penguinReady = window.__penguinReady === true;
