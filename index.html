@@ -312,9 +312,17 @@
     };
 
     window.__openGameModeFallback = function () {
-      window.__setScreenFallback("select");
       if (window.__openGameMode) {
-        window.__openGameMode();
+        window.__setMessageFallback("Loading...");
+        Promise.resolve(window.__openGameMode()).then(function (opened) {
+          if (opened === false) {
+            return;
+          }
+          window.__setMessageFallback("");
+        }).catch(function (error) {
+          var detail = error && error.message ? " / " + error.message : "";
+          window.__setMessageFallback("ゲーム用アセットの読み込みに失敗しました。" + detail);
+        });
       }
     };
 

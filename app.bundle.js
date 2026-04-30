@@ -22892,7 +22892,7 @@ if (typeof window !== "undefined") {
         const timeoutId = window.setTimeout(() => {
           console.warn("Character texture load timed out. Falling back to generated texture.");
           finish(createFallbackPenguinTexture());
-        }, 250);
+        }, ASSET_LOAD_TIMEOUT_MS);
         image.onload = () => finish(processPenguinTexture(image));
         image.onerror = () => {
           console.warn("Failed to load character image. Falling back to generated texture.");
@@ -22919,7 +22919,7 @@ if (typeof window !== "undefined") {
         const timeoutId = window.setTimeout(() => {
           console.warn(`Cloud texture timed out: ${src}. Falling back to generated texture.`);
           finish(createFallbackCloudTexture());
-        }, 250);
+        }, ASSET_LOAD_TIMEOUT_MS);
         loader.load(
           assetUrl(src),
           (texture) => {
@@ -22953,7 +22953,7 @@ if (typeof window !== "undefined") {
         const timeoutId = window.setTimeout(() => {
           console.warn(`Mountain texture timed out: ${src}. Falling back to generated texture.`);
           finish(createFallbackMountainTexture());
-        }, 250);
+        }, ASSET_LOAD_TIMEOUT_MS);
         loader.load(
           assetUrl(src),
           (texture) => {
@@ -22989,7 +22989,7 @@ if (typeof window !== "undefined") {
         const timeoutId = window.setTimeout(() => {
           console.warn(`Sea decoration texture timed out: ${src}. Falling back to generated texture.`);
           finish(createFallbackSeaDecorationTexture(key));
-        }, 250);
+        }, ASSET_LOAD_TIMEOUT_MS);
         loader.load(
           assetUrl(src),
           (texture) => {
@@ -23026,7 +23026,7 @@ if (typeof window !== "undefined") {
         const timeoutId = window.setTimeout(() => {
           console.warn(`Space decoration texture timed out: ${src}. Falling back to generated texture.`);
           finish(createFallbackSeaDecorationTexture("fish"));
-        }, 250);
+        }, ASSET_LOAD_TIMEOUT_MS);
         loader.load(
           assetUrl(src),
           (texture) => {
@@ -23064,7 +23064,7 @@ if (typeof window !== "undefined") {
         const timeoutId = window.setTimeout(() => {
           console.warn(`City decoration texture timed out: ${src}. Falling back to generated texture.`);
           finish(createFallbackSeaDecorationTexture("coral"));
-        }, 250);
+        }, ASSET_LOAD_TIMEOUT_MS);
         loader.load(
           assetUrl(src),
           (texture) => {
@@ -24947,6 +24947,7 @@ if (typeof window !== "undefined") {
     const GATE_COUNT = 9;
     const GATE_MARGIN = 0.55;
     const GATE_HOLE_COMPENSATION = 8.4 / 9.4;
+    const ASSET_LOAD_TIMEOUT_MS = 5e3;
     const PENGUIN_BASE_SCALE = 0.5;
     const PENGUIN_SCALE = PENGUIN_BASE_SCALE * 0.8;
     const PLAYER_HITBOX_BASE = {
@@ -25353,6 +25354,7 @@ if (typeof window !== "undefined") {
     let initialized = false;
     let ensureScenePromise = null;
     let startModePromise = null;
+    let gameModeLoadPromise = null;
     let penguinTexturePromise;
     let cloudTexturesPromise;
     let mountainTexturesPromise;
@@ -25456,9 +25458,7 @@ if (typeof window !== "undefined") {
         }
       }
     }
-    window.__openGameMode = function() {
-      openSelect("sky");
-    };
+    window.__openGameMode = openGameMode;
     window.__openMusicMode = function() {
       openMusicMode();
     };
@@ -25757,7 +25757,6 @@ if (typeof window !== "undefined") {
         return startModePromise;
       }
       startModePromise = (async () => {
-        prepareAssetReloadForGameStart();
         unlockResultBgmTracks();
         unlockSfxTracks();
         window.__lastSceneInitError = "";
@@ -25807,6 +25806,7 @@ if (typeof window !== "undefined") {
         resetBursts();
         await syncStageBgm(true, "main", modeKey);
         playSfx("stage");
+        setMessage("");
         return true;
       })().finally(() => {
         startModePromise = null;
@@ -25816,12 +25816,35 @@ if (typeof window !== "undefined") {
     window.__startMode = function(modeKey) {
       return startMode(modeKey);
     };
+    async function openGameMode() {
+      if (gameModeLoadPromise) {
+        return gameModeLoadPromise;
+      }
+      gameModeLoadPromise = (async () => {
+        state.running = false;
+        setMessage("Loading...");
+        prepareAssetReloadForGameStart();
+        window.__lastSceneInitError = "";
+        const ready = await ensureScene({ interactive: false });
+        if (!ready) {
+          const detail = window.__lastSceneInitError ? ` (${window.__lastSceneInitError})` : "";
+          setMessage(`\u30B2\u30FC\u30E0\u7528\u30A2\u30BB\u30C3\u30C8\u306E\u8AAD\u307F\u8FBC\u307F\u306B\u5931\u6557\u3057\u307E\u3057\u305F\u3002\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002${detail}`);
+          return false;
+        }
+        setMessage("");
+        openSelect("sky");
+        return true;
+      })().finally(() => {
+        gameModeLoadPromise = null;
+      });
+      return gameModeLoadPromise;
+    }
     bindUiEvent(gameModeButton, "click", () => {
       if (window.__openGameModeFallback) {
         window.__openGameModeFallback();
         return;
       }
-      openSelect("sky");
+      void openGameMode();
     });
     bindUiEvent(musicModeButton, "click", () => {
       if (window.__openMusicModeFallback) {

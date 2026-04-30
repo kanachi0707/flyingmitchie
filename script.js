@@ -18,6 +18,7 @@ import * as THREE from "./vendor/three.module.js";
   const GATE_COUNT = 9;
   const GATE_MARGIN = 0.55;
   const GATE_HOLE_COMPENSATION = 8.4 / 9.4;
+  const ASSET_LOAD_TIMEOUT_MS = 5000;
   const PENGUIN_BASE_SCALE = 0.5;
   const PENGUIN_SCALE = PENGUIN_BASE_SCALE * 0.8;
   const PLAYER_HITBOX_BASE = {
@@ -455,6 +456,7 @@ import * as THREE from "./vendor/three.module.js";
   let initialized = false;
   let ensureScenePromise = null;
   let startModePromise = null;
+  let gameModeLoadPromise = null;
   let penguinTexturePromise;
   let cloudTexturesPromise;
   let mountainTexturesPromise;
@@ -1732,7 +1734,7 @@ import * as THREE from "./vendor/three.module.js";
       const timeoutId = window.setTimeout(() => {
         console.warn("Character texture load timed out. Falling back to generated texture.");
         finish(createFallbackPenguinTexture());
-      }, 250);
+      }, ASSET_LOAD_TIMEOUT_MS);
       image.onload = () => finish(processPenguinTexture(image));
       image.onerror = () => {
         console.warn("Failed to load character image. Falling back to generated texture.");
@@ -1761,7 +1763,7 @@ import * as THREE from "./vendor/three.module.js";
       const timeoutId = window.setTimeout(() => {
         console.warn(`Cloud texture timed out: ${src}. Falling back to generated texture.`);
         finish(createFallbackCloudTexture());
-      }, 250);
+      }, ASSET_LOAD_TIMEOUT_MS);
       loader.load(
         assetUrl(src),
         (texture) => {
@@ -1798,7 +1800,7 @@ import * as THREE from "./vendor/three.module.js";
       const timeoutId = window.setTimeout(() => {
         console.warn(`Mountain texture timed out: ${src}. Falling back to generated texture.`);
         finish(createFallbackMountainTexture());
-      }, 250);
+      }, ASSET_LOAD_TIMEOUT_MS);
       loader.load(
         assetUrl(src),
         (texture) => {
@@ -1838,7 +1840,7 @@ import * as THREE from "./vendor/three.module.js";
       const timeoutId = window.setTimeout(() => {
         console.warn(`Sea decoration texture timed out: ${src}. Falling back to generated texture.`);
         finish(createFallbackSeaDecorationTexture(key));
-      }, 250);
+      }, ASSET_LOAD_TIMEOUT_MS);
       loader.load(
         assetUrl(src),
         (texture) => {
@@ -1879,7 +1881,7 @@ import * as THREE from "./vendor/three.module.js";
       const timeoutId = window.setTimeout(() => {
         console.warn(`Space decoration texture timed out: ${src}. Falling back to generated texture.`);
         finish(createFallbackSeaDecorationTexture("fish"));
-      }, 250);
+      }, ASSET_LOAD_TIMEOUT_MS);
       loader.load(
         assetUrl(src),
         (texture) => {
@@ -1921,7 +1923,7 @@ import * as THREE from "./vendor/three.module.js";
       const timeoutId = window.setTimeout(() => {
         console.warn(`City decoration texture timed out: ${src}. Falling back to generated texture.`);
         finish(createFallbackSeaDecorationTexture("coral"));
-      }, 250);
+      }, ASSET_LOAD_TIMEOUT_MS);
       loader.load(
         assetUrl(src),
         (texture) => {
@@ -3391,9 +3393,7 @@ import * as THREE from "./vendor/three.module.js";
     resetPreviewScene(modeKey);
   }
 
-  window.__openGameMode = function () {
-    openSelect("sky");
-  };
+  window.__openGameMode = openGameMode;
 
   window.__openMusicMode = function () {
     openMusicMode();
@@ -4417,7 +4417,6 @@ import * as THREE from "./vendor/three.module.js";
     }
 
     startModePromise = (async () => {
-      prepareAssetReloadForGameStart();
       unlockResultBgmTracks();
       unlockSfxTracks();
       window.__lastSceneInitError = "";
@@ -4470,6 +4469,7 @@ import * as THREE from "./vendor/three.module.js";
 
       await syncStageBgm(true, "main", modeKey);
       playSfx("stage");
+      setMessage("");
       return true;
     })().finally(() => {
       startModePromise = null;
@@ -4481,6 +4481,34 @@ import * as THREE from "./vendor/three.module.js";
   window.__startMode = function (modeKey) {
     return startMode(modeKey);
   };
+
+  async function openGameMode() {
+    if (gameModeLoadPromise) {
+      return gameModeLoadPromise;
+    }
+
+    gameModeLoadPromise = (async () => {
+      state.running = false;
+      setMessage("Loading...");
+      prepareAssetReloadForGameStart();
+      window.__lastSceneInitError = "";
+
+      const ready = await ensureScene({ interactive: false });
+      if (!ready) {
+        const detail = window.__lastSceneInitError ? ` (${window.__lastSceneInitError})` : "";
+        setMessage(`ゲーム用アセットの読み込みに失敗しました。もう一度お試しください。${detail}`);
+        return false;
+      }
+
+      setMessage("");
+      openSelect("sky");
+      return true;
+    })().finally(() => {
+      gameModeLoadPromise = null;
+    });
+
+    return gameModeLoadPromise;
+  }
 
   function handlePointer(clientX, clientY) {
     if (!state.running) {
@@ -4554,7 +4582,7 @@ import * as THREE from "./vendor/three.module.js";
       window.__openGameModeFallback();
       return;
     }
-    openSelect("sky");
+    void openGameMode();
   });
 
   bindUiEvent(musicModeButton, "click", () => {
