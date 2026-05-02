@@ -1603,6 +1603,9 @@ body[data-touch-orientation="landscape"] .music-actions {
 body[data-touch-orientation="landscape"] .music-actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    "prev play next"
+    "repeat stop shuffle";
   gap: 8px;
   width: 100%;
   padding: 6px;
@@ -1638,27 +1641,27 @@ body[data-touch-orientation="landscape"] .music-actions .music-option-button svg
 }
 
 body[data-touch-orientation="landscape"] #musicPlayButton {
-  grid-column: 2;
+  grid-area: play;
 }
 
 body[data-touch-orientation="landscape"] #musicPrevButton {
-  grid-column: 1;
+  grid-area: prev;
 }
 
 body[data-touch-orientation="landscape"] #musicNextButton {
-  grid-column: 3;
+  grid-area: next;
 }
 
 body[data-touch-orientation="landscape"] #musicShuffleButton {
-  grid-column: 3;
+  grid-area: shuffle;
 }
 
 body[data-touch-orientation="landscape"] #musicRepeatButton {
-  grid-column: 1;
+  grid-area: repeat;
 }
 
 body[data-touch-orientation="landscape"] #musicStopButton {
-  grid-column: 2;
+  grid-area: stop;
 }
 
 body[data-touch-orientation="landscape"] .result-actions {
@@ -1870,6 +1873,9 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
   .music-actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "prev play next"
+      "repeat stop shuffle";
     gap: 8px;
     width: 100%;
     padding: 6px;
@@ -1942,27 +1948,27 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
   }
 
   #musicPrevButton {
-    grid-column: 1;
+    grid-area: prev;
   }
 
   #musicPlayButton {
-    grid-column: 2;
+    grid-area: play;
   }
 
   #musicNextButton {
-    grid-column: 3;
+    grid-area: next;
   }
 
   #musicShuffleButton {
-    grid-column: 3;
+    grid-area: shuffle;
   }
 
   #musicRepeatButton {
-    grid-column: 1;
+    grid-area: repeat;
   }
 
   #musicStopButton {
-    grid-column: 2;
+    grid-area: stop;
   }
 
   .utility-bar {
