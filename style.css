@@ -158,12 +158,14 @@ body[data-stage="sky"] .music-track-button.is-playing {
     0 18px 34px rgba(18, 61, 122, 0.22);
 }
 
-body[data-stage="sky"] .title-credit {
+body[data-stage="sky"] .title-credit,
+body[data-stage="sky"] .title-version {
   color: rgba(18, 61, 122, 0.74);
 }
 
 body[data-stage="sky"] .play-credit {
-  color: rgba(247, 251, 255, 0.82);
+  color: rgba(10, 39, 82, 0.96);
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.26);
 }
 
 body[data-stage="sky"] .track-option:hover,
@@ -459,11 +461,11 @@ body[data-screen="result"] .play-credit {
 
 .intro-shell {
   min-height: min(68vh, 720px);
-  grid-template-rows: auto auto 1fr auto;
-  align-content: stretch;
+  grid-template-rows: auto auto auto auto;
+  align-content: center;
   justify-items: center;
   text-align: center;
-  transform: translateY(-10vh);
+  transform: none;
 }
 
 .title-badge,
@@ -539,11 +541,109 @@ body[data-screen="result"] .play-credit {
   width: 100%;
 }
 
+.title-howto-launch {
+  display: flex;
+  justify-content: center;
+  margin-block: 6px;
+}
+
+.title-howto-button {
+  min-width: 0;
+  width: auto;
+  padding-inline: 14px;
+  padding-block: 10px;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  align-self: center;
+}
+
+.title-howto-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: max(24px, env(safe-area-inset-top, 0px)) 20px max(24px, env(safe-area-inset-bottom, 0px));
+  z-index: 30;
+}
+
+.title-howto-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(3, 8, 20, 0.62);
+  backdrop-filter: blur(10px);
+}
+
+.title-howto-panel {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 560px);
+  padding: 16px 18px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(8, 15, 26, 0.9), rgba(8, 15, 26, 0.72));
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(8px);
+}
+
+.title-howto-kicker {
+  margin: 0 0 12px;
+  font-family: "Orbitron", "Segoe UI", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(239, 247, 255, 0.82);
+}
+
+.title-howto-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.title-howto-grid p {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  text-align: left;
+}
+
+.title-howto-grid strong {
+  font-family: "Orbitron", "Segoe UI", sans-serif;
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  color: rgba(255, 234, 164, 0.94);
+}
+
+.title-howto-grid span {
+  color: rgba(244, 248, 255, 0.88);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.title-version {
+  margin: -8px 0 2px;
+  color: rgba(247, 251, 255, 0.5);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.title-howto-close {
+  margin-top: 14px;
+  justify-self: end;
+}
+
 .title-credit {
   display: grid;
   justify-items: center;
   gap: 2px;
-  margin-top: auto;
+  margin-top: 4px;
   color: rgba(247, 251, 255, 0.5);
   font-size: 0.82rem;
   letter-spacing: 0.04em;
@@ -554,6 +654,26 @@ body[data-screen="result"] .play-credit {
 
 .title-credit p {
   margin: 0;
+}
+
+body[data-device-mode="touch"] .intro-shell {
+  gap: 6px;
+}
+
+body[data-device-mode="touch"] .title-actions {
+  gap: 8px;
+}
+
+body[data-device-mode="touch"] .title-howto-launch {
+  margin-block: 4px;
+}
+
+body[data-device-mode="touch"] .title-credit {
+  margin-top: 8px;
+}
+
+body[data-device-mode="touch"] .title-version {
+  margin: -14px 0 4px;
 }
 
 .music-option-button {
@@ -1390,6 +1510,26 @@ body[data-touch-orientation="landscape"] .ui-shell {
   gap: 16px;
 }
 
+body[data-touch-orientation="landscape"] .intro-shell {
+  gap: 6px;
+}
+
+body[data-touch-orientation="landscape"] .title-actions {
+  gap: 8px;
+}
+
+body[data-touch-orientation="landscape"] .title-howto-launch {
+  margin-block: 4px;
+}
+
+body[data-touch-orientation="landscape"] .title-credit {
+  margin-top: 8px;
+}
+
+body[data-touch-orientation="landscape"] .title-version {
+  margin: -14px 0 4px;
+}
+
 body[data-touch-orientation="landscape"] .title-credit {
   width: min(82vw, 320px);
   font-size: 0.66rem;
@@ -1640,6 +1780,14 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
 }
 
 @media (max-width: 720px) {
+  .title-logo {
+    transform: translateY(-60px);
+  }
+
+  .intro-shell {
+    gap: 6px;
+  }
+
   .result-card {
     width: 100%;
     padding: 22px 18px;
@@ -1715,6 +1863,10 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
     align-items: stretch;
   }
 
+  .title-actions {
+    gap: 8px;
+  }
+
   .music-actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1730,6 +1882,34 @@ body[data-touch-orientation="landscape"] .stage-option-card .track-option {
   .music-track-button,
   .link-button {
     width: 100%;
+  }
+
+  .title-howto-button {
+    width: auto;
+    min-width: 0;
+    padding-inline: 16px;
+  }
+
+  .title-howto-launch {
+    margin-block: 10px;
+  }
+
+  .title-howto-panel {
+    width: min(92vw, 420px);
+    padding: 14px 14px 16px;
+  }
+
+  .title-howto-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .title-howto-grid p {
+    padding: 10px 12px;
+  }
+
+  .title-howto-grid span {
+    font-size: 0.84rem;
   }
 
 

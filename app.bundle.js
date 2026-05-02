@@ -25239,6 +25239,10 @@ if (typeof window !== "undefined") {
     const resultTopHomeButton = document.querySelector("#resultTopHomeButton");
     const gameModeButton = document.querySelector("#gameModeButton");
     const musicModeButton = document.querySelector("#musicModeButton");
+    const howToPlayButton = document.querySelector("#howToPlayButton");
+    const howToPlayModal = document.querySelector("#howToPlayModal");
+    const howToPlayCloseButton = document.querySelector("#howToPlayCloseButton");
+    const howToPlayBackdrop = document.querySelector(".title-howto-backdrop");
     const musicStopButton = document.querySelector("#musicStopButton");
     const musicPrevButton = document.querySelector("#musicPrevButton");
     const musicNextButton = document.querySelector("#musicNextButton");
@@ -25839,7 +25843,34 @@ if (typeof window !== "undefined") {
       });
       return gameModeLoadPromise;
     }
+    function closeHowToPlay() {
+      if (!howToPlayModal) {
+        return;
+      }
+      howToPlayModal.hidden = true;
+    }
+    function openHowToPlay() {
+      if (!howToPlayModal) {
+        return;
+      }
+      howToPlayModal.hidden = false;
+    }
+    bindUiEvent(howToPlayButton, "click", () => {
+      openHowToPlay();
+    });
+    bindUiEvent(howToPlayCloseButton, "click", () => {
+      closeHowToPlay();
+    });
+    bindUiEvent(howToPlayBackdrop, "click", () => {
+      closeHowToPlay();
+    });
+    bindUiEvent(document, "keydown", (event) => {
+      if (event.key === "Escape") {
+        closeHowToPlay();
+      }
+    });
     bindUiEvent(gameModeButton, "click", () => {
+      closeHowToPlay();
       if (window.__openGameModeFallback) {
         window.__openGameModeFallback();
         return;
@@ -25847,6 +25878,7 @@ if (typeof window !== "undefined") {
       void openGameMode();
     });
     bindUiEvent(musicModeButton, "click", () => {
+      closeHowToPlay();
       if (window.__openMusicModeFallback) {
         window.__openMusicModeFallback();
         return;
