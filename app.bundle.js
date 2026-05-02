@@ -24360,7 +24360,7 @@ if (typeof window !== "undefined") {
         playSfx("stage");
       } else {
         state.resultOutcome = "failed";
-        state.resultTitle = `${modeName} Failed`;
+        state.resultTitle = mode.key === "city" ? `${modeName} Nice Run` : `${modeName} Failed`;
         state.resultLead = mode.key === "city" ? "\u661F\u3092\u53D6\u308B\u3068\u30DC\u30FC\u30CA\u30B9\u30DD\u30A4\u30F3\u30C8\uFF01" : `${mode.targetRings} WALL\u3092\u76EE\u6307\u3057\u3066\u518D\u6311\u6226\u3057\u3066\u307F\u3088\u3046\uFF01`;
         playSfx("hit");
       }

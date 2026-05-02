@@ -220,6 +220,11 @@ body[data-stage="city"] {
   --accent-strong: #5abf71;
 }
 
+body[data-stage="city"] .play-credit {
+  color: rgba(28, 81, 49, 0.96);
+  text-shadow: 0 1px 3px rgba(255, 244, 232, 0.26);
+}
+
 .scene-root,
 .grain {
   position: fixed;

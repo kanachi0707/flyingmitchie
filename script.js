@@ -3447,7 +3447,7 @@ import * as THREE from "./vendor/three.module.js";
       playSfx("stage");
     } else {
       state.resultOutcome = "failed";
-      state.resultTitle = `${modeName} Failed`;
+      state.resultTitle = mode.key === "city" ? `${modeName} Nice Run` : `${modeName} Failed`;
       state.resultLead = mode.key === "city"
         ? "\u661f\u3092\u53d6\u308b\u3068\u30dc\u30fc\u30ca\u30b9\u30dd\u30a4\u30f3\u30c8\uff01"
         : `${mode.targetRings} WALL\u3092\u76ee\u6307\u3057\u3066\u518d\u6311\u6226\u3057\u3066\u307f\u3088\u3046\uff01`;
